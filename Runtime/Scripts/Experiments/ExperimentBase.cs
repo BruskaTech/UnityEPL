@@ -38,7 +38,8 @@ namespace UnityEPL {
         protected ErrorNotifier errorNotifier;
         protected EventReporter eventReporter;
 
-        public ExperimentBase() {
+        protected new void Awake() {
+            base.Awake();
             this.inputManager = InputManager.Instance;
             this.textDisplayer = TextDisplayer.Instance;
             this.errorNotifier = ErrorNotifier.Instance;
@@ -91,7 +92,7 @@ namespace UnityEPL {
             manager.QuitTS();
         }
 
-        protected void LogExperimentInfo() {
+        protected virtual void LogExperimentInfo() {
             //write versions to logfile
             Dictionary<string, object> versionsData = new() {
                 { "application version", Application.version },
@@ -105,7 +106,7 @@ namespace UnityEPL {
             eventReporter.LogTS("session start", versionsData);
         }
 
-        protected async void ExperimentQuit() {
+        protected virtual async void ExperimentQuit() {
             var quitKeyCode = KeyCode.N;
             if (Config.quitAnytime) {
                 while (quitKeyCode == KeyCode.N) {
@@ -161,7 +162,7 @@ namespace UnityEPL {
         }
 
         // Pre-Trial States
-        protected async Task Introduction() {
+        protected virtual async Task Introduction() {
             await RepeatUntilYes(async () => {
                 await textDisplayer.PressAnyKey("show instruction video", "Press any key to show instruction video");
 
@@ -169,7 +170,7 @@ namespace UnityEPL {
                 await manager.videoControl.PlayVideo();
             }, "repeat introduction video", "Press Y to continue, \n Press N to replay instructional video.");
         }
-        protected async Task MicrophoneTest() {
+        protected virtual async Task MicrophoneTest() {
             await RepeatUntilYes(async () => {
                 await textDisplayer.PressAnyKey("microphone test prompt", "Microphone Test", "Press any key to record a sound after the beep.");
 
@@ -190,7 +191,7 @@ namespace UnityEPL {
                 await InterfaceManager.Delay(Config.micTestDuration);
             }, "repeat mic test", "Did you hear the recording ? \n(Y = Continue / N = Try Again).");
         }
-        protected async Task QuitPrompt() {
+        protected virtual async Task QuitPrompt() {
             SendRamulatorStateMsg(HostPcStateMsg.WAITING(), true);
             manager.hostPC?.SendStateMsgTS(HostPcStateMsg.WAITING());
 
@@ -205,7 +206,7 @@ namespace UnityEPL {
                 manager.QuitTS();
             }
         }
-        protected async Task ConfirmStart() {
+        protected virtual async Task ConfirmStart() {
             await textDisplayer.PressAnyKey("confirm start",
                 "Please let the experimenter know if you have any questions about what you just did.\n\n" +
                 "If you think you understand, please explain the task to the experimenter in your own words.\n\n" +
