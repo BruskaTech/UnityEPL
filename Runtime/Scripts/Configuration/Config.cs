@@ -51,6 +51,10 @@ namespace UnityEPL {
         public static bool lessTrials { get { return Config.GetSetting<bool>("lessTrials"); } }
         public static bool showFps { get { return Config.GetSetting<bool>("showFps"); } }
 
+        // ExperimentBase.cs
+        public static int micTestDuration { get { return Config.GetSetting<int>("micTestDuration"); } }
+        public static string introductionVideo { get { return Config.GetSetting<string>("introductionVideo"); } }
+
         // Game Section Skips
         //public static bool skipIntros { get { return Config.GetSetting<bool>("skipIntros"); } }
         //public static bool skipTownLearning { get { return Config.GetSetting<bool>("skipTownLearning"); } }

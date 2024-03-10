@@ -69,7 +69,7 @@ namespace UnityEPL {
 
         //untested accuraccy, requires collider
         private void DoViewReport() {
-            Camera[] cameras = FindObjectsOfType<Camera>();
+            Camera[] cameras = FindObjectsByType<Camera>(FindObjectsSortMode.None);
 
             foreach (Camera thisCamera in cameras) {
                 Plane[] frustrumPlanes = GeometryUtility.CalculateFrustumPlanes(thisCamera);
