@@ -1,6 +1,6 @@
-//Copyright (c) 2024 Columbia University
-//Copyright (c) 2024 Jefferson University
-//Copyright (c) 2024 Bruska Technologies LLC
+//Copyright (c) 2024 Columbia University (James Bruska)
+//Copyright (c) 2024 Jefferson University (James Bruska)
+//Copyright (c) 2024 Bruska Technologies LLC (James Bruska)
 //Copyright (c) 2023 University of Pennsylvania
 
 //This file is part of UnityEPL.
