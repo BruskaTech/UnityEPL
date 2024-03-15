@@ -656,7 +656,7 @@ namespace UnityEPL {
 #if !UNITY_WEBGL && !UNITY_EDITOR // System.Threading
         private async Task StartTask(Action func) {
             cts.Token.ThrowIfCancellationRequested();
-            return await Task.Factory.StartNew(TaskErrorHandler(func), cts.Token, TaskCreationOptions.DenyChildAttach, scheduler);
+            await Task.Factory.StartNew(TaskErrorHandler(func), cts.Token, TaskCreationOptions.DenyChildAttach, scheduler);
         }
         //private Task<Task> StartTask(Func<Task> func) {
         //    return Task.Factory.StartNew(TaskErrorHandler(func), cts.Token, TaskCreationOptions.DenyChildAttach, scheduler);

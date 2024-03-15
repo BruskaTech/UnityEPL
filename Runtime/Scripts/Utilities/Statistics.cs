@@ -7,6 +7,7 @@
 //UnityEPL is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 //You should have received a copy of the GNU General Public License along with UnityEPL. If not, see <https://www.gnu.org/licenses/>. 
 
+using System;
 using System.Numerics;
 
 namespace UnityEPL {
@@ -33,5 +34,25 @@ namespace UnityEPL {
         public static BigInteger Combination(BigInteger n, BigInteger r) {
             return Permutation(n, r) / Factorial(r);
         }
+
+        
+        /// <summary>
+        /// Calculates the mathematical modulus of a number.
+        /// This is not the C# remainder operator.
+        /// The big difference is that the mathematical modulus is always positive.
+        /// ex: -1 % 5 = 4
+        /// </summary>
+        /// <param name="dividend">The dividend.</param>
+        /// <param name="divisor">The divisor.</param>
+        /// <returns>The modulus of the dividend divided by the divisor.</returns>
+        public static int Mod(int dividend, int divisor) {
+            int remainder = dividend % divisor;
+            return remainder < 0 ? remainder + divisor : remainder;
+        }
+        public static BigInteger Mod(BigInteger dividend, BigInteger divisor) {
+            BigInteger remainder = dividend % divisor;
+            return remainder < 0 ? remainder + divisor : remainder;
+        }
+
     }
 }
