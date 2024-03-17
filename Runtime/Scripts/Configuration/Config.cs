@@ -62,12 +62,14 @@ namespace UnityEPL {
         //public static bool skipNewEfrKeypressPractice { get { return Config.GetSetting<bool>("skipNewEfrKeypressPractice"); } }
 
         // Local variables
-        public static string subject {
-            get { return Config.GetSetting<string>("subject"); }
+#nullable enable
+        public static string? subject {
+            get { return Config.GetSetting<string?>("subject"); }
             set { Config.SetSetting("subject", value); }
         }
-        public static int sessionNum {
-            get { return Config.GetSetting<int>("session"); }
+#nullable disable
+        public static int? sessionNum {
+            get { return Config.GetSetting<int?>("session"); }
             set { Config.SetSetting("session", value); }
         }
         public static string[] availableExperiments {
@@ -77,7 +79,7 @@ namespace UnityEPL {
 
         // InterfaceManager.cs
         public static bool isTest { get { return Config.GetSetting<bool>("isTest"); } }
-        public static int? eventsPerFrame { get { return Config.GetNullableSetting<int>("eventsPerFrame"); } }
+        public static int? eventsPerFrame { get { return Config.GetOptionalSetting<int>("eventsPerFrame"); } }
         public static int vSync { get { return Config.GetSetting<int>("vSync"); } }
         public static int frameRate { get { return Config.GetSetting<int>("frameRate"); } }
 
@@ -87,7 +89,9 @@ namespace UnityEPL {
         public static string experimentName { get { return Config.GetSetting<string>("experimentName"); } }
 
         // FileManager.cs
-        public static string dataPath { get { return Config.GetSetting<string>("dataPath"); } }
+#nullable enable
+        public static string? dataPath { get { return Config.GetOptionalClassSetting<string>("dataPath"); } }
+#nullable disable
         public static string wordpool { get { return Config.GetSetting<string>("wordpool"); } }
         public static string practiceWordpool { get { return Config.GetSetting<string>("practiceWordpool"); } }
         public static string prefix { get { return Config.GetSetting<string>("prefix"); } }
@@ -177,7 +181,7 @@ namespace UnityEPL {
         }
 #endif // UNITY_WEBGL
 
-        private static Nullable<T> GetNullableSetting<T>(string setting) where T : struct {
+        private static T? GetOptionalSetting<T>(string setting) where T : struct {
             object value;
 
             if (IsExperimentConfigSetup()) {
@@ -193,6 +197,24 @@ namespace UnityEPL {
             return null;
         }
 
+#nullable enable
+        private static T? GetOptionalClassSetting<T>(string setting) where T : class {
+            object value;
+
+            if (IsExperimentConfigSetup()) {
+                var experimentConfig = GetExperimentConfig();
+                if (experimentConfig.TryGetValue(setting, out value))
+                    return (T)value;
+            }
+
+            var systemConfig = GetSystemConfig();
+            if (systemConfig.TryGetValue(setting, out value))
+                return (T)value;
+
+            return null;
+        }
+#nullable disable
+
         private static T GetSetting<T>(string setting) {
             object value;
 
@@ -207,7 +229,9 @@ namespace UnityEPL {
                 return (T)value;
 
             string expConfigNotLoaded = IsExperimentConfigSetup() ? "" : "\nNote: Experiment config not loaded yet.";
-            throw new MissingFieldException("Missing Config Setting " + setting + "." + expConfigNotLoaded);
+            var exception = new MissingFieldException("Missing Config Setting " + setting + "." + expConfigNotLoaded);
+            ErrorNotifier.ErrorTS(exception);
+            throw exception;
         }
 
         private static void SetSetting<T>(string setting, T value) {
@@ -232,12 +256,12 @@ namespace UnityEPL {
                 // Setup config file
 #if !UNITY_WEBGL // System.IO
                 string text = File.ReadAllText(Path.Combine(configPath, SYSTEM_CONFIG_NAME));
-                systemConfig = new ConcurrentDictionary<string, dynamic>(FlexibleConfig.LoadFromText(text));
+                systemConfig = new ConcurrentDictionary<string, object>(FlexibleConfig.LoadFromText(text));
 #else
                 if (onlineSystemConfigText == null)
                     Debug.Log("Missing config from web");
                 else
-                    systemConfig = new ConcurrentDictionary<string, dynamic>(FlexibleConfig.LoadFromText(onlineSystemConfigText));
+                    systemConfig = new ConcurrentDictionary<string, object>(FlexibleConfig.LoadFromText(onlineSystemConfigText));
 #endif
             }
             return systemConfig;
@@ -248,12 +272,12 @@ namespace UnityEPL {
                 // Setup config file
 #if !UNITY_WEBGL // System.IO
                 string text = File.ReadAllText(Path.Combine(configPath, experimentConfigName + ".json"));
-                experimentConfig = new ConcurrentDictionary<string, dynamic>(FlexibleConfig.LoadFromText(text));
+                experimentConfig = new ConcurrentDictionary<string, object>(FlexibleConfig.LoadFromText(text));
 #else
                 if (onlineExperimentConfigText == null)
                     Debug.Log("Missing config from web");
                 else
-                    experimentConfig = new ConcurrentDictionary<string, dynamic>(FlexibleConfig.LoadFromText(onlineExperimentConfigText));
+                    experimentConfig = new ConcurrentDictionary<string, object>(FlexibleConfig.LoadFromText(onlineExperimentConfigText));
 #endif
             }
             return experimentConfig;

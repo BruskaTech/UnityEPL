@@ -39,11 +39,7 @@ namespace UnityEPL {
         }
 
         public string DataPath() {
-            try {
-                return Config.dataPath;
-            } catch {
-                return Path.Combine(ExperimentRoot(), "data");
-            }
+            return Config.dataPath ?? Path.Combine(ExperimentRoot(), "data");
         }
 
         public string ExperimentPath() {
@@ -67,16 +63,12 @@ namespace UnityEPL {
 
         public string ParticipantPath() {
             string dir = ExperimentPath();
-            string participant;
 
-            try {
-                participant = Config.subject;
-            } catch (MissingFieldException) {
+            if (Config.subject == null) {
                 ErrorNotifier.ErrorTS(new Exception("No participant selected"));
-                return null;
             }
 
-            dir = Path.Combine(dir, participant);
+            dir = Path.Combine(dir, Config.subject);
             return dir;
         }
 
@@ -87,15 +79,13 @@ namespace UnityEPL {
         }
 
         public string SessionPath() {
-            string session;
-            try {
-                session = Config.sessionNum.ToString();
-            } catch (MissingFieldException) {
-                return null;
+             if (Config.sessionNum == null) {
+                // Throw exception and don't use ErrorTS because of EventReporter::DoWrite
+                throw new Exception("No session selected");
             }
 
             string dir = ParticipantPath();
-            dir = Path.Combine(dir, "session_" + session);
+            dir = Path.Combine(dir, "session_" + Config.sessionNum);
             return dir;
         }
 
@@ -140,7 +130,9 @@ namespace UnityEPL {
             Directory.CreateDirectory(ExperimentPath());
         }
         public void CreateDataFolder() {
+            UnityEngine.Debug.Log("CreateDataFolder start");
             Directory.CreateDirectory(DataPath());
+            UnityEngine.Debug.Log("CreateDataFolder end");
         }
 
         public string ConfigPath() {

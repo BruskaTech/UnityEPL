@@ -7,6 +7,7 @@
 //UnityEPL is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 //You should have received a copy of the GNU General Public License along with UnityEPL. If not, see <https://www.gnu.org/licenses/>. 
 
+using Codice.Client.BaseCommands;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -54,7 +55,6 @@ namespace UnityEPL {
         protected FORMAT outputFormat = FORMAT.JSON_LINES;
         protected string filePath = "";
         string extensionlessFileName = "session";
-        protected bool experimentPathSetup = false;
 
         protected override void AwakeOverride() { }
         protected void Start() {
@@ -67,16 +67,17 @@ namespace UnityEPL {
         }
 
         protected void DoWrite(DataPoint dataPoint) {
-            if (!experimentPathSetup) {
+            if (filePath == "") {
                 try {
-                    string directory = manager.fileManager.SessionPath();
+                    var sessionPath = manager.fileManager.SessionPath();
                     switch (outputFormat) {
                         case FORMAT.JSON_LINES:
-                            filePath = Path.Combine(directory, extensionlessFileName + ".jsonl");
+                            filePath = Path.Combine(sessionPath, extensionlessFileName + ".jsonl");
                             break;
                     }
-                    experimentPathSetup = true;
-                } catch { }
+                } catch { 
+                    return;
+                }
             }
 
             string lineOutput = "unrecognized type";

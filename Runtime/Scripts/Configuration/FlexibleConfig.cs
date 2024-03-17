@@ -52,14 +52,14 @@ public static class FlexibleConfig {
             // C# doesn't implicitly cast the contents of an
             // array when casting the array
 
-            if (prop.Value is Newtonsoft.Json.Linq.JArray) {
+            if (prop.Value is JArray) {
                 JTokenType jType = JTokenType.None;
 
                 foreach (JToken child in prop.Value.Children()) {
                     if (jType == JTokenType.None) {
                         jType = child.Type;
                     } else if (jType != child.Type) {
-                        throw new Exception("Mixed type arrays not supported");
+                        throw new Exception("Mixed type arrays not supported. If using floats, make sure that they all have a decimal point.");
                     }
                 }
 
