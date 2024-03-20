@@ -51,6 +51,7 @@ namespace UnityEPL {
                 node = node.Next;
             }
             // Check for button presses
+            // TODO: JPB: (refactor) The keysystem can be improved by keeping track of which keys were requested and only looping through those
             foreach (KeyCode vKey in System.Enum.GetValues(typeof(KeyCode))) {
                 if (Input.GetKeyDown(vKey)) {
                     node = tempKeyRequests.First;
@@ -66,6 +67,29 @@ namespace UnityEPL {
                 }
             }
         }
+
+        public bool GetKeyMB(KeyCode key, bool unpausable = false) {
+            return DoGet<KeyCode, Bool, Bool>(GetKeyHelper, key, unpausable);
+        }
+        protected Bool GetKeyHelper(KeyCode key, Bool unpausable) {
+            if (!unpausable && Time.timeScale == 0) { return false; }
+            return Input.GetKey(key);
+        }
+
+        public KeyCode? GetKeysMB(KeyCode[] keys, bool unpausable = false) {
+            return DoGet<KeyCode[], Bool, KeyCode?>(GetKeysHelper, keys, unpausable);
+        }
+        public KeyCode? GetKeysHelper(KeyCode[] keys, Bool unpausable) {
+            if (!unpausable && Time.timeScale == 0) { return null; }
+
+            foreach (KeyCode key in keys) {
+                if (Input.GetKey(key)) {
+                    return key;
+                }
+            }
+            return null;
+        }
+
 
         public async Task<KeyCode> WaitForKeyTS() {
             return await GetKeyTS(null, false);
@@ -89,6 +113,7 @@ namespace UnityEPL {
         }
 
         // TODO: JPB: (refactor) Make GetKeyTS protected (only use WaitForKeyTS)
+        // These should actually be named GetKeyDownTS
         public async Task<KeyCode> GetKeyTS(TimeSpan? duration = null, bool unpausable = false) {
             TimeSpan dur = duration ?? DateTime.MaxValue - Clock.UtcNow - TimeSpan.FromDays(1);
             return await DoGetManualTriggerTS<NativeArray<KeyCode>, TimeSpan, Bool, KeyCode>(GetKeyHelper, new(), dur, unpausable);
