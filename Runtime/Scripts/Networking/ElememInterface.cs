@@ -62,6 +62,7 @@ namespace UnityEPL {
         }
 
         private uint heartbeatCount = 0;
+        private TimeSpan LastHeartbeatDelay = TimeSpan.Zero;
         protected override CancellationTokenSource DoHeartbeatsForeverTS() {
             return DoRepeatingTS(0, Config.elememHeartbeatInterval, null, DoHeartbeatHelper);
         }
@@ -70,7 +71,16 @@ namespace UnityEPL {
                 { "count", heartbeatCount }
             };
             heartbeatCount++;
+
+            var startTime = Clock.UtcNow;
             await SendAndReceive("HEARTBEAT", data, "HEARTBEAT_OK");
+            LastHeartbeatDelay = Clock.UtcNow - startTime;
+        }
+        public async Task<TimeSpan> GetLastHeartbeatDelayTS() {
+            return await DoGetTS(GetLastHeartbeatDelayHelper);
+        }
+        protected TimeSpan GetLastHeartbeatDelayHelper() {
+            return LastHeartbeatDelay;
         }
 
         protected readonly static double maxSingleTimeMs = 20;
