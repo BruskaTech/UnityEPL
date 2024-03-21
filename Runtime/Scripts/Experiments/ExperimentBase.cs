@@ -217,9 +217,9 @@ namespace UnityEPL {
         }
         protected virtual async Task ConfirmStart() {
             await textDisplayer.PressAnyKey("confirm start",
-                "Please let the experimenter know if you have any questions about what you just did.\n\n" +
+                "Please let the experimenter know if you have any questions about the task.\n\n" +
                 "If you think you understand, please explain the task to the experimenter in your own words.\n\n" +
-                "Press any key to continue to the first list.");
+                "Press any key to continue to start.");
         }
     }
 }
