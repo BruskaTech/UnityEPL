@@ -362,10 +362,12 @@ namespace UnityEPL {
         protected void PauseHelper(Bool pause) {
             // TODO: JPB: (needed) Implement pause functionality correctly
             if (pause) {
+                videoControl.PauseVideo(pause);
                 pausedTimescale = Time.timeScale;
                 Time.timeScale = 0;
             } else {
                 Time.timeScale = pausedTimescale;
+                videoControl.PauseVideo(pause);
             }
         }
 

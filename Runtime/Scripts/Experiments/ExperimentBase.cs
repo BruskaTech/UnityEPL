@@ -117,10 +117,10 @@ namespace UnityEPL {
         }
 
         protected virtual async void ExperimentQuit() {
-            var quitKeyCode = KeyCode.N;
             if (Config.quitAnytime) {
-                while (quitKeyCode == KeyCode.N) {
+                while (true) {
                     await inputManager.GetKeyTS(new List<KeyCode>() { KeyCode.Q });
+
                     manager.PauseTS(true);
                     var activeOld = textDisplayer.IsActive();
                     var titleOld = textDisplayer.titleElement.text;
@@ -128,7 +128,10 @@ namespace UnityEPL {
                     textDisplayer.Display("Experiment quit", "",
                         $"Do you want to quit" +
                         "\nPress Y to Quit, N to Resume.");
-                    quitKeyCode = await inputManager.GetKeyTS(new List<KeyCode>() { KeyCode.Y, KeyCode.N }, unpausable: true);
+
+                    var quitKeyCode = await inputManager.GetKeyTS(new List<KeyCode>() { KeyCode.Y, KeyCode.N }, unpausable: true);
+                    if (quitKeyCode == KeyCode.Y) { break; }
+
                     textDisplayer.titleElement.text = titleOld;
                     textDisplayer.textElement.text = textOld;
                     if (!activeOld) { textDisplayer.Hide(); }

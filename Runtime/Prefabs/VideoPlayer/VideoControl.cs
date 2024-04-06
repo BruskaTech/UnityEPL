@@ -117,6 +117,20 @@ namespace UnityEPL {
             gameObject.SetActive(false);
         }
 
+        public void PauseVideo(bool pause) {
+            Do<Bool>(PauseVideoHelper, pause);
+        }
+        public void PauseVideoTS(bool pause) {
+            DoTS<Bool>(PauseVideoHelper, pause);
+        }
+        protected void PauseVideoHelper(Bool pause) {
+            if (pause) {
+                videoPlayer.Pause();
+            } else {
+                videoPlayer.Play();
+            }
+        }
+
         public bool IsPlaying() {
             return DoGet(IsPlayingHelper);
         }
