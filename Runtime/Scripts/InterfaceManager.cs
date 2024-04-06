@@ -177,8 +177,8 @@ namespace UnityEPL {
         protected void GetExperiments(string[] configs) {
             List<string> exps = new List<string>();
 
+            UnityEngine.Debug.Log("Experiment Options:\n" + string.Join("\n", configs));
             for (int i = 0, j = 0; i < configs.Length; i++) {
-                Debug.Log(configs[i]);
                 if (!configs[i].Contains(SYSTEM_CONFIG))
                     exps.Add(Path.GetFileNameWithoutExtension(configs[i]));
                 j++;
@@ -206,7 +206,7 @@ namespace UnityEPL {
             if (video != null) {
                 videoControl = video.GetComponent<VideoControl>();
                 video.SetActive(false);
-                Debug.Log("Found VideoPlayer");
+                Debug.Log("Initalized VideoPlayer");
             }
 
             // Beep Sounds
@@ -216,14 +216,14 @@ namespace UnityEPL {
                 lowerBeep = sound.transform.Find("LowerBeep").gameObject.GetComponent<AudioSource>();
                 highBeep = sound.transform.Find("HighBeep").gameObject.GetComponent<AudioSource>();
                 playback = sound.transform.Find("Playback").gameObject.GetComponent<AudioSource>();
-                Debug.Log("Found Sounds");
+                Debug.Log("Initialized Sounds");
             }
 
             // Sound Recorder
             GameObject soundRecorder = GameObject.Find("SoundRecorder");
             if (soundRecorder != null) {
                 recorder = soundRecorder.GetComponent<SoundRecorder>();
-                Debug.Log("Found Sound Recorder");
+                Debug.Log("Initialized Sound Recorder");
             }
 
             // Ramulator Interface

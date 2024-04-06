@@ -131,9 +131,7 @@ namespace UnityEPL {
             Directory.CreateDirectory(ExperimentPath());
         }
         public void CreateDataFolder() {
-            UnityEngine.Debug.Log("CreateDataFolder start");
             Directory.CreateDirectory(DataPath());
-            UnityEngine.Debug.Log("CreateDataFolder end");
         }
 
         public string ConfigPath() {

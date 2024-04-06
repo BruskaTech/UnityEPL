@@ -54,6 +54,7 @@ namespace UnityEPL {
         public enum FORMAT { JSON_LINES };
 
         protected FORMAT outputFormat = FORMAT.JSON_LINES;
+        protected string defaultFilePath = "";
         protected string filePath = "";
         string extensionlessFileName = "session";
 
@@ -65,10 +66,11 @@ namespace UnityEPL {
                     filePath = Path.Combine(directory, extensionlessFileName + ".jsonl");
                     break;
             }
+            defaultFilePath = filePath;
         }
 
         protected void DoWrite(DataPoint dataPoint) {
-            if (filePath == "") {
+            if (filePath == defaultFilePath) {
                 try {
                     var sessionPath = manager.fileManager.SessionPath();
                     switch (outputFormat) {
@@ -76,12 +78,10 @@ namespace UnityEPL {
                             filePath = Path.Combine(sessionPath, extensionlessFileName + ".jsonl");
                             break;
                     }
-                } catch { 
-                    return;
-                }
+                } catch { } // Do nothing because we will log to the default place
             }
 
-            string lineOutput = "unrecognized type";
+            string lineOutput = "Unrecognized DataReporter FORMAT";
             switch (outputFormat) {
                 case FORMAT.JSON_LINES:
                     lineOutput = dataPoint.ToJSON();

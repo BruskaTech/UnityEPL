@@ -1,4 +1,5 @@
-﻿//Copyright (c) 2024 Jefferson University (James Bruska)
+﻿//Copyright (c) 2024 Columbia University (James Bruska)
+//Copyright (c) 2024 Jefferson University (James Bruska)
 //Copyright (c) 2024 Bruska Technologies LLC (James Bruska)
 //Copyright (c) 2023 University of Pennsylvania (James Bruska)
 
@@ -64,6 +65,20 @@ namespace UnityEPL {
         }
         protected void HideHelper() {
             gameObject.SetActive(false);
+        }
+
+        /// <summary>
+        /// Is the TextDisplayer Active
+        /// </summary>
+        /// <returns>if the TextDisplayer is active</returns>
+        public bool IsActive() {
+            return DoGet(IsActiveHelper);
+        }
+        public async Task<bool> IsActiveTS() {
+            return await DoGetTS(IsActiveHelper);
+        }
+        protected Bool IsActiveHelper() {
+            return gameObject.activeSelf;
         }
 
         /// <summary>

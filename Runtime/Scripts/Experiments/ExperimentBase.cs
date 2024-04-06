@@ -1,3 +1,4 @@
+//Copyright (c) 2024 Columbia University (James Bruska)
 //Copyright (c) 2024 Jefferson University (James Bruska)
 //Copyright (c) 2024 Bruska Technologies LLC (James Bruska)
 //Copyright (c) 2023 University of Pennsylvania (James Bruska)
@@ -121,6 +122,7 @@ namespace UnityEPL {
                 while (quitKeyCode == KeyCode.N) {
                     await inputManager.GetKeyTS(new List<KeyCode>() { KeyCode.Q });
                     manager.PauseTS(true);
+                    var activeOld = textDisplayer.IsActive();
                     var titleOld = textDisplayer.titleElement.text;
                     var textOld = textDisplayer.textElement.text;
                     textDisplayer.Display("Experiment quit", "",
@@ -129,6 +131,7 @@ namespace UnityEPL {
                     quitKeyCode = await inputManager.GetKeyTS(new List<KeyCode>() { KeyCode.Y, KeyCode.N }, unpausable: true);
                     textDisplayer.titleElement.text = titleOld;
                     textDisplayer.textElement.text = textOld;
+                    if (!activeOld) { textDisplayer.Hide(); }
                     manager.PauseTS(false);
                 }
                 UnityEngine.Debug.Log("QUITTING!");

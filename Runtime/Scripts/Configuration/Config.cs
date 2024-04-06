@@ -65,12 +65,12 @@ namespace UnityEPL {
         // Local variables
 #nullable enable
         public static string? subject {
-            get { return Config.GetSetting<string?>("subject"); }
+            get { return Config.GetOptionalClassSetting<string>("subject"); }
             set { Config.SetSetting("subject", value); }
         }
 #nullable disable
         public static int? sessionNum {
-            get { return Config.GetSetting<int?>("session"); }
+            get { return Config.GetOptionalSetting<int>("session"); }
             set { Config.SetSetting("session", value); }
         }
         public static string[] availableExperiments {

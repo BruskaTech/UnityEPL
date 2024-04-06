@@ -76,7 +76,7 @@ namespace UnityEPL {
             await SendAndReceive("HEARTBEAT", data, "HEARTBEAT_OK");
             LastHeartbeatDelay = Clock.UtcNow - startTime;
         }
-        public async Task<TimeSpan> GetLastHeartbeatDelayTS() {
+        public override async Task<TimeSpan> GetLastHeartbeatDelayTS() {
             return await DoGetTS(GetLastHeartbeatDelayHelper);
         }
         protected TimeSpan GetLastHeartbeatDelayHelper() {

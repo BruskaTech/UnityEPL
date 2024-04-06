@@ -94,6 +94,7 @@ namespace UnityEPL {
         public abstract Task ConnectTS();
         public abstract Task ConfigureTS();
         public abstract Task QuitTS();
+        public abstract Task<TimeSpan> GetLastHeartbeatDelayTS();
 
         public abstract Task SendMathMsgTS(string problem, string response, int responseTimeMs, bool correct);
         public abstract Task SendStimSelectMsgTS(string tag);

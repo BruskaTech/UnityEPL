@@ -7,6 +7,7 @@
 //UnityEPL is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 //You should have received a copy of the GNU General Public License along with UnityEPL. If not, see <https://www.gnu.org/licenses/>. 
 
+using PlasticGui.WorkspaceWindow.IssueTrackers;
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
@@ -68,26 +69,75 @@ namespace UnityEPL {
             }
         }
 
-        public bool GetKeyMB(KeyCode key, bool unpausable = false) {
+        public bool GetKeyDown(KeyCode key, bool unpausable = false) {
+            return DoGet<KeyCode, Bool, Bool>(GetKeyDownHelper, key, unpausable);
+        }
+        protected Bool GetKeyDownHelper(KeyCode key, Bool unpausable) {
+            if (!unpausable && Time.timeScale == 0) { return false; }
+            return Input.GetKeyDown(key);
+        }
+        public KeyCode GetKeyDown(KeyCode[] keys, bool unpausable = false) {
+            return DoGet<KeyCode[], Bool, KeyCode>(GetKeyDownHelper, keys, unpausable);
+        }
+        public KeyCode GetKeyDownHelper(KeyCode[] keys, Bool unpausable) {
+            if (!unpausable && Time.timeScale == 0) { return KeyCode.None; }
+
+            foreach (KeyCode key in keys) {
+                if (Input.GetKeyDown(key)) {
+                    return key;
+                }
+            }
+            return KeyCode.None;
+        }
+
+        public bool GetKey(KeyCode key, bool unpausable = false) {
             return DoGet<KeyCode, Bool, Bool>(GetKeyHelper, key, unpausable);
         }
         protected Bool GetKeyHelper(KeyCode key, Bool unpausable) {
             if (!unpausable && Time.timeScale == 0) { return false; }
             return Input.GetKey(key);
         }
-
-        public KeyCode? GetKeysMB(KeyCode[] keys, bool unpausable = false) {
-            return DoGet<KeyCode[], Bool, KeyCode?>(GetKeysHelper, keys, unpausable);
+        public KeyCode GetKey(KeyCode[] keys, bool unpausable = false) {
+            return DoGet<KeyCode[], Bool, KeyCode>(GetKeyHelper, keys, unpausable);
         }
-        public KeyCode? GetKeysHelper(KeyCode[] keys, Bool unpausable) {
-            if (!unpausable && Time.timeScale == 0) { return null; }
+        public KeyCode GetKeyHelper(KeyCode[] keys, Bool unpausable) {
+            if (!unpausable && Time.timeScale == 0) { return KeyCode.None; }
 
             foreach (KeyCode key in keys) {
                 if (Input.GetKey(key)) {
                     return key;
                 }
             }
-            return null;
+            return KeyCode.None;
+        }
+
+        public async Task WaitForKey(KeyCode key, bool unpausable = false) {
+            // return await DoGet<KeyCode, Bool, KeyCode>(WaitForKeyHelper, key, unpausable);
+            await DoWaitFor<KeyCode, Bool>(WaitForKeyHelper, key, unpausable);
+        }
+        protected async Task WaitForKeyHelper(KeyCode key, Bool unpausable) {
+            // This first await is needed when WaitForKey is used in a tight loop.
+            // If it is, then it will repeatedly be checked over and over on the same frame, causing the program to hang
+            // It does add a one frame delay, but if you are using an await in the first place, you are probably not concerned about that
+            await Awaitable.NextFrameAsync();
+            while (!GetKeyDownHelper(key, unpausable)) {
+                await Awaitable.NextFrameAsync();
+            }
+        }
+        public async Task<KeyCode> WaitForKey(KeyCode[] keys, bool unpausable = false) {
+            return await DoGet<KeyCode[], Bool, KeyCode>(WaitForKeyHelper, keys, unpausable);
+        }
+        protected async Task<KeyCode> WaitForKeyHelper(KeyCode[] keys, Bool unpausable) {
+            // This first await is needed when WaitForKey is used in a tight loop.
+            // If it is, then it will repeatedly be checked over and over on the same frame, causing the program to hang
+            // It does add a one frame delay, but if you are using an await in the first place, you are probably not concerned about that
+            await Awaitable.NextFrameAsync();
+            var retKey = GetKeyDownHelper(keys, unpausable);
+            while (retKey == KeyCode.None) {
+                await Awaitable.NextFrameAsync();
+                retKey = GetKeyDownHelper(keys, unpausable);
+            }
+            return retKey;
         }
 
 
