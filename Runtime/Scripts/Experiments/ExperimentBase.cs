@@ -119,8 +119,10 @@ namespace UnityEPL {
         protected virtual async void ExperimentQuit() {
             if (Config.quitAnytime) {
                 while (true) {
+                    // Wait for the quit key
                     await inputManager.GetKeyTS(new List<KeyCode>() { KeyCode.Q });
 
+                    // Pause everything and ask if they want to quit
                     manager.PauseTS(true);
                     var activeOld = textDisplayer.IsActive();
                     var titleOld = textDisplayer.titleElement.text;
@@ -129,14 +131,17 @@ namespace UnityEPL {
                         $"Do you want to quit" +
                         "\nPress Y to Quit, N to Resume.");
 
+                    // Wait for response and quit if they want to
                     var quitKeyCode = await inputManager.GetKeyTS(new List<KeyCode>() { KeyCode.Y, KeyCode.N }, unpausable: true);
                     if (quitKeyCode == KeyCode.Y) { break; }
 
+                    // Resume everything since they don't want to quit
                     textDisplayer.titleElement.text = titleOld;
                     textDisplayer.textElement.text = textOld;
                     if (!activeOld) { textDisplayer.Hide(); }
                     manager.PauseTS(false);
                 }
+                
                 UnityEngine.Debug.Log("QUITTING!");
                 manager.QuitTS();
             }
