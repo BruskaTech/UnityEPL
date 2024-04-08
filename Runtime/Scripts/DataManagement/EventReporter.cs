@@ -8,7 +8,6 @@
 //UnityEPL is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 //You should have received a copy of the GNU General Public License along with UnityEPL. If not, see <https://www.gnu.org/licenses/>. 
 
-using Codice.Client.BaseCommands;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -67,6 +66,7 @@ namespace UnityEPL {
                     break;
             }
             defaultFilePath = filePath;
+            File.Create(defaultFilePath);
         }
 
         protected void DoWrite(DataPoint dataPoint) {
@@ -80,6 +80,12 @@ namespace UnityEPL {
                     }
                 }
             }
+
+            // This was an idea for stopping the hanging loop that happens when there is no configs folder
+            // TODO: JPB: (bug) If there is no configs folder with configs.json inside it, the program hangs
+            // if (!File.Exists(filePath)) {
+            //     return;
+            // }
 
             string lineOutput = "Unrecognized DataReporter FORMAT";
             switch (outputFormat) {

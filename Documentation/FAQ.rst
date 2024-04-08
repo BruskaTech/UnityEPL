@@ -47,6 +47,9 @@ You need to add the following code to start your experiment class.
         Run();
     }
 
+Or you need to make sure that there is a configs folder defined on your Desktop (when running from the Unity Editor).
+Just copy the configs folder from the UnityEPL repo to your Desktop.
+
 =============
 Microphone class is used but Microphone Usage Description is empty in Player Settings.
 =============

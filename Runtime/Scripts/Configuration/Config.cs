@@ -14,7 +14,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using UnityEngine.Networking;
 
 namespace UnityEPL {
 
@@ -35,74 +34,68 @@ namespace UnityEPL {
         public static string experimentConfigName = null;
 
         // System Settings
-        public static bool logNetworkMessages { get { return Config.GetSetting<bool>("logNetworkMessages"); } }
-        public static bool elememOn { get { return Config.GetSetting<bool>("elememOn"); } }
-        public static string hostServerIP { get { return Config.GetSetting<string>("hostServerIP"); } }
-        public static int hostServerPort { get { return Config.GetSetting<int>("hostServerPort"); } }
-        public static int elememHeartbeatInterval { get { return Config.GetSetting<int>("elememHeartbeatInterval"); } }
-        public static bool ramulatorOn { get { return Config.GetSetting<bool>("ramulatorOn"); } }
-        public static string niclServerIP { get { return Config.GetSetting<string>("niclServerIP"); } }
-        public static int niclServerPort { get { return Config.GetSetting<int>("niclServerPort"); } }
+        public static bool logNetworkMessages { get { return GetSetting<bool>("logNetworkMessages"); } }
+        public static bool elememOn { get { return GetSetting<bool>("elememOn"); } }
+        public static string hostServerIP { get { return GetSetting<string>("hostServerIP"); } }
+        public static int hostServerPort { get { return GetSetting<int>("hostServerPort"); } }
+        public static int elememHeartbeatInterval { get { return GetSetting<int>("elememHeartbeatInterval"); } }
+        public static bool ramulatorOn { get { return GetSetting<bool>("ramulatorOn"); } }
+        public static string niclServerIP { get { return GetSetting<string>("niclServerIP"); } }
+        public static int niclServerPort { get { return GetSetting<int>("niclServerPort"); } }
 
         // Hardware
-        public static bool syncboxOn { get { return Config.GetSetting<bool>("syncboxOn"); } }
-        public static bool ps4Controller { get { return Config.GetSetting<bool>("ps4Contoller"); } }
+        public static bool syncboxOn { get { return GetSetting<bool>("syncboxOn"); } }
+        public static bool ps4Controller { get { return GetSetting<bool>("ps4Contoller"); } }
 
         // Programmer Conveniences
-        public static bool lessTrials { get { return Config.GetSetting<bool>("lessTrials"); } }
-        public static bool showFps { get { return Config.GetSetting<bool>("showFps"); } }
+        public static bool lessTrials { get { return GetSetting<bool>("lessTrials"); } }
+        public static bool showFps { get { return GetSetting<bool>("showFps"); } }
 
         // ExperimentBase.cs
-        public static int micTestDuration { get { return Config.GetSetting<int>("micTestDuration"); } }
-        public static string introductionVideo { get { return Config.GetSetting<string>("introductionVideo"); } }
-
-        // Game Section Skips
-        //public static bool skipIntros { get { return Config.GetSetting<bool>("skipIntros"); } }
-        //public static bool skipTownLearning { get { return Config.GetSetting<bool>("skipTownLearning"); } }
-        //public static bool skipNewEfrKeypressCheck { get { return Config.GetSetting<bool>("skipNewEfrKeypressCheck"); } }
-        //public static bool skipNewEfrKeypressPractice { get { return Config.GetSetting<bool>("skipNewEfrKeypressPractice"); } }
+        public static int micTestDuration { get { return GetSetting<int>("micTestDuration"); } }
+        public static string introductionVideo { get { return GetSetting<string>("introductionVideo"); } }
 
         // Local variables
 #nullable enable
         public static string? subject {
-            get { return Config.GetOptionalClassSetting<string>("subject"); }
-            set { Config.SetSetting("subject", value); }
+            get { return GetOptionalClassSetting<string>("subject"); }
+            set { SetSetting("subject", value); }
         }
 #nullable disable
         public static int? sessionNum {
-            get { return Config.GetOptionalSetting<int>("session"); }
-            set { Config.SetSetting("session", value); }
+            get { return GetOptionalSetting<int>("session"); }
+            set { SetSetting("session", value); }
         }
         public static string[] availableExperiments {
-            get { return Config.GetSetting<string[]>("availableExperiments"); }
-            set { Config.SetSetting("availableExperiments", value); }
+            get { return GetSetting<string[]>("availableExperiments"); }
+            set { SetSetting("availableExperiments", value); }
         }
 
         // InterfaceManager.cs
-        public static bool isTest { get { return Config.GetSetting<bool>("isTest"); } }
-        public static int? eventsPerFrame { get { return Config.GetOptionalSetting<int>("eventsPerFrame"); } }
-        public static int vSync { get { return Config.GetSetting<int>("vSync"); } }
-        public static int frameRate { get { return Config.GetSetting<int>("frameRate"); } }
+        public static bool isTest { get { return GetSetting<bool>("isTest"); } }
+        public static int? eventsPerFrame { get { return GetOptionalSetting<int>("eventsPerFrame"); } }
+        public static int vSync { get { return GetSetting<int>("vSync"); } }
+        public static int frameRate { get { return GetSetting<int>("frameRate"); } }
 
-        public static string experimentScene { get { return Config.GetSetting<string>("experimentScene"); } }
-        public static string experimentClass { get { return Config.GetSetting<string>("experimentClass"); } }
-        public static string launcherScene { get { return Config.GetSetting<string>("launcherScene"); } }
-        public static string experimentName { get { return Config.GetSetting<string>("experimentName"); } }
+        public static string experimentScene { get { return GetSetting<string>("experimentScene"); } }
+        public static string experimentClass { get { return GetSetting<string>("experimentClass"); } }
+        public static string launcherScene { get { return GetSetting<string>("launcherScene"); } }
+        public static string experimentName { get { return GetSetting<string>("experimentName"); } }
 
         // FileManager.cs
 #nullable enable
-        public static string? dataPath { get { return Config.GetOptionalClassSetting<string>("dataPath"); } }
+        public static string? dataPath { get { return GetOptionalClassSetting<string>("dataPath"); } }
 #nullable disable
-        public static string wordpool { get { return Config.GetSetting<string>("wordpool"); } }
-        public static string practiceWordpool { get { return Config.GetSetting<string>("practiceWordpool"); } }
-        public static string prefix { get { return Config.GetSetting<string>("prefix"); } }
+        public static string wordpool { get { return GetSetting<string>("wordpool"); } }
+        public static string practiceWordpool { get { return GetSetting<string>("practiceWordpool"); } }
+        public static string prefix { get { return GetSetting<string>("prefix"); } }
 
         // ExperimentBase.cs
         
-        public static bool quitAnytime { get { return Config.GetSetting<bool>("quitAnytime"); } }
+        public static bool quitAnytime { get { return GetSetting<bool>("quitAnytime"); } }
 
         // ElememInterface.cs
-        public static string stimMode { get { return Config.GetSetting<string>("stimMode"); } }
+        public static string stimMode { get { return GetSetting<string>("stimMode"); } }
 
 
         // Functions
@@ -132,6 +125,9 @@ namespace UnityEPL {
             Config.configPath = configPath;
 
 #if !UNITY_WEBGL // System.IO
+            if (!Directory.Exists(configPath)) {
+                throw new IOException($"Config directory path does not exist: {configPath}");
+            }
             GetSystemConfig();
 #else // UNITY_WEBGL
             var ucr = UnityCoroutineRunner.Generate();
@@ -256,6 +252,9 @@ namespace UnityEPL {
             if (systemConfig == null) {
                 // Setup config file
 #if !UNITY_WEBGL // System.IO
+                if (!Directory.Exists(configPath)) {
+                    throw new IOException($"Config directory path does not exist: {configPath}");
+                }
                 string text = File.ReadAllText(Path.Combine(configPath, SYSTEM_CONFIG_NAME));
                 systemConfig = new ConcurrentDictionary<string, object>(FlexibleConfig.LoadFromText(text));
 #else

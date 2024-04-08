@@ -124,10 +124,10 @@ namespace UnityEPL {
             // Unity internal event handling
             SceneManager.sceneLoaded += onSceneLoaded;
 
-            // Setup Text Displayer
-            textDisplayer = TextDisplayer.Instance;
-
             try {
+                // Setup Text Displayer
+                textDisplayer = TextDisplayer.Instance;
+
                 // Create objects not tied to unity
                 fileManager = new FileManager(this);
 
