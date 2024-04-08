@@ -60,22 +60,24 @@ namespace UnityEPL {
             scheduler.Abort();
         }
 
+        // Note that there is the same method in EventMonoBehaiour.cs
         protected async Task TimeoutTask(Task task, int timeoutMs, string timeoutMessage = null) {
             Task timeoutTask = InterfaceManager.Delay(timeoutMs, cts.Token);
             var completedTask = await Task.WhenAny(task, timeoutTask);
             await completedTask;
             if (completedTask == timeoutTask) {
                 var msg = timeoutMessage ?? $"Task Timed out after {timeoutMs}ms";
-                throw new TimeoutException(timeoutMessage);
+                throw new TimeoutException(msg);
             }
         }
+        // Note that there is the same method in EventMonoBehaiour.cs
         protected async Task<Z> TimeoutTask<Z>(Task<Z> task, int timeoutMs, string timeoutMessage = null) {
             Task timeoutTask = InterfaceManager.Delay(timeoutMs, cts.Token);
             var completedTask = await Task.WhenAny(task, timeoutTask);
             await completedTask;
             if (completedTask == timeoutTask) {
                 var msg = timeoutMessage ?? $"Task Timed out after {timeoutMs}ms";
-                throw new TimeoutException(timeoutMessage);
+                throw new TimeoutException(msg);
             }
             return await task;
         }

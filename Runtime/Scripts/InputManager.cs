@@ -7,7 +7,6 @@
 //UnityEPL is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 //You should have received a copy of the GNU General Public License along with UnityEPL. If not, see <https://www.gnu.org/licenses/>. 
 
-using PlasticGui.WorkspaceWindow.IssueTrackers;
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
@@ -97,6 +96,9 @@ namespace UnityEPL {
             if (!unpausable && Time.timeScale == 0) { return false; }
             return Input.GetKey(key);
         }
+        public KeyCode GetKey(List<KeyCode> keys, bool unpausable = false) {
+            return DoGet<KeyCode[], Bool, KeyCode>(GetKeyHelper, keys.ToArray(), unpausable);
+        }
         public KeyCode GetKey(KeyCode[] keys, bool unpausable = false) {
             return DoGet<KeyCode[], Bool, KeyCode>(GetKeyHelper, keys, unpausable);
         }
@@ -111,9 +113,32 @@ namespace UnityEPL {
             return KeyCode.None;
         }
 
-        public async Task WaitForKey(KeyCode key, bool unpausable = false) {
-            // return await DoGet<KeyCode, Bool, KeyCode>(WaitForKeyHelper, key, unpausable);
-            await DoWaitFor<KeyCode, Bool>(WaitForKeyHelper, key, unpausable);
+        public async Task<KeyCode> WaitForKey(bool unpausable = false, int timeoutMs = 0) {
+            var task = DoGet<Bool, KeyCode>(WaitForKeyHelper, unpausable);
+            if (timeoutMs <= 0) {
+                return await task;
+            } else {
+                return await TimeoutTask(task, timeoutMs);
+            }
+        }
+        protected async Task<KeyCode> WaitForKeyHelper(Bool unpausable) {
+            while (true) {
+                await Awaitable.NextFrameAsync();
+                if (!unpausable && Time.timeScale == 0) { continue; }
+                foreach (KeyCode vKey in Enum.GetValues(typeof(KeyCode))) {
+                    if (Input.GetKeyDown(vKey)) {
+                        return vKey;
+                    };
+                }
+            }
+        }
+        public async Task WaitForKey(KeyCode key, bool unpausable = false, int timeoutMs = 0) {
+            var task = DoWaitFor<KeyCode, Bool>(WaitForKeyHelper, key, unpausable);
+            if (timeoutMs <= 0) {
+                await task;
+            } else {
+                await TimeoutTask(task, timeoutMs);
+            }
         }
         protected async Task WaitForKeyHelper(KeyCode key, Bool unpausable) {
             // This first await is needed when WaitForKey is used in a tight loop.
@@ -124,8 +149,16 @@ namespace UnityEPL {
                 await Awaitable.NextFrameAsync();
             }
         }
-        public async Task<KeyCode> WaitForKey(KeyCode[] keys, bool unpausable = false) {
-            return await DoGet<KeyCode[], Bool, KeyCode>(WaitForKeyHelper, keys, unpausable);
+        public async Task<KeyCode> WaitForKey(List<KeyCode> keys, bool unpausable = false, int timeoutMs = 0) {
+            return await WaitForKey(keys.ToArray(), unpausable, timeoutMs); 
+        }
+        public async Task<KeyCode> WaitForKey(KeyCode[] keys, bool unpausable = false, int timeoutMs = 0) {
+            var task = DoGet<KeyCode[], Bool, KeyCode>(WaitForKeyHelper, keys, unpausable);
+            if (timeoutMs <= 0) {
+                return await task;
+            } else {
+                return await TimeoutTask(task, timeoutMs);
+            }
         }
         protected async Task<KeyCode> WaitForKeyHelper(KeyCode[] keys, Bool unpausable) {
             // This first await is needed when WaitForKey is used in a tight loop.

@@ -52,7 +52,7 @@ namespace UnityEPL {
         public static bool showFps { get { return GetSetting<bool>("showFps"); } }
 
         // ExperimentBase.cs
-        public static int micTestDuration { get { return GetSetting<int>("micTestDuration"); } }
+        public static int micTestDurationMs { get { return GetSetting<int>("micTestDurationMs"); } }
         public static string introductionVideo { get { return GetSetting<string>("introductionVideo"); } }
 
         // Local variables

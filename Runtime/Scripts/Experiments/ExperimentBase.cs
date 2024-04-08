@@ -203,12 +203,12 @@ namespace UnityEPL {
 
                 manager.recorder.StartRecording(wavPath);
                 textDisplayer.DisplayText("microphone test recording", "<color=red>Recording...</color>");
-                await InterfaceManager.Delay(Config.micTestDuration);
+                await InterfaceManager.Delay(Config.micTestDurationMs);
                 var clip = manager.recorder.StopRecording();
 
                 textDisplayer.DisplayText("microphone test playing", "<color=green>Playing...</color>");
                 manager.playback.Play(clip);
-                await InterfaceManager.Delay(Config.micTestDuration);
+                await InterfaceManager.Delay(Config.micTestDurationMs);
             }, "repeat mic test", "Did you hear the recording ? \n(Y = Continue / N = Try Again).");
         }
         protected virtual async Task QuitPrompt() {
