@@ -14,6 +14,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace UnityEPL {
 
@@ -288,7 +289,10 @@ namespace UnityEPL {
             Debug.Log("setting web request");
             string systemConfigPath = Path.Combine(Application.streamingAssetsPath, "config.json");
 
-#if !UNITY_EDITOR
+#if !UNITY_WEBGL
+            yield return new WaitForSeconds(1f);
+            onlineSystemConfigText = File.ReadAllText(systemConfigPath);
+#else
             UnityWebRequest systemWWW = UnityWebRequest.Get(systemConfigPath);
             yield return systemWWW.SendWebRequest();
 
@@ -302,9 +306,6 @@ namespace UnityEPL {
                 Debug.Log("Online System Config fetched!!");
                 Debug.Log(onlineSystemConfigText);
             }
-#else
-            yield return new WaitForSeconds(1f);
-            onlineSystemConfigText = File.ReadAllText(systemConfigPath);
 #endif
 
             string experimentConfigPath = Path.Combine(Application.streamingAssetsPath, "CourierOnline.json");

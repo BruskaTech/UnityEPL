@@ -54,6 +54,7 @@ namespace UnityEPL {
             this.textDisplayer = TextDisplayer.Instance;
             this.errorNotifier = ErrorNotifier.Instance;
             this.eventReporter = EventReporter.Instance;
+            LogExperimentInfo();
         }
 
         protected void OnEnable() {
@@ -103,17 +104,15 @@ namespace UnityEPL {
         }
 
         protected virtual void LogExperimentInfo() {
-            //write versions to logfile
-            Dictionary<string, object> versionsData = new() {
+            // Log versions and experiment info
+            eventReporter.LogTS("session start", new() {
                 { "application version", Application.version },
                 { "build date", BuildInfo.ToString() }, // compiler magic, gives compile date
                 { "experiment version", Config.experimentName },
-                { "logfile version", "0" },
+                { "logfile version", "1.0.0" },
                 { "participant", Config.subject },
                 { "session", Config.sessionNum },
-            };
-
-            eventReporter.LogTS("session start", versionsData);
+            });
         }
 
         protected virtual async void ExperimentQuit() {

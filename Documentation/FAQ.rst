@@ -1,7 +1,7 @@
 #############
 FAQ
 #############
-This is the coding practices document for the UnityEPL
+This is the Frequently Asked Questions document for the UnityEPL
 
 .. contents:: **Table of Contents**
     :depth: 2
