@@ -27,7 +27,7 @@ namespace UnityEPL {
                 throw new Exception("THIS SHOULD NOT HAPPEN! ErrorNotifier was accessed before it's awake method has been called.", exception);
             }
 
-            Instance.DoTS(() => { Instance.ErrorHelper(new Mutex<Exception>(exception)); });
+            Instance.DoTS(async () => { await Instance.ErrorHelper(new Mutex<Exception>(exception)); });
             throw new Exception("ErrorNotifier", exception);
         }
         protected async Task ErrorHelper(Mutex<Exception> exception) {
