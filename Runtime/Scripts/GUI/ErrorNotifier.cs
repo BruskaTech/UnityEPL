@@ -11,6 +11,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 using Unity.Collections;
 using UnityEngine;
 
@@ -29,20 +30,24 @@ namespace UnityEPL {
             Instance.DoTS(() => { Instance.ErrorHelper(new Mutex<Exception>(exception)); });
             throw new Exception("ErrorNotifier", exception);
         }
-        protected void ErrorHelper(Mutex<Exception> exception) {
+        protected async Task ErrorHelper(Mutex<Exception> exception) {
             try {
                 Exception e = exception.Get();
                 // Only show first error on screen, but report all errors
                 if (!gameObject.activeSelf) {
                     gameObject.SetActive(true);
                     var msg = e.Message == "" ? e.GetType().Name : e.Message;
+                    msg += "\n\nPress Q to quit";
                     TextDisplayer.Instance.Display("Error", "<color=red><b>Error</b></color>", msg);
                     Debug.Log($"Error: {msg}\n{e.StackTrace}");
                 }
                 manager.eventReporter.LogTS("Error", new() {
                     { "message", e.Message },
                     { "stackTrace", e.StackTrace } });
+                await Awaitable.NextFrameAsync();
                 manager.PauseTS(true);
+                await InputManager.Instance.WaitForKey(KeyCode.Q, true);
+                manager.Quit();
             } catch (Exception e) {
                 Debug.Log("UNSAVEABLE ERROR IN ErrorHelper... Quitting...\n" + e);
                 Debug.Assert(gameObject != null);

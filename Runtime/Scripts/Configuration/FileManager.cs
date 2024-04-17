@@ -79,16 +79,18 @@ namespace UnityEPL {
             return dir;
         }
 
-        public string SessionPath() {
+#nullable enable
+        public string? SessionPath() {
              if (Config.sessionNum == null) {
-                // Throw exception and don't use ErrorTS because of EventReporter::DoWrite
-                throw new Exception("No session selected");
+                // return null and don't use ErrorTS because of EventReporter::DoWrite
+                return null;
             }
 
             string dir = ParticipantPath();
             dir = Path.Combine(dir, "session_" + Config.sessionNum);
             return dir;
         }
+#nullable disable
 
         public bool isValidParticipant(string code) {
             if (Config.isTest) {
@@ -121,6 +123,10 @@ namespace UnityEPL {
         }
 
         public void CreateSession() {
+            var dir = SessionPath();
+            if (dir == null) {
+                throw new Exception("No session selected");
+            }
             Directory.CreateDirectory(SessionPath());
         }
 

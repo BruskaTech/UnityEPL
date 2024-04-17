@@ -71,14 +71,14 @@ namespace UnityEPL {
 
         protected void DoWrite(DataPoint dataPoint) {
             if (filePath == defaultFilePath) {
-                try {
-                    var sessionPath = manager.fileManager.SessionPath();
+                var sessionPath = manager.fileManager.SessionPath();
+                if (sessionPath != null) {
                     switch (outputFormat) {
                         case FORMAT.JSON_LINES:
                             filePath = Path.Combine(sessionPath, extensionlessFileName + ".jsonl");
                             break;
                     }
-                } catch { } // Do nothing because we will log to the default place
+                }
             }
 
             string lineOutput = "Unrecognized DataReporter FORMAT";
