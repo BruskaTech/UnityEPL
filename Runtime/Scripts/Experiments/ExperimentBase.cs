@@ -117,29 +117,14 @@ namespace UnityEPL {
 
         protected virtual async void ExperimentQuit() {
             if (Config.quitAnytime) {
-                while (true) {
+                await RepeatUntilYes(async () => {
+                    // Resume since they don't want to quit (or haven't tried yet)
+                    manager.PauseTS(false);
                     // Wait for the quit key
                     await inputManager.GetKeyTS(new List<KeyCode>() { KeyCode.Q });
-
                     // Pause everything and ask if they want to quit
                     manager.PauseTS(true);
-                    var activeOld = textDisplayer.IsActive();
-                    var titleOld = textDisplayer.titleElement.text;
-                    var textOld = textDisplayer.textElement.text;
-                    textDisplayer.Display("Experiment quit", "",
-                        $"Do you want to quit" +
-                        "\nPress Y to Quit, N to Resume.");
-
-                    // Wait for response and quit if they want to
-                    var quitKeyCode = await inputManager.GetKeyTS(new List<KeyCode>() { KeyCode.Y, KeyCode.N }, unpausable: true);
-                    if (quitKeyCode == KeyCode.Y) { break; }
-
-                    // Resume everything since they don't want to quit
-                    textDisplayer.titleElement.text = titleOld;
-                    textDisplayer.textElement.text = textOld;
-                    if (!activeOld) { textDisplayer.Hide(); }
-                    manager.PauseTS(false);
-                }
+                }, "Experiment quit", $"Do you want to quit\nPress Y to Quit, N to Resume.", unpausable: true);
                 
                 UnityEngine.Debug.Log("QUITTING!");
                 manager.QuitTS();
@@ -155,28 +140,34 @@ namespace UnityEPL {
         protected virtual void SendRamulatorStateMsg(HostPcStateMsg state, bool stateToggle, Dictionary<string, object> extraData = null) {
             // Do nothing by default
         }
-        protected async Task RepeatUntilYes(Func<Task> func, string description, string displayText) {
+        protected async Task RepeatUntilYes(Func<Task> func, string description, string displayText, Func<bool, Task> postFunc = null, bool unpausable = false) {
             var repeat = true;
             while (repeat) {
                 await func();
 
                 SendRamulatorStateMsg(HostPcStateMsg.WAITING(), true);
-                textDisplayer.Display(description, "", displayText);
-                var keyCode = await inputManager.GetKeyTS(new List<KeyCode>() { KeyCode.Y, KeyCode.N });
-                repeat = keyCode != KeyCode.Y;
+                await textDisplayer.DisplayForTask(description, "", displayText, async () => {
+                    var keyCode = await inputManager.GetKeyTS(new List<KeyCode>() { KeyCode.Y, KeyCode.N }, unpausable: unpausable);
+                    repeat = keyCode != KeyCode.Y;
+                });
                 SendRamulatorStateMsg(HostPcStateMsg.WAITING(), false);
+
+                if (postFunc != null) { await postFunc(repeat); }
             }
         }
-        protected async Task RepeatUntilNo(Func<Task> func, string description, string displayText) {
+        protected async Task RepeatUntilNo(Func<Task> func, string description, string displayText, Func<bool, Task> postFunc = null, bool unpausable = false) {
             var repeat = true;
             while (repeat) {
                 await func();
 
                 SendRamulatorStateMsg(HostPcStateMsg.WAITING(), true);
-                textDisplayer.Display(description, "", displayText);
-                var keyCode = await inputManager.GetKeyTS(new List<KeyCode>() { KeyCode.Y, KeyCode.N });
-                repeat = keyCode != KeyCode.N;
+                await textDisplayer.DisplayForTask(description, "", displayText, async () => {
+                    var keyCode = await inputManager.GetKeyTS(new List<KeyCode>() { KeyCode.Y, KeyCode.N }, unpausable: unpausable);
+                    repeat = keyCode != KeyCode.N;
+                });
                 SendRamulatorStateMsg(HostPcStateMsg.WAITING(), false);
+
+                if (postFunc != null) { await postFunc(repeat); }
             }
         }
 

@@ -146,28 +146,6 @@ namespace UnityEPL {
             return ToCoroutineTask(new WaitUntil(conditional));
         }
 
-        // Note that there is the same method in EventLoop.cs
-        protected async Task TimeoutTask(Task task, int timeoutMs, string timeoutMessage = null) {
-            Task timeoutTask = InterfaceManager.Delay(timeoutMs);
-            var completedTask = await Task.WhenAny(task, timeoutTask);
-            await completedTask;
-            if (completedTask == timeoutTask) {
-                var msg = timeoutMessage ?? $"Task Timed out after {timeoutMs}ms";
-                throw new TimeoutException(msg);
-            }
-        }
-        // Note that there is the same method in EventLoop.cs
-        protected async Task<Z> TimeoutTask<Z>(Task<Z> task, int timeoutMs, string timeoutMessage = null) {
-            Task timeoutTask = InterfaceManager.Delay(timeoutMs);
-            var completedTask = await Task.WhenAny(task, timeoutTask);
-            await completedTask;
-            if (completedTask == timeoutTask) {
-                var msg = timeoutMessage ?? $"Task Timed out after {timeoutMs}ms";
-                throw new TimeoutException(msg);
-            }
-            return await task;
-        }
-
 
         // -------------------------------------
         // Do

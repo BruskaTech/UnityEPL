@@ -115,11 +115,8 @@ namespace UnityEPL {
 
         public async Task<KeyCode> WaitForKey(bool unpausable = false, int timeoutMs = 0) {
             var task = DoGet<Bool, KeyCode>(WaitForKeyHelper, unpausable);
-            if (timeoutMs <= 0) {
-                return await task;
-            } else {
-                return await TimeoutTask(task, timeoutMs);
-            }
+            var timedTask = timeoutMs == 0 ? task : task.Timeout(timeoutMs);
+            return await timedTask;
         }
         protected async Task<KeyCode> WaitForKeyHelper(Bool unpausable) {
             while (true) {
@@ -134,11 +131,8 @@ namespace UnityEPL {
         }
         public async Task WaitForKey(KeyCode key, bool unpausable = false, int timeoutMs = 0) {
             var task = DoWaitFor<KeyCode, Bool>(WaitForKeyHelper, key, unpausable);
-            if (timeoutMs <= 0) {
-                await task;
-            } else {
-                await TimeoutTask(task, timeoutMs);
-            }
+            var timedTask = timeoutMs == 0 ? task : task.Timeout(timeoutMs);
+            await timedTask;
         }
         protected async Task WaitForKeyHelper(KeyCode key, Bool unpausable) {
             // This first await is needed when WaitForKey is used in a tight loop.
@@ -154,11 +148,8 @@ namespace UnityEPL {
         }
         public async Task<KeyCode> WaitForKey(KeyCode[] keys, bool unpausable = false, int timeoutMs = 0) {
             var task = DoGet<KeyCode[], Bool, KeyCode>(WaitForKeyHelper, keys, unpausable);
-            if (timeoutMs <= 0) {
-                return await task;
-            } else {
-                return await TimeoutTask(task, timeoutMs);
-            }
+            var timedTask = timeoutMs == 0 ? task : task.Timeout(timeoutMs);
+            return await timedTask;
         }
         protected async Task<KeyCode> WaitForKeyHelper(KeyCode[] keys, Bool unpausable) {
             // This first await is needed when WaitForKey is used in a tight loop.

@@ -47,7 +47,7 @@ namespace UnityEPL {
             return shuf;
         }
         public static IList<T> Shuffle<T>(this IList<T> list) {
-            return list.Shuffle(InterfaceManager.rnd.Value);
+            return list.Shuffle(InterfaceManager.Rnd);
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace UnityEPL {
             return shuf;
         }
         public static List<T> Shuffle<T>(this List<T> list) {
-            return list.Shuffle(InterfaceManager.rnd.Value);
+            return list.Shuffle(InterfaceManager.Rnd);
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace UnityEPL {
             return list;
         }
         public static IList<T> ShuffleInPlace<T>(this IList<T> list) {
-            return list.ShuffleInPlace(InterfaceManager.rnd.Value);
+            return list.ShuffleInPlace(InterfaceManager.Rnd);
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace UnityEPL {
             return list;
         }
         public static List<T> ShuffleInPlace<T>(this List<T> list) {
-            return list.ShuffleInPlace(InterfaceManager.rnd.Value);
+            return list.ShuffleInPlace(InterfaceManager.Rnd);
         }
 
         // https://stackoverflow.com/a/30758270
@@ -139,7 +139,7 @@ namespace UnityEPL {
             return array;
         }
         public static T[] ShuffleInPlace<T>(this T[] array) {
-            return array.ShuffleInPlace(InterfaceManager.rnd.Value);
+            return array.ShuffleInPlace(InterfaceManager.Rnd);
         }
 
         // https://stackoverflow.com/a/30758270
@@ -204,6 +204,52 @@ namespace UnityEPL {
             while (!task.IsCompleted) { yield return null; }
             if (task.IsFaulted) { ErrorNotifier.ErrorTS(task.Exception.InnerException); }
             else if (task.IsCanceled) { ErrorNotifier.ErrorTS(new OperationCanceledException("ToEnumerator")); }
+        }
+
+        /// <summary>
+        /// Create a timeout for a task that throws a TimeoutException if the task takes too long
+        /// </summary>
+        /// <param name="task"></param>
+        /// <param name="timeoutMs"></param>
+        /// <param name="timeoutMessage"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="TimeoutException"></exception>
+        public static async Task Timeout(this Task task, int timeoutMs, string timeoutMessage = null) {
+            if (timeoutMs < 0) {
+                throw new ArgumentException($"The timeoutMs cannot be negative, but it was {timeoutMs}");
+            }
+            Task timeoutTask = InterfaceManager.Delay(timeoutMs);
+            var completedTask = await Task.WhenAny(task, timeoutTask);
+            await completedTask;
+            if (completedTask == timeoutTask) {
+                var msg = timeoutMessage ?? $"Task Timed out after {timeoutMs}ms";
+                throw new TimeoutException(msg);
+            }
+        }
+
+        /// <summary>
+        /// Create a timeout for a task that throws a TimeoutException if the task takes too long
+        /// </summary>
+        /// <typeparam name="Z"></typeparam>
+        /// <param name="task"></param>
+        /// <param name="timeoutMs"></param>
+        /// <param name="timeoutMessage"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="TimeoutException"></exception>
+        public static async Task<Z> Timeout<Z>(this Task<Z> task, int timeoutMs, string timeoutMessage = null) {
+            if (timeoutMs < 0) {
+                throw new ArgumentException($"The timeoutMs cannot be negative, but it was {timeoutMs}");
+            }
+            Task timeoutTask = InterfaceManager.Delay(timeoutMs);
+            var completedTask = await Task.WhenAny(task, timeoutTask);
+            await completedTask;
+            if (completedTask == timeoutTask) {
+                var msg = timeoutMessage ?? $"Task Timed out after {timeoutMs}ms";
+                throw new TimeoutException(msg);
+            }
+            return await task;
         }
     }
 

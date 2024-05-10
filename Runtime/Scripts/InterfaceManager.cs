@@ -45,8 +45,10 @@ namespace UnityEPL {
         //////////
         // Random Number Generators
         ////////// 
-        public static ThreadLocal<System.Random> rnd { get; private set; } = new(() => { return new(); });
-        public static ThreadLocal<System.Random> stableRnd { get; private set; } = null;
+        protected static ThreadLocal<System.Random> rnd = new(() => { return new(); });
+        protected static ThreadLocal<System.Random> stableRnd = null;
+        public static System.Random Rnd { get { return rnd.Value; } }
+        public static System.Random StableRnd { get { return stableRnd.Value; } }
 
         //////////
         // ???

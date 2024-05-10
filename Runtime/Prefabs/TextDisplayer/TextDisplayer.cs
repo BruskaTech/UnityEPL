@@ -188,6 +188,22 @@ namespace UnityEPL {
             text.Dispose();
         }
 
+        public async Task DisplayForTask(string description, string title, string text, Func<Task> func) {
+            // Remember the current state
+            var activeOld = IsActive();
+            var titleOld = titleElement.text;
+            var textOld = textElement.text;
+
+            // Display the new text and wait for the task to complete
+            Display(description, title, text);
+            await func();
+
+            // Put the old state back
+            titleElement.text = titleOld;
+            textElement.text = textOld;
+            if (!activeOld) { Hide(); }
+        }
+
 
         /// <summary>
         /// Clears the text of all textElements.  This is logged if the wordEventReporter field is populated in the editor.
