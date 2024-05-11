@@ -221,7 +221,7 @@ namespace UnityEPL {
             }
             Task timeoutTask = InterfaceManager.Delay(timeoutMs);
             var completedTask = await Task.WhenAny(task, timeoutTask);
-            await completedTask;
+            await completedTask; // Propagates exceptions thrown in the task
             if (completedTask == timeoutTask) {
                 var msg = timeoutMessage ?? $"Task Timed out after {timeoutMs}ms";
                 throw new TimeoutException(msg);
@@ -244,12 +244,34 @@ namespace UnityEPL {
             }
             Task timeoutTask = InterfaceManager.Delay(timeoutMs);
             var completedTask = await Task.WhenAny(task, timeoutTask);
-            await completedTask;
+            await completedTask; // Propagates exceptions thrown in the task
             if (completedTask == timeoutTask) {
                 var msg = timeoutMessage ?? $"Task Timed out after {timeoutMs}ms";
                 throw new TimeoutException(msg);
             }
             return await task;
+        }
+
+        /// <summary>
+        /// Create a timeout for a task and logs if the task taskes too long
+        /// Unlike the normal Timeout, this one does not throw an exception if the task times out
+        /// </summary>
+        /// <param name="task"></param>
+        /// <param name="timeoutMs"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public static async Task TimeoutQuiet(this Task task, int timeoutMs) {
+            if (timeoutMs < 0) {
+                throw new ArgumentException($"The timeoutMs cannot be negative, but it was {timeoutMs}");
+            }
+            Task timeoutTask = InterfaceManager.Delay(timeoutMs);
+            var completedTask = await Task.WhenAny(task, timeoutTask);
+            await completedTask; // Propagates exceptions thrown in the task
+            if (completedTask == timeoutTask) {
+                EventReporter.Instance.LogTS("TimeoutQuiet", new() {
+                    { "timeoutMs", timeoutMs }
+                });
+            }
         }
     }
 

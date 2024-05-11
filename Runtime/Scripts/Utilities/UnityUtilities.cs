@@ -30,6 +30,7 @@ public static class UnityUtilities {
         }
         textComponent.enableAutoSizing = oldAutosizing;
         textComponent.text = oldText;
+        textComponent.ForceMeshUpdate();
 
         return maxFontSize;
     }

@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -70,9 +71,46 @@ namespace UnityEPL {
         public override string ToString() => ((char)_val).ToString();
     }
 
-    public static class UnityEplExtensions {
+    public static class NativeExtensions {
         public static NativeText ToNativeText(this string s) {
             return new NativeText(s, Allocator.Persistent);
+        }
+        public static string ToStringAndDispose(this NativeText nativeText) {
+            var s = nativeText.ToString();
+            nativeText.Dispose();
+            return s;
+        }
+        public static NativeArray<NativeText> ToNativeArray(this string[] strings) {
+            var nativeArray = new NativeArray<NativeText>(strings.Length, Allocator.Persistent);
+            for (int i = 0; i < strings.Length; i++) {
+                nativeArray[i] = strings[i].ToNativeText();
+            }
+            return nativeArray;
+        }
+        public static string[] ToArrayAndDispose(this NativeArray<NativeText> nativeArray) {
+            var strings = new string[nativeArray.Length];
+            for (int i = 0; i < nativeArray.Length; i++) {
+                strings[i] = nativeArray[i].ToString();
+                nativeArray[i].Dispose();
+            }
+            nativeArray.Dispose();
+            return strings;
+        }
+        public static NativeArray<NativeText> ToNativeArray(this List<string> strings) {
+            var nativeArray = new NativeArray<NativeText>(strings.Count, Allocator.Persistent);
+            for (int i = 0; i < strings.Count; i++) {
+                nativeArray[i] = strings[i].ToNativeText();
+            }
+            return nativeArray;
+        }
+        public static List<string> ToListAndDispose(this NativeArray<NativeText> nativeArray) {
+            var strings = new List<string>(nativeArray.Length);
+            for (int i = 0; i < nativeArray.Length; i++) {
+                strings.Add(nativeArray[i].ToString());
+                nativeArray[i].Dispose();
+            }
+            nativeArray.Dispose();
+            return strings;
         }
     }
 

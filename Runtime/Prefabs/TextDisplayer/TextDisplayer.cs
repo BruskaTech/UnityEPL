@@ -105,16 +105,25 @@ namespace UnityEPL {
         /// </summary>
         /// <param name="description">Description.</param>
         /// <param name="text">Text.</param>
-        public void DisplayText(string description, string text) {
-            Do(DisplayTextHelper, description.ToNativeText(), text.ToNativeText());
+        public void DisplayText(string description, string text, float textFontSize = 0) {
+            Do(DisplayTextHelper, description.ToNativeText(), text.ToNativeText(), textFontSize);
         }
-        public void DisplayTextTS(string description, string text) {
-            DoTS(DisplayTextHelper, description.ToNativeText(), text.ToNativeText());
+        public void DisplayTextTS(string description, string text, float textFontSize = 0) {
+            DoTS(DisplayTextHelper, description.ToNativeText(), text.ToNativeText(), textFontSize);
         }
-        protected void DisplayTextHelper(NativeText description, NativeText text) {
+        protected void DisplayTextHelper(NativeText description, NativeText text, float textFontSize) {
             var displayedText = text.ToString();
             if (OnText != null)
                 OnText(displayedText);
+
+            if (textElement == null) {
+                return;
+            }
+
+            if (textFontSize > 0) {
+                textElement.enableAutoSizing = false;
+                textElement.fontSize = textFontSize;
+            }
 
             textElement.text = displayedText;
             Dictionary<string, object> dataDict = new() {
@@ -155,13 +164,13 @@ namespace UnityEPL {
             title.Dispose();
         }
 
-        public void Display(string description, string title, string text) {
-            Do(DisplayHelper, description.ToNativeText(), title.ToNativeText(), text.ToNativeText());
+        public void Display(string description, string title, string text, float textFontSize = 0) {
+            Do(DisplayHelper, description.ToNativeText(), title.ToNativeText(), text.ToNativeText(), textFontSize);
         }
-        public void DisplayTS(string description, string title, string text) {
-            DoTS(DisplayHelper, description.ToNativeText(), title.ToNativeText(), text.ToNativeText());
+        public void DisplayTS(string description, string title, string text, float textFontSize = 0) {
+            DoTS(DisplayHelper, description.ToNativeText(), title.ToNativeText(), text.ToNativeText(), textFontSize);
         }
-        protected void DisplayHelper(NativeText description, NativeText title, NativeText text) {
+        protected void DisplayHelper(NativeText description, NativeText title, NativeText text, float textFontSize) {
             var displayedTitle = title.ToString();
             var displayedText = text.ToString();
             if (OnText != null) {
@@ -171,6 +180,11 @@ namespace UnityEPL {
                 
             if (titleElement == null || textElement == null) {
                 return;
+            }
+
+            if (textFontSize > 0) {
+                textElement.enableAutoSizing = false;
+                textElement.fontSize = textFontSize;
             }
 
             titleElement.text = displayedTitle;
@@ -188,20 +202,25 @@ namespace UnityEPL {
             text.Dispose();
         }
 
-        public async Task DisplayForTask(string description, string title, string text, Func<Task> func) {
+        public async Task DisplayForTask(string description, string title, string text, float textFontSize, Func<Task> func) {
             // Remember the current state
             var activeOld = IsActive();
             var titleOld = titleElement.text;
             var textOld = textElement.text;
+            var textAutoSizingOld = textElement.enableAutoSizing;
 
             // Display the new text and wait for the task to complete
-            Display(description, title, text);
+            Display(description, title, text, textFontSize);
             await func();
 
             // Put the old state back
             titleElement.text = titleOld;
             textElement.text = textOld;
+            textElement.enableAutoSizing = textAutoSizingOld;
             if (!activeOld) { Hide(); }
+        }
+        public async Task DisplayForTask(string description, string title, string text, Func<Task> func) {
+            await DisplayForTask(description, title, text, 0, func);
         }
 
 
@@ -216,6 +235,7 @@ namespace UnityEPL {
         }
         protected void ClearTextHelper() {
             textElement.text = "";
+            textElement.enableAutoSizing = false;
             if (eventReporter != null)
                 eventReporter.LogTS("text display cleared", new());
         }
@@ -241,6 +261,7 @@ namespace UnityEPL {
         protected void ClearOnlyHelper() {
             titleElement.text = "";
             textElement.text = "";
+            textElement.enableAutoSizing = false;
             if (eventReporter != null)
                 eventReporter.LogTS("title display cleared", new());
         }
@@ -324,6 +345,32 @@ namespace UnityEPL {
             displayTitle.Dispose();
             displayText.Dispose();
             return keyCode;
+        }
+
+        public float FindMaxFittingFontSize(List<string> strings) {
+            return DoGet(FindMaxFittingFontSizeHelper, strings.ToNativeArray());
+        }
+        public async Task<float> FindMaxFittingFontSizeTS(List<string> strings) {
+            return await DoGetTS(FindMaxFittingFontSizeHelper, strings.ToNativeArray());
+        }
+        protected float FindMaxFittingFontSizeHelper(NativeArray<NativeText> strings) {
+            // Remember the current state
+            var activeOld = IsActive();
+            var titleOld = titleElement.text;
+            var textOld = textElement.text;
+            var textAutoSizingOld = textElement.enableAutoSizing;
+
+            // Find the max fitting font size
+            gameObject.SetActive(true);
+            var size = UnityUtilities.FindMaxFittingFontSize(strings.ToListAndDispose(), textElement);
+
+            // Put the old state back
+            titleElement.text = titleOld;
+            textElement.text = textOld;
+            textElement.enableAutoSizing = textAutoSizingOld;
+            if (!activeOld) { Hide(); }
+            
+            return size;
         }
     }
 
