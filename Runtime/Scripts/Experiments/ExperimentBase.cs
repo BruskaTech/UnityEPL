@@ -11,6 +11,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -36,6 +37,18 @@ namespace UnityEPL {
                     + "If you have more than one experiment, make sure to make them all inactive in the editor.");
             }
             active = val;
+        }
+    }
+
+    public readonly struct TextSlide {
+        public readonly string description;
+        public readonly string title;
+        public readonly string text;
+
+        public TextSlide(string description, string title, string text) {
+            this.description = description;
+            this.title = title;
+            this.text = text;
         }
     }
 
@@ -222,5 +235,25 @@ namespace UnityEPL {
                 "If you think you understand, please explain the task to the experimenter in your own words.\n\n" +
                 "Press any key to continue to start.");
         }
+        protected async Task DisplayTextSlides(List<TextSlide> textSlides) {
+        // constants
+        var slideControlStr = "\n\n(go backward) '<-'   |   '->' (go forward) ";
+
+        // Resize based on all text item sizes
+        var strList = textSlides.Select(item => item.text + slideControlStr).ToList();
+        var fontSize = (int)textDisplayer.FindMaxFittingFontSize(strList);
+        UnityEngine.Debug.Log("Font size: " + fontSize);
+
+        // Display all instruction texts
+        var keys = new List<KeyCode>() { KeyCode.LeftArrow, KeyCode.RightArrow };
+        for (int i = 0; i < textSlides.Count; ++i) {
+            var slide = textSlides[i];
+            var text = slide.text + slideControlStr;
+            await textDisplayer.DisplayForTask(slide.description, slide.title, text, fontSize, async () => {
+                var keycode = await inputManager.WaitForKey(keys);
+                if (keycode == KeyCode.LeftArrow && i > 0) { i -= 2; }
+            });
+        }
+    }
     }
 }
