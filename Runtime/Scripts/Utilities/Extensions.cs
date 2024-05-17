@@ -13,6 +13,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using System.Threading;
 
 namespace UnityEPL {
     public static class IEnumerable {
@@ -215,7 +216,7 @@ namespace UnityEPL {
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
         /// <exception cref="TimeoutException"></exception>
-        public static async Task Timeout(this Task task, int timeoutMs, string timeoutMessage = null) {
+        public static async Task Timeout(this Task task, int timeoutMs, CancellationTokenSource cts, string timeoutMessage = null) {
             if (timeoutMs < 0) {
                 throw new ArgumentException($"The timeoutMs cannot be negative, but it was {timeoutMs}");
             }
@@ -223,6 +224,7 @@ namespace UnityEPL {
             var completedTask = await Task.WhenAny(task, timeoutTask);
             await completedTask; // Propagates exceptions thrown in the task
             if (completedTask == timeoutTask) {
+                cts?.Cancel();
                 var msg = timeoutMessage ?? $"Task Timed out after {timeoutMs}ms";
                 throw new TimeoutException(msg);
             }
@@ -238,7 +240,7 @@ namespace UnityEPL {
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
         /// <exception cref="TimeoutException"></exception>
-        public static async Task<Z> Timeout<Z>(this Task<Z> task, int timeoutMs, string timeoutMessage = null) {
+        public static async Task<Z> Timeout<Z>(this Task<Z> task, int timeoutMs, CancellationTokenSource cts, string timeoutMessage = null) {
             if (timeoutMs < 0) {
                 throw new ArgumentException($"The timeoutMs cannot be negative, but it was {timeoutMs}");
             }
@@ -246,6 +248,7 @@ namespace UnityEPL {
             var completedTask = await Task.WhenAny(task, timeoutTask);
             await completedTask; // Propagates exceptions thrown in the task
             if (completedTask == timeoutTask) {
+                cts?.Cancel();
                 var msg = timeoutMessage ?? $"Task Timed out after {timeoutMs}ms";
                 throw new TimeoutException(msg);
             }
@@ -260,7 +263,7 @@ namespace UnityEPL {
         /// <param name="timeoutMs"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public static async Task TimeoutQuiet(this Task task, int timeoutMs) {
+        public static async Task TimeoutQuiet(this Task task, int timeoutMs, CancellationTokenSource cts) {
             if (timeoutMs < 0) {
                 throw new ArgumentException($"The timeoutMs cannot be negative, but it was {timeoutMs}");
             }
@@ -268,6 +271,7 @@ namespace UnityEPL {
             var completedTask = await Task.WhenAny(task, timeoutTask);
             await completedTask; // Propagates exceptions thrown in the task
             if (completedTask == timeoutTask) {
+                cts?.Cancel();
                 EventReporter.Instance.LogTS("TimeoutQuiet", new() {
                     { "timeoutMs", timeoutMs }
                 });

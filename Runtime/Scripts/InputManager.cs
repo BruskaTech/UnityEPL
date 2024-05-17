@@ -12,6 +12,7 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Unity.Collections;
 using UnityEngine;
@@ -113,51 +114,46 @@ namespace UnityEPL {
             return KeyCode.None;
         }
 
-        public async Task<KeyCode> WaitForKey(bool unpausable = false, int timeoutMs = 0) {
-            var task = DoGet<Bool, KeyCode>(WaitForKeyHelper, unpausable);
-            var timedTask = timeoutMs == 0 ? task : task.Timeout(timeoutMs);
-            return await timedTask;
+        public async Task<KeyCode> WaitForKey(bool unpausable = false, CancellationToken ct = default) {
+            return await DoGet<Bool, CancellationToken, KeyCode>(WaitForKeyHelper, unpausable, ct);
         }
-        protected async Task<KeyCode> WaitForKeyHelper(Bool unpausable) {
-            while (true) {
-                await Awaitable.NextFrameAsync();
+        protected async Task<KeyCode> WaitForKeyHelper(Bool unpausable, CancellationToken ct) {
+            while (!ct.IsCancellationRequested) {
                 if (!unpausable && Time.timeScale == 0) { continue; }
                 foreach (KeyCode vKey in Enum.GetValues(typeof(KeyCode))) {
                     if (Input.GetKeyDown(vKey)) {
                         return vKey;
                     };
                 }
+                await Awaitable.NextFrameAsync();
             }
+            return KeyCode.None;
         }
-        public async Task WaitForKey(KeyCode key, bool unpausable = false, int timeoutMs = 0) {
-            var task = DoWaitFor<KeyCode, Bool>(WaitForKeyHelper, key, unpausable);
-            var timedTask = timeoutMs == 0 ? task : task.Timeout(timeoutMs);
-            await timedTask;
+        public async Task WaitForKey(KeyCode key, bool unpausable = false, CancellationToken ct = default) {
+            await DoWaitFor<KeyCode, Bool, CancellationToken>(WaitForKeyHelper, key, unpausable, ct);
         }
-        protected async Task WaitForKeyHelper(KeyCode key, Bool unpausable) {
+        protected async Task WaitForKeyHelper(KeyCode key, Bool unpausable, CancellationToken ct) {
             // This first await is needed when WaitForKey is used in a tight loop.
             // If it is, then it will repeatedly be checked over and over on the same frame, causing the program to hang
             // It does add a one frame delay, but if you are using an await in the first place, you are probably not concerned about that
             await Awaitable.NextFrameAsync();
-            while (!GetKeyDownHelper(key, unpausable)) {
+            while (!ct.IsCancellationRequested && !GetKeyDownHelper(key, unpausable)) {
                 await Awaitable.NextFrameAsync();
             }
         }
-        public async Task<KeyCode> WaitForKey(List<KeyCode> keys, bool unpausable = false, int timeoutMs = 0) {
-            return await WaitForKey(keys.ToArray(), unpausable, timeoutMs); 
+        public async Task<KeyCode> WaitForKey(List<KeyCode> keys, bool unpausable = false, CancellationToken ct = default) {
+            return await WaitForKey(keys.ToArray(), unpausable, ct);
         }
-        public async Task<KeyCode> WaitForKey(KeyCode[] keys, bool unpausable = false, int timeoutMs = 0) {
-            var task = DoGet<KeyCode[], Bool, KeyCode>(WaitForKeyHelper, keys, unpausable);
-            var timedTask = timeoutMs == 0 ? task : task.Timeout(timeoutMs);
-            return await timedTask;
+        public async Task<KeyCode> WaitForKey(KeyCode[] keys, bool unpausable = false, CancellationToken ct = default) {
+            return await DoGet<KeyCode[], Bool, CancellationToken, KeyCode>(WaitForKeyHelper, keys, unpausable, ct);
         }
-        protected async Task<KeyCode> WaitForKeyHelper(KeyCode[] keys, Bool unpausable) {
+        protected async Task<KeyCode> WaitForKeyHelper(KeyCode[] keys, Bool unpausable, CancellationToken ct) {
             // This first await is needed when WaitForKey is used in a tight loop.
             // If it is, then it will repeatedly be checked over and over on the same frame, causing the program to hang
             // It does add a one frame delay, but if you are using an await in the first place, you are probably not concerned about that
             await Awaitable.NextFrameAsync();
             var retKey = GetKeyDownHelper(keys, unpausable);
-            while (retKey == KeyCode.None) {
+            while (!ct.IsCancellationRequested && retKey == KeyCode.None) {
                 await Awaitable.NextFrameAsync();
                 retKey = GetKeyDownHelper(keys, unpausable);
             }

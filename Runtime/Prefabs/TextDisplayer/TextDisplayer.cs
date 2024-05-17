@@ -202,7 +202,7 @@ namespace UnityEPL {
             text.Dispose();
         }
 
-        public async Task DisplayForTask(string description, string title, string text, float textFontSize, Func<Task> func) {
+        public async Task DisplayForTask(string description, string title, string text, float textFontSize, CancellationToken ct, Func<CancellationToken, Task> func) {
             // Remember the current state
             var activeOld = IsActive();
             var titleOld = titleElement.text;
@@ -211,7 +211,7 @@ namespace UnityEPL {
 
             // Display the new text and wait for the task to complete
             Display(description, title, text, textFontSize);
-            await func();
+            await func(ct);
 
             // Put the old state back
             titleElement.text = titleOld;
@@ -219,8 +219,8 @@ namespace UnityEPL {
             textElement.enableAutoSizing = textAutoSizingOld;
             if (!activeOld) { Hide(); }
         }
-        public async Task DisplayForTask(string description, string title, string text, Func<Task> func) {
-            await DisplayForTask(description, title, text, 0, func);
+        public async Task DisplayForTask(string description, string title, string text, CancellationToken ct, Func<CancellationToken, Task> func) {
+            await DisplayForTask(description, title, text, 0, ct, func);
         }
 
 

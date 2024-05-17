@@ -61,7 +61,7 @@ namespace UnityEPL {
             ip.Dispose();
             var timeoutMessage = $"{this.GetType().Name} connection attempt timed out after {connectionTimeoutMs}ms";
             try {
-                await connectTask.Timeout(connectionTimeoutMs, timeoutMessage);
+                await connectTask.Timeout(connectionTimeoutMs, new(), timeoutMessage);
                 stream = tcpClient.GetStream();
             } catch (Exception e) {
                 throw new Exception($"{this.GetType().Name} connection attempt failed with \"{e.Message}\"", e);
@@ -154,7 +154,7 @@ namespace UnityEPL {
             receiveRequests.Add((type.ToString(), tcs));
             var timeoutMessage = $"{this.GetType().Name} didn't receive message after waiting {receiveTimeoutMs}ms";
             type.Dispose();
-            return tcs.Task.Timeout(receiveTimeoutMs, timeoutMessage);
+            return tcs.Task.Timeout(receiveTimeoutMs, new(), timeoutMessage);
         }
 
         // TODO: JPB: (needed) Make NetworkInterface::Send use Mutex
@@ -173,16 +173,17 @@ namespace UnityEPL {
 
             Byte[] buffer = Encoding.UTF8.GetBytes(message + "\n");
             var timeoutMessage = $"{this.GetType().Name} didn't receive message after waiting {1000}ms";
+            var cts = new CancellationTokenSource();
             Task sendTask;
             try {
-                sendTask = stream.WriteAsync(buffer, 0, buffer.Length);
+                sendTask = stream.WriteAsync(buffer, 0, buffer.Length, cts.Token);
             } catch (SocketException) {
                 var name = this.GetType().Name;
                 throw new IOException($"The network interface {name} closed before the {type} message could be sent");
             }
 
             ReportNetworkMessageTS(type, message, point.time, true);
-            return sendTask.Timeout(1000, timeoutMessage);
+            return sendTask.Timeout(1000, cts, timeoutMessage);
         }
 
         protected Task<JObject> SendAndReceiveTS(string sendType, string receiveType) {
