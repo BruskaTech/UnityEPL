@@ -83,6 +83,16 @@ namespace UnityEPL {
             return LastHeartbeatDelay;
         }
 
+        public override async Task<TimeSpan> GetMsgQueueDelayTS() {
+            // This use of a lambda to pass captured values across the thread boundary is not thread safe.
+            // However, it is safe in this case because the stopwatch is only used in this one place
+            // and it uses an await to make sure things don't happen at the same time.
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            await DoWaitForTS(() => stopwatch.Stop());
+            return stopwatch.Elapsed;
+        }
+
         protected readonly static double maxSingleTimeMs = 20;
         protected readonly static double meanSingleTimeMs = 5;
         protected override async Task DoLatencyCheckTS() {
