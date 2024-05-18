@@ -27,7 +27,6 @@ namespace UnityEPL {
         private TcpClient tcpClient;
         private NetworkStream stream;
 
-        // TODO: JPB: (needed) NetworkInterface::stopListening variable may not be needed
         private bool stopListening = false;
         private readonly List<(string, TaskCompletionSource<JObject>)> receiveRequests = new();
 
@@ -53,20 +52,18 @@ namespace UnityEPL {
             await DoWaitForTS(ConnectHelper, ip.ToNativeText(), port);
         }
         private async Task ConnectHelper(NativeText ip, int port) {
-            tcpClient = new TcpClient();
-            tcpClient.SendTimeout = sendTimeoutMs;
+            tcpClient = new TcpClient { SendTimeout = sendTimeoutMs };
 
-            // TODO: JPB: (needed) (bug) NetworkInterface always uses Elemem IP
-            Task connectTask = tcpClient.ConnectAsync(ip.ToString(), port);
-            ip.Dispose();
-            var timeoutMessage = $"{this.GetType().Name} connection attempt timed out after {connectionTimeoutMs}ms";
+            Task connectTask = tcpClient.ConnectAsync(ip.ToStringAndDispose(), port);
+            var timeoutMessage = $"{GetType().Name} connection attempt timed out after {connectionTimeoutMs}ms";
             try {
                 await connectTask.Timeout(connectionTimeoutMs, new(), timeoutMessage);
                 stream = tcpClient.GetStream();
             } catch (Exception e) {
-                throw new Exception($"{this.GetType().Name} connection attempt failed with \"{e.Message}\"", e);
+                throw new Exception($"{GetType().Name} connection attempt failed with \"{e.Message}\"", e);
             }
 
+            stopListening = false;
             DoListenerForever();
         }
 

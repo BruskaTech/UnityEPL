@@ -72,7 +72,7 @@ namespace UnityEPL {
                 { "time", unixTimestamp.ToString() },
                 { "data", data }
             };
-            return JsonConvert.SerializeObject(dataPointjson);
+            return dataPointjson.ToJSON();
         }
 
         private static double ConvertToMillisecondsSinceEpoch(DateTime convertMe) {

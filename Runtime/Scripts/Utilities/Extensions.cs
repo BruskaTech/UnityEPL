@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using System.Threading;
+using Newtonsoft.Json;
 
 namespace UnityEPL {
     public static class IEnumerable {
@@ -167,6 +168,19 @@ namespace UnityEPL {
             foreach (var item in itemsToAdd) {
                 collection.Add(item);
             }
+        }
+    }
+
+    public static class DictionaryExtensions {
+        /// <summary>
+        /// Convert a dictionary to a JSON string
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="U"></typeparam>
+        /// <param name="dict"></param>
+        /// <returns>The converted JSON string</returns>
+        public static string ToJSON<T,U>(this Dictionary<T,U> dict) {
+            return JsonConvert.SerializeObject(dict);
         }
     }
 

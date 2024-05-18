@@ -81,7 +81,6 @@ namespace UnityEPL {
         private bool endTrials = false;
         private bool endPracticeTrials = false;
         protected uint trialNum { get; private set; } = 0;
-        protected uint practiceTrialNum { get; private set; } = 0;
         protected bool inPracticeTrials { get; private set; } = false;
 
         protected abstract Task PreTrialStates();
@@ -104,9 +103,10 @@ namespace UnityEPL {
             await PreTrialStates();
             inPracticeTrials = true;
             while (!endPracticeTrials) {
-                practiceTrialNum++;
+                trialNum++;
                 await PracticeTrialStates();
             }
+            trialNum = 0;
             inPracticeTrials = false;
             while (!endTrials) {
                 trialNum++;
