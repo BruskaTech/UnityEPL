@@ -8,28 +8,26 @@
 //You should have received a copy of the GNU General Public License along with UnityEPL. If not, see <https://www.gnu.org/licenses/>. 
 
 
+using System.IO;
 using System.Reflection;
 
-[assembly: AssemblyVersion("1.0.0")]
 
 namespace UnityEPL {
 
+    /// <summary>
+    /// Get the date and time of the build.
+    /// </summary>
     public static class BuildInfo {
-        public static System.Version Version() {
-            return Assembly.GetExecutingAssembly().GetName().Version;
-        }
-
+        /// <summary>
+        /// Get the date and time of the build.
+        /// Uses the last write time of the assembly file.
+        /// </summary>
+        /// <returns></returns>
         public static System.DateTime Date() {
-            System.Version version = Version();
-            System.DateTime startDate = new System.DateTime(2000, 1, 1, 0, 0, 0);
-            System.TimeSpan span = new System.TimeSpan(version.Build, 0, 0, version.Revision * 2);
-            System.DateTime buildDate = startDate.Add(span);
-            return buildDate;
-        }
-
-        public static string ToString(string format = null) {
-            System.DateTime date = Date();
-            return date.ToString(format);
+            var assembly = Assembly.GetExecutingAssembly();
+            var filePath = assembly.Location;
+            var buildTime = File.GetLastWriteTime(filePath);
+            return buildTime;
         }
     }
 

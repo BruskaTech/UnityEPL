@@ -120,7 +120,7 @@ namespace UnityEPL {
             // Log versions and experiment info
             eventReporter.LogTS("session start", new() {
                 { "application version", Application.version },
-                { "build date", BuildInfo.ToString() }, // compiler magic, gives compile date
+                { "build date", BuildInfo.Date() },
                 { "experiment version", Config.experimentName },
                 { "logfile version", "1.0.0" },
                 { "participant", Config.subject },
