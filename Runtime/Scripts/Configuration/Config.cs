@@ -74,7 +74,6 @@ namespace UnityEPL {
 
         // InterfaceManager.cs
         public static bool isTest { get { return GetSetting<bool>("isTest"); } }
-        public static int? eventsPerFrame { get { return GetOptionalSetting<int>("eventsPerFrame"); } }
         public static int vSync { get { return GetSetting<int>("vSync"); } }
         public static int frameRate { get { return GetSetting<int>("frameRate"); } }
 

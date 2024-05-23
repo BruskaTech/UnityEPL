@@ -41,7 +41,7 @@ namespace UnityEPL {
                     TextDisplayer.Instance.Display("Error", "<color=red><b>Error</b></color>", msg);
                     Debug.Log($"Error: {msg}\n{e.StackTrace}");
                 }
-                manager.eventReporter.LogTS("Error", new() {
+                EventReporter.Instance.LogTS("Error", new() {
                     { "message", e.Message },
                     { "stackTrace", e.StackTrace } });
                 await Awaitable.NextFrameAsync();
@@ -52,7 +52,7 @@ namespace UnityEPL {
                 Debug.Log("UNSAVEABLE ERROR IN ErrorHelper... Quitting...\n" + e);
                 Debug.Assert(gameObject != null);
                 Debug.Assert(manager != null);
-                Debug.Assert(manager.eventReporter != null);
+                Debug.Assert(EventReporter.Instance != null);
                 manager.Quit();
             }
         }
@@ -71,7 +71,7 @@ namespace UnityEPL {
         protected void WarningHelper(NativeText message, NativeText stackTrace) {
             TextDisplayer.Instance.Display("Warning", "<color=yellow><b>Warning</b></color>", message.ToString());
             Debug.Log($"Warning: {message}\n{stackTrace}");
-            manager.eventReporter.LogTS("Warning", new() {
+            EventReporter.Instance.LogTS("Warning", new() {
                 { "message", message.ToString() },
                 { "stackTrace", stackTrace.ToString() } });
             manager.PauseTS(true);

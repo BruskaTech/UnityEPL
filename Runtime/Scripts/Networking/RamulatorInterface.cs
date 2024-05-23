@@ -211,7 +211,7 @@ namespace UnityEPL {
                 { "message", message },
                 { "sent", sent.ToString() },
             };
-            manager.eventReporter.LogTS("network", messageDataDict);
+            EventReporter.Instance.LogTS("network", messageDataDict);
         }
     }
 }

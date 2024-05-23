@@ -206,7 +206,7 @@ namespace UnityEPL {
 #endif // NETWORKINTERFACE_DEBUG_MESSAGES
 
             if (Config.logNetworkMessages) {
-                manager.eventReporter.LogLocalTS("network", time, dict);
+                EventReporter.Instance.LogLocalTS("network", time, dict);
             }
         }
     }

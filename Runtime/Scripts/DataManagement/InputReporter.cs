@@ -58,14 +58,14 @@ namespace UnityEPL {
                 { "is pressed", pressed },
             };
             var label = "key/mouse press/release";
-            manager.eventReporter.LogTS(label, dataDict);
+            EventReporter.Instance.LogTS(label, dataDict);
         }
 
         private void CollectMousePosition() {
             Dictionary<string, object> dataDict = new() {
                 { "position", Input.mousePosition },
             };
-            manager.eventReporter.LogTS("mouse position", dataDict);
+            EventReporter.Instance.LogTS("mouse position", dataDict);
             lastMousePositionReportFrame = Time.frameCount;
         }
     }

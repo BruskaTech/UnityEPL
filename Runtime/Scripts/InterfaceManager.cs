@@ -61,15 +61,6 @@ namespace UnityEPL {
         public ISyncBox syncBox;
 
         //////////
-        // Input reporters
-        //////////
-        //public VoiceActivityDetection voiceActity;
-        public EventReporter eventReporter;
-        public InputReporter inputReporter;
-        public UIDataReporter uiReporter;
-        private int eventsPerFrame;
-
-        //////////
         // Provided AudioSources
         //////////
         public AudioSource highBeep;
@@ -119,16 +110,8 @@ namespace UnityEPL {
             SceneManager.sceneLoaded += onSceneLoaded;
 
             try {
-                // Setup Text Displayer
-                textDisplayer = TextDisplayer.Instance;
-
                 // Create objects not tied to unity
                 fileManager = new FileManager(this);
-
-                // Setup Input Reporters
-                eventReporter = EventReporter.Instance;
-                inputReporter = InputReporter.Instance;
-                //uiReporter = UIDataReporter.Instance;
 
                 // Setup Pausing
                 pausedTimescale = Time.timeScale;
@@ -137,8 +120,6 @@ namespace UnityEPL {
                 var configs = SetupConfigs();
                 GetExperiments(configs);
                 fileManager.CreateDataFolder();
-
-                eventsPerFrame = Config.eventsPerFrame ?? 5;
 
                 // Setup Syncbox Interface
                 if (!Config.isTest && Config.syncboxOn) {
