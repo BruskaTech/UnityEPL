@@ -43,17 +43,6 @@ namespace UnityEPL {
         const string SYSTEM_CONFIG = "config.json";
 
         //////////
-        // Random Number Generators
-        ////////// 
-        protected static ThreadLocal<System.Random> rnd = new(() => { return new(); });
-        protected static ThreadLocal<System.Random> stableRnd = null;
-        public static System.Random Rnd { get { return rnd.Value; } }
-        public static System.Random StableRnd { get { return stableRnd.Value; } }
-        public static void SetStableRndSeed(int seed) {
-            stableRnd = new(() => new(seed));
-        }
-
-        //////////
         // ???
         //////////
         public FileManager fileManager;

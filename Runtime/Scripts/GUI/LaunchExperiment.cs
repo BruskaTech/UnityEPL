@@ -90,8 +90,7 @@ namespace UnityEPL {
             launchButton.SetActive(false);
             loadingButton.SetActive(true);
 
-            InterfaceManager.SetStableRndSeed(Config.subject.GetHashCode());
-            // InterfaceManager.StableRnd = new(() => new(Config.subject.GetHashCode()));
+            Random.SetStableRndSeed(Config.subject.GetHashCode());
 
             Cursor.visible = false;
             Application.runInBackground = true;

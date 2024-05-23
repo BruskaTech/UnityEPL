@@ -49,7 +49,7 @@ namespace UnityEPL {
             return shuf;
         }
         public static IList<T> Shuffle<T>(this IList<T> list) {
-            return list.Shuffle(InterfaceManager.Rnd);
+            return list.Shuffle(Random.Rnd);
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace UnityEPL {
             return shuf;
         }
         public static List<T> Shuffle<T>(this List<T> list) {
-            return list.Shuffle(InterfaceManager.Rnd);
+            return list.Shuffle(Random.Rnd);
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace UnityEPL {
             return list;
         }
         public static IList<T> ShuffleInPlace<T>(this IList<T> list) {
-            return list.ShuffleInPlace(InterfaceManager.Rnd);
+            return list.ShuffleInPlace(Random.Rnd);
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace UnityEPL {
             return list;
         }
         public static List<T> ShuffleInPlace<T>(this List<T> list) {
-            return list.ShuffleInPlace(InterfaceManager.Rnd);
+            return list.ShuffleInPlace(Random.Rnd);
         }
 
         // https://stackoverflow.com/a/30758270
@@ -141,7 +141,7 @@ namespace UnityEPL {
             return array;
         }
         public static T[] ShuffleInPlace<T>(this T[] array) {
-            return array.ShuffleInPlace(InterfaceManager.Rnd);
+            return array.ShuffleInPlace(Random.Rnd);
         }
 
         // https://stackoverflow.com/a/30758270
