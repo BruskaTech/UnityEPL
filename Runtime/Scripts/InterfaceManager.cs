@@ -432,17 +432,8 @@ namespace UnityEPL {
             }
         }
 
-        public void LoadExperimentConfig(string name) {
-            Do(LoadExperimentConfigHelper, name);
-        }
-        public void LoadExperimentConfigHelper(string name) {
-            Config.experimentConfigName = name;
-            Config.SetupExperimentConfig();
-        }
-
 
         // Helpful functions
-
         public void LockCursor(CursorLockMode isLocked) {
             Do(LockCursorHelper, isLocked);
         }

@@ -39,9 +39,8 @@ namespace UnityEPL {
             Dropdown dropdown = GetComponent<Dropdown>();
 
             if (dropdown.captionText.text != "Select Task...") {
-                Debug.Log("Task chosen");
-
-                manager.LoadExperimentConfig(dropdown.captionText.text);
+                Config.experimentConfigName = dropdown.captionText.text;
+                Config.SetupExperimentConfig();
             }
         }
     }
