@@ -49,6 +49,9 @@ namespace UnityEPL {
         protected static ThreadLocal<System.Random> stableRnd = null;
         public static System.Random Rnd { get { return rnd.Value; } }
         public static System.Random StableRnd { get { return stableRnd.Value; } }
+        public static void SetStableRndSeed(int seed) {
+            stableRnd = new(() => new(seed));
+        }
 
         //////////
         // ???
@@ -236,27 +239,6 @@ namespace UnityEPL {
             //}
         }
 
-        private void onExperimentSceneLoaded(Scene scene, LoadSceneMode mode) {
-            // Experiment Manager
-            // TODO: JPB: (bug) Fix issue where unity crashes if I check for multiple experiments
-            try {
-                // Use gameObject.scene to get values in DontDestroyOnLoad
-                var activeExperiments = gameObject.scene.GetRootGameObjects()
-                    .Where(go => go.name == Config.experimentClass && go.activeSelf);
-
-                if (activeExperiments.Count() == 0) {
-                    var expManager = scene.GetRootGameObjects().Where(go => go.name == Config.experimentClass).First();
-                    expManager.SetActive(true);
-                }
-            } catch (InvalidOperationException exception) {
-                ErrorNotifier.ErrorTS(new Exception(
-                    $"Missing experiment GameObject that is the same name as the experiment class ({Config.experimentClass})",
-                    exception));
-            }
-
-            SceneManager.sceneLoaded -= onExperimentSceneLoaded;
-        }
-
         // TODO: JPB: (feature) Make InterfaceManager.Delay() pause aware
         // https://devblogs.microsoft.com/pfxteam/cooperatively-pausing-async-methods/
 #if !UNITY_WEBGL || UNITY_EDITOR // System.Threading
@@ -386,50 +368,6 @@ namespace UnityEPL {
             EventReporter.Instance.LogTS("experiment quitted");
             await Delay(500);
             ((MonoBehaviour)this).Quit();
-        }
-
-        public void LaunchExperimentTS() {
-            DoTS(LaunchExperimentHelper);
-        }
-        protected IEnumerator LaunchExperimentHelper() {
-            // launch scene with exp, 
-            // instantiate experiment,
-            // call start function
-
-            // Check if settings are loaded
-            if (Config.IsExperimentConfigSetup()) {
-                stableRnd = new(() => new(Config.subject.GetHashCode()));
-
-                UnityEngine.Cursor.visible = false;
-                Application.runInBackground = true;
-
-                // Make the game run as fast as possible
-                QualitySettings.vSyncCount = Config.vSync;
-                Application.targetFrameRate = Config.frameRate;
-
-                // Create path for current participant/session
-                fileManager.CreateSession();
-
-                // Save Configs
-                Config.SaveConfigs(fileManager.SessionPath());
-
-                // Connect to HostPC
-                if (Config.elememOn) {
-                    textDisplayer.Display("Elemem connetion display", "", "Waiting for Elemem connection...");
-                    hostPC = new ElememInterface();
-                } else if (Config.ramulatorOn) {
-                    textDisplayer.Display("Ramulator connetion display", "", "Waiting for Ramulator connection...");
-                    ramulator = new RamulatorWrapper(this);
-                    yield return ramulator.BeginNewSession();
-                }
-                yield return hostPC?.ConnectTS().ToEnumerator();
-                yield return hostPC?.ConfigureTS().ToEnumerator();
-
-                SceneManager.sceneLoaded += onExperimentSceneLoaded;
-                SceneManager.LoadScene(Config.experimentScene);
-            } else {
-                throw new Exception("No experiment configuration loaded");
-            }
         }
 
 

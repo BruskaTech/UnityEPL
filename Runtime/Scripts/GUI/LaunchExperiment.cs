@@ -9,8 +9,10 @@
 
 using System;
 using System.Collections;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace UnityEPL {
@@ -60,25 +62,24 @@ namespace UnityEPL {
         }
 
         // activated by UI launch button
-        public void DoLaunchExperiment() {
-            Do(DoLaunchExperimentHelper);
+        public void LaunchExp() {
+            DoTS(LaunchExpHelper);
         }
-        protected void DoLaunchExperimentHelper() {
+        protected IEnumerator LaunchExpHelper() {
             if (manager.syncBox?.IsRunning() ?? false) {
                 cantGoPrompt.GetComponent<Text>().text = "Can't start while Syncbox Test is running";
                 cantGoPrompt.SetActive(true);
-                return;
-            }
-
-            if (participantNameInput.text.Equals("")) {
+                yield break;
+            } else if (participantNameInput.text.Equals("")) {
                 cantGoPrompt.GetComponent<Text>().text = "Please enter a participant";
                 cantGoPrompt.SetActive(true);
-                return;
-            }
-            if (!isValidParticipant(participantNameInput.text)) {
+                yield break;
+            } else if (!isValidParticipant(participantNameInput.text)) {
                 cantGoPrompt.GetComponent<Text>().text = "Please enter a valid participant name (ex. R1123E or LTP123)";
                 cantGoPrompt.SetActive(true);
-                return;
+                yield break;
+            } else if (!Config.IsExperimentConfigSetup()) {
+                throw new Exception("No experiment configuration loaded");
             }
 
             int sessionNumber = ParticipantSelection.nextSessionNumber;
@@ -89,7 +90,57 @@ namespace UnityEPL {
             launchButton.SetActive(false);
             loadingButton.SetActive(true);
 
-            manager.LaunchExperimentTS();
+            InterfaceManager.SetStableRndSeed(Config.subject.GetHashCode());
+            // InterfaceManager.StableRnd = new(() => new(Config.subject.GetHashCode()));
+
+            Cursor.visible = false;
+            Application.runInBackground = true;
+
+            // Make the game run as fast as possible
+            QualitySettings.vSyncCount = Config.vSync;
+            Application.targetFrameRate = Config.frameRate;
+
+            // Create path for current participant/session
+            manager.fileManager.CreateSession();
+
+            // Save Configs
+            Config.SaveConfigs(manager.fileManager.SessionPath());
+
+            // Connect to HostPC
+            if (Config.elememOn) {
+                manager.textDisplayer.Display("Elemem connetion display", "", "Waiting for Elemem connection...");
+                manager.hostPC = new ElememInterface();
+            } else if (Config.ramulatorOn) {
+                manager.textDisplayer.Display("Ramulator connetion display", "", "Waiting for Ramulator connection...");
+                manager.ramulator = new RamulatorWrapper(manager);
+                yield return manager.ramulator.BeginNewSession();
+            }
+            yield return manager.hostPC?.ConnectTS().ToEnumerator();
+            yield return manager.hostPC?.ConfigureTS().ToEnumerator();
+
+            SceneManager.sceneLoaded += onExperimentSceneLoaded;
+            SceneManager.LoadScene(Config.experimentScene);
+        }
+
+        private static void onExperimentSceneLoaded(Scene scene, LoadSceneMode mode) {
+            // Experiment Manager
+            // TODO: JPB: (bug) Fix issue where unity crashes if I check for multiple experiments
+            try {
+                // Use gameObject.scene to get values in DontDestroyOnLoad
+                var activeExperiments = InterfaceManager.Instance.gameObject.scene.GetRootGameObjects()
+                    .Where(go => go.name == Config.experimentClass && go.activeSelf);
+
+                if (activeExperiments.Count() == 0) {
+                    var expManager = scene.GetRootGameObjects().Where(go => go.name == Config.experimentClass).First();
+                    expManager.SetActive(true);
+                }
+            } catch (InvalidOperationException exception) {
+                ErrorNotifier.ErrorTS(new Exception(
+                    $"Missing experiment GameObject that is the same name as the experiment class ({Config.experimentClass})",
+                    exception));
+            }
+
+            SceneManager.sceneLoaded -= onExperimentSceneLoaded;
         }
 
         private bool isValidParticipant(string name) {

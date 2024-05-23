@@ -124,7 +124,6 @@ namespace UnityEPL {
         protected Task ToCoroutineTask(IEnumerator enumerator) {
             var tcs = new TaskCompletionSource<bool>();
             StartCoroutine(TaskTrigger(tcs, enumerator));
-            //manager.events.Enqueue(TaskTrigger(tcs, enumerator));
             return tcs.Task;
         }
 
@@ -198,9 +197,12 @@ namespace UnityEPL {
         // DoTS
         // -------------------------------------
         // TODO: JPB: (feature) Add support for cancellation tokens in EventMonoBehavior Do functions
-
-        private void DoHelper(IEnumerator enumerator) {
-            manager.events.Enqueue(MakeEventEnumerator(enumerator));
+        private async void DoHelper(IEnumerator enumerator) {
+            try {
+                await ToCoroutineTask(MakeEventEnumerator(enumerator));
+            } catch (Exception e) {
+                ErrorNotifier.ErrorTS(e);
+            }
         }
 
         protected void DoTS(Func<IEnumerator> func) {
@@ -803,6 +805,7 @@ namespace UnityEPL {
         // -------------------------------------
 
         private Task DoWaitForHelper(IEnumerator enumerator) {
+
             var tcs = new TaskCompletionSource<bool>();
             manager.events.Enqueue(TaskTrigger(tcs, enumerator));
             return tcs.Task;

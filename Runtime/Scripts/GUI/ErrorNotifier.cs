@@ -18,9 +18,9 @@ using UnityEngine;
 namespace UnityEPL {
 
     public class ErrorNotifier : SingletonEventMonoBehaviour<ErrorNotifier> {
-        protected override void AwakeOverride() {
-            gameObject.SetActive(false);
-        }
+        protected override void AwakeOverride() {}
+
+        bool errorSet = false;
 
         public static void ErrorTS(Exception exception) {
             if (!IsInstatiated) {
@@ -34,8 +34,8 @@ namespace UnityEPL {
             try {
                 Exception e = exception.Get();
                 // Only show first error on screen, but report all errors
-                if (!gameObject.activeSelf) {
-                    gameObject.SetActive(true);
+                if (!errorSet) {
+                    errorSet = true;
                     var msg = e.Message == "" ? e.GetType().Name : e.Message;
                     msg += "\n\nPress Q to quit";
                     TextDisplayer.Instance.Display("Error", "<color=red><b>Error</b></color>", msg);
