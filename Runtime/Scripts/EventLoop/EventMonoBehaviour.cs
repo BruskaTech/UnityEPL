@@ -83,13 +83,15 @@ namespace UnityEPL {
         /// <returns>An enumerator that runs the given enumerator</returns>
         /// /// TODO: JPB: (needed) Implement pausing in MakeEventEnumerator
         private IEnumerator MakeEventEnumerator(IEnumerator enumerator) {
+            object current = null;
             while (true) {
-                object current;
                 try {
-                    if (enumerator.MoveNext() == false) {
-                        break;
+                    if (Time.timeScale != 0) {
+                        if (enumerator.MoveNext() == false) {
+                            break;
+                        }
+                        current = enumerator.Current;
                     }
-                    current = enumerator.Current;
                 } catch (Exception e) {
                     Debug.Log(e);
                     ErrorNotifier.ErrorTS(e);
@@ -197,12 +199,8 @@ namespace UnityEPL {
         // DoTS
         // -------------------------------------
         // TODO: JPB: (feature) Add support for cancellation tokens in EventMonoBehavior Do functions
-        private async void DoHelper(IEnumerator enumerator) {
-            try {
-                await ToCoroutineTask(MakeEventEnumerator(enumerator));
-            } catch (Exception e) {
-                ErrorNotifier.ErrorTS(e);
-            }
+        private void DoHelper(IEnumerator enumerator) {
+            manager.events.Enqueue(MakeEventEnumerator(enumerator));
         }
 
         protected void DoTS(Func<IEnumerator> func) {

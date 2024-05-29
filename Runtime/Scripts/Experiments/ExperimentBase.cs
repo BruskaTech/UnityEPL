@@ -18,16 +18,6 @@ using UnityEngine;
 
 namespace UnityEPL {
 
-    public struct KeyMsg {
-        public string key;
-        public bool down;
-
-        public KeyMsg(string key, bool down) {
-            this.key = key;
-            this.down = down;
-        }
-    }
-
     public static class ExperimentActive {
         private static bool active = false;
         public static bool isActive() { return active; }
@@ -54,7 +44,6 @@ namespace UnityEPL {
 
     public abstract class ExperimentBase<T> : SingletonEventMonoBehaviour<T>
             where T : ExperimentBase<T> {
-        TaskCompletionSource<KeyMsg> tcs = new TaskCompletionSource<KeyMsg>();
 
         protected InputManager inputManager;
         protected TextDisplayer textDisplayer;
@@ -63,10 +52,10 @@ namespace UnityEPL {
 
         protected new void Awake() {
             base.Awake();
-            this.inputManager = InputManager.Instance;
-            this.textDisplayer = TextDisplayer.Instance;
-            this.errorNotifier = ErrorNotifier.Instance;
-            this.eventReporter = EventReporter.Instance;
+            inputManager = InputManager.Instance;
+            textDisplayer = TextDisplayer.Instance;
+            errorNotifier = ErrorNotifier.Instance;
+            eventReporter = EventReporter.Instance;
             LogExperimentInfo();
         }
 
@@ -95,8 +84,8 @@ namespace UnityEPL {
             endPracticeTrials = true;
         }
 
-        protected async void Run() {
-            await DoWaitFor(RunHelper);
+        protected void Run() {
+            DoTS(RunHelper().ToEnumerator);
         }
         protected async Task RunHelper() {
             DoTS(ExperimentQuit);
