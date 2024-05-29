@@ -8,6 +8,7 @@
 //You should have received a copy of the GNU General Public License along with UnityEPL. If not, see <https://www.gnu.org/licenses/>. 
 
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Unity.Collections.LowLevel.Unsafe;
@@ -592,42 +593,50 @@ namespace UnityEPL {
 
         // Helper Functions for error handling
 
-        private static Action TaskErrorHandler(Action func) {
+        private static Action TaskErrorHandler(Action func, StackTrace stackTrace = null) {
             return () => {
                 try {
                     func();
                 } catch (Exception e) {
-                    ErrorNotifier.ErrorTS(e);
+                    var e2 = new Exception(e.Message, e);
+                    if (stackTrace != null) { e2.SetStackTrace(stackTrace); }
+                    ErrorNotifier.ErrorTS(e2);
                 }
             };
         }
-        private static Func<Task> TaskErrorHandler(Func<Task> func) {
+        private static Func<Task> TaskErrorHandler(Func<Task> func, StackTrace stackTrace = null) {
             return async () => {
                 try {
                     await func();
                 } catch (Exception e) {
-                    ErrorNotifier.ErrorTS(e);
+                    var e2 = new Exception(e.Message, e);
+                    if (stackTrace != null) { e2.SetStackTrace(stackTrace); }
+                    ErrorNotifier.ErrorTS(e2);
                 }
             };
         }
-        private static Func<Task<Z>> TaskErrorHandler<Z>(Func<Task<Z>> func) {
+        private static Func<Task<Z>> TaskErrorHandler<Z>(Func<Task<Z>> func, StackTrace stackTrace = null) {
             return async () => {
                 try {
                     var ret = await func();
                     return ret;
                 } catch (Exception e) {
-                    ErrorNotifier.ErrorTS(e);
+                    var e2 = new Exception(e.Message, e);
+                    if (stackTrace != null) { e2.SetStackTrace(stackTrace); }
+                    ErrorNotifier.ErrorTS(e2);
                     throw e; // never called
                 }
             };
         }
-        private static Func<Z> TaskErrorHandler<Z>(Func<Z> func) {
+        private static Func<Z> TaskErrorHandler<Z>(Func<Z> func, StackTrace stackTrace = null) {
             return () => {
                 try {
                     var ret = func();
                     return ret;
                 } catch (Exception e) {
-                    ErrorNotifier.ErrorTS(e);
+                    var e2 = new Exception(e.Message, e);
+                    if (stackTrace != null) { e2.SetStackTrace(stackTrace); }
+                    ErrorNotifier.ErrorTS(e2);
                     throw e; // never called
                 }
             };
@@ -651,17 +660,21 @@ namespace UnityEPL {
 #else
         private async Task StartTask(Action func) {
             cts.Token.ThrowIfCancellationRequested();
-            await Task.Factory.StartNew(TaskErrorHandler(func), cts.Token, TaskCreationOptions.DenyChildAttach, scheduler);
+            StackTrace stackTrace = Config.debugEventLoopExtendedStackTrace ? new(true) : null;
+            await Task.Factory.StartNew(TaskErrorHandler(func, stackTrace), cts.Token, TaskCreationOptions.DenyChildAttach, scheduler);
         }
         //private Task<Task> StartTask(Func<Task> func) {
+        //    StackTrace stackTrace = Config.debugEventLoopExtendedStackTrace ? new(true) : null;
         //    return Task.Factory.StartNew(TaskErrorHandler(func), cts.Token);
         //}
         //private Task<Task<Z>> StartTask<Z>(Func<Task<Z>> func) {
-        //    return Task.Factory.StartNew(TaskErrorHandler(func), cts.Token);
+        //    StackTrace stackTrace = Config.debugEventLoopExtendedStackTrace ? new(true) : null;
+        //    return Task.Factory.StartNew(TaskErrorHandler(func, stackTrace), cts.Token);
         //}
         private async Task<Z> StartTask<Z>(Func<Z> func) {
             cts.Token.ThrowIfCancellationRequested();
-            return await Task.Factory.StartNew(TaskErrorHandler(func), cts.Token, TaskCreationOptions.DenyChildAttach, scheduler);
+            StackTrace stackTrace = Config.debugEventLoopExtendedStackTrace ? new(true) : null;
+            return await Task.Factory.StartNew(TaskErrorHandler(func, stackTrace), cts.Token, TaskCreationOptions.DenyChildAttach, scheduler);
         }
 #endif
 

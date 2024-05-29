@@ -36,6 +36,7 @@ namespace UnityEPL {
 
         // System Settings
         public static bool logNetworkMessages { get { return GetSetting<bool>("logNetworkMessages"); } }
+        public static bool debugEventLoopExtendedStackTrace { get { return GetSetting<bool>("debugEventLoopExtendedStackTrace"); } }
         public static bool elememOn { get { return GetSetting<bool>("elememOn"); } }
         public static string hostServerIP { get { return GetSetting<string>("hostServerIP"); } }
         public static int hostServerPort { get { return GetSetting<int>("hostServerPort"); } }
