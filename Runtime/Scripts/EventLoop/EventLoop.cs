@@ -32,12 +32,12 @@ namespace UnityEPL {
     public class EventLoop {
         protected SingleThreadTaskScheduler scheduler;
         protected CancellationTokenSource cts = new CancellationTokenSource();
-        protected InterfaceManager manager;
+        protected MainManager manager;
         protected DateTime startTime;
 
         public EventLoop() {
             scheduler = new SingleThreadTaskScheduler(cts.Token);
-            manager = InterfaceManager.Instance;
+            manager = MainManager.Instance;
             manager.eventLoops.Add(this);
 
             // Init threadlocal variables

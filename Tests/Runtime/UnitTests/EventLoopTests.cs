@@ -30,7 +30,7 @@ namespace UnityEPLTests {
         bool isSetup = false;
 
         const double DELAY_JITTER_MS = 2;
-        InterfaceManager im = new();
+        MainManager im = new();
 
 
         // -------------------------------------

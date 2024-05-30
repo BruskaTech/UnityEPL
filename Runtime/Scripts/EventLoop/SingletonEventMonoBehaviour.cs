@@ -27,7 +27,7 @@ namespace UnityEPL {
         }
 
         protected SingletonEventMonoBehaviour() {
-            if (typeof(T) == typeof(InterfaceManager)) {
+            if (typeof(T) == typeof(MainManager)) {
                 _Instance = (T)this;
             }
         }

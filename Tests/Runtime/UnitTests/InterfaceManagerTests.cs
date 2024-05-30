@@ -50,7 +50,7 @@ namespace UnityEPLTests {
 
         [Test]
         public void Creation() {
-            Assert.AreNotEqual(null, InterfaceManager.Instance);
+            Assert.AreNotEqual(null, MainManager.Instance);
         }
 
         // Async Delay has 9ms leniency (because it's bad)

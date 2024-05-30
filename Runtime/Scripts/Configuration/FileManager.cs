@@ -24,9 +24,9 @@ namespace UnityEPL {
     // TODO: JPB: (needed) (refactor) Decide if FileManager should be an EventLoop
     public class FileManager {
 
-        InterfaceManager manager;
+        MainManager manager;
 
-        public FileManager(InterfaceManager _manager) {
+        public FileManager(MainManager _manager) {
             manager = _manager;
         }
 

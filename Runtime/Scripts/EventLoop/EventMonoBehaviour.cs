@@ -28,13 +28,13 @@ using static UnityEPL.Blittability;
 namespace UnityEPL {
 
     public abstract class EventMonoBehaviour : MonoBehaviour {
-        protected InterfaceManager manager;
+        protected MainManager manager;
         protected int threadID;
         protected bool awakeCompleted = false;
 
         protected abstract void AwakeOverride();
         protected void Awake() {
-            manager = InterfaceManager.Instance;
+            manager = MainManager.Instance;
             threadID = Thread.CurrentThread.ManagedThreadId;
             AwakeOverride();
             awakeCompleted = true;

@@ -25,7 +25,7 @@ namespace UnityEPL {
     public class RamulatorWrapper {
         private RamulatorInterface ramulatorInterface;
 
-        public RamulatorWrapper(InterfaceManager manager) {
+        public RamulatorWrapper(MainManager manager) {
             ramulatorInterface = manager.gameObject.AddComponent<RamulatorInterface>();
         }
 

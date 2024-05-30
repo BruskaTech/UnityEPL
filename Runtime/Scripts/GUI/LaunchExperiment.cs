@@ -125,7 +125,7 @@ namespace UnityEPL {
             // TODO: JPB: (bug) Fix issue where unity crashes if I check for multiple experiments
             try {
                 // Use gameObject.scene to get values in DontDestroyOnLoad
-                var activeExperiments = InterfaceManager.Instance.gameObject.scene.GetRootGameObjects()
+                var activeExperiments = MainManager.Instance.gameObject.scene.GetRootGameObjects()
                     .Where(go => go.name == Config.experimentClass && go.activeSelf);
 
                 if (activeExperiments.Count() == 0) {
