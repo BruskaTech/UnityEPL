@@ -130,10 +130,10 @@ namespace UnityEPLTests {
 
                 el.DelayedIncAct(1000);
 
-                await InterfaceManager.Delay(900);
+                await Timing.Delay(900);
                 Assert.AreEqual(i, await el.GetI());
 
-                await InterfaceManager.Delay(200);
+                await Timing.Delay(200);
                 Assert.AreEqual(i + 1, await el.GetI());
             }).Wait();
         }
@@ -146,10 +146,10 @@ namespace UnityEPLTests {
 
                 el.DelayedIncTask(1000);
 
-                await InterfaceManager.Delay(900);
+                await Timing.Delay(900);
                 Assert.AreEqual(i, await el.GetI());
 
-                await InterfaceManager.Delay(200);
+                await Timing.Delay(200);
                 Assert.AreEqual(i + 1, await el.GetI());
             }).Wait();
         }
@@ -164,13 +164,13 @@ namespace UnityEPLTests {
 
                 Assert.AreEqual(i + 1, await el.GetI());
 
-                await InterfaceManager.Delay(900);
+                await Timing.Delay(900);
                 Assert.AreEqual(i + 1, await el.GetI());
 
-                await InterfaceManager.Delay(200);
+                await Timing.Delay(200);
                 Assert.AreEqual(i + 2, await el.GetI());
 
-                await InterfaceManager.Delay(1000);
+                await Timing.Delay(1000);
                 Assert.AreEqual(i + 3, await el.GetI());
             }).Wait();
         }
@@ -185,16 +185,16 @@ namespace UnityEPLTests {
 
                 Assert.AreEqual(i, await el.GetI());
 
-                await InterfaceManager.Delay(900);
+                await Timing.Delay(900);
                 Assert.AreEqual(i, await el.GetI());
 
-                await InterfaceManager.Delay(200);
+                await Timing.Delay(200);
                 Assert.AreEqual(i + 1, await el.GetI());
 
-                await InterfaceManager.Delay(1000);
+                await Timing.Delay(1000);
                 Assert.AreEqual(i + 2, await el.GetI());
 
-                await InterfaceManager.Delay(1000);
+                await Timing.Delay(1000);
                 Assert.AreEqual(i + 3, await el.GetI());
             }).Wait();
         }
@@ -209,13 +209,13 @@ namespace UnityEPLTests {
 
                 Assert.AreEqual(i + 1, await el.GetI());
 
-                await InterfaceManager.Delay(900);
+                await Timing.Delay(900);
                 Assert.AreEqual(i + 1, await el.GetI());
 
-                await InterfaceManager.Delay(200);
+                await Timing.Delay(200);
                 Assert.AreEqual(i + 2, await el.GetI());
 
-                await InterfaceManager.Delay(1000);
+                await Timing.Delay(1000);
                 Assert.AreEqual(i + 3, await el.GetI());
             }).Wait();
         }
@@ -230,16 +230,16 @@ namespace UnityEPLTests {
 
                 Assert.AreEqual(i, await el.GetI());
 
-                await InterfaceManager.Delay(900);
+                await Timing.Delay(900);
                 Assert.AreEqual(i, await el.GetI());
 
-                await InterfaceManager.Delay(200);
+                await Timing.Delay(200);
                 Assert.AreEqual(i + 1, await el.GetI());
 
-                await InterfaceManager.Delay(1000);
+                await Timing.Delay(1000);
                 Assert.AreEqual(i + 2, await el.GetI());
 
-                await InterfaceManager.Delay(1000);
+                await Timing.Delay(1000);
                 Assert.AreEqual(i + 3, await el.GetI());
             }).Wait();
         }
@@ -298,7 +298,7 @@ namespace UnityEPLTests {
             return await DoGetTS<int>(GetMutexValTaskHelper);
         }
         protected async Task<int> GetMutexValTaskHelper() {
-            await InterfaceManager.Delay(1);
+            await Timing.Delay(1);
             return mutex.Get();
         }
 
@@ -372,7 +372,7 @@ namespace UnityEPLTests {
             await DoWaitForTS(DelayedIncAndWaitTaskHelper, millisecondsDelay);
         }
         protected async Task DelayedIncAndWaitTaskHelper(int millisecondsDelay) {
-            await InterfaceManager.Delay(1000);
+            await Timing.Delay(1000);
             i += 1;
         }
     }

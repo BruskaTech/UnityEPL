@@ -29,7 +29,7 @@ namespace UnityEPLTests {
 
         const double ONE_FRAME_MS = 1000.0 / 120.0;
         const double DELAY_JITTER_MS = 9;
-        // TODO: JPB: (bug) The acceptable jitter for InterfaceManager.Delay() should be less than 9ms
+        // TODO: JPB: (bug) The acceptable jitter for Timing.Delay() should be less than 9ms
 
         // -------------------------------------
         // Setup
@@ -58,7 +58,7 @@ namespace UnityEPLTests {
         public void Delay() {
             Task.Run(async () => {
                 var start = Clock.UtcNow;
-                await InterfaceManager.Delay(1000);
+                await Timing.Delay(1000);
                 var diff = (Clock.UtcNow - start).TotalMilliseconds;
                 Assert.GreaterOrEqual(diff, 1000);
                 Assert.LessOrEqual(diff, 1000 + DELAY_JITTER_MS);
@@ -69,7 +69,7 @@ namespace UnityEPLTests {
         [UnityTest]
         public IEnumerator DelayE() {
             var start = Clock.UtcNow;
-            yield return InterfaceManager.DelayE(1000);
+            yield return Timing.DelayE(1000);
             var diff = (Clock.UtcNow - start).TotalMilliseconds;
             Assert.GreaterOrEqual(diff, 1000);
             Assert.LessOrEqual(diff, 1000 + ONE_FRAME_MS);
@@ -79,7 +79,7 @@ namespace UnityEPLTests {
         [UnityTest]
         public IEnumerator IEnumeratorDelay() {
             var start = Clock.UtcNow;
-            yield return InterfaceManager.Delay(1000).ToEnumerator();
+            yield return Timing.Delay(1000).ToEnumerator();
             var diff = (Clock.UtcNow - start).TotalMilliseconds;
             Assert.GreaterOrEqual(diff, 1000);
             Assert.LessOrEqual(diff, 1003);
