@@ -237,7 +237,7 @@ namespace UnityEPL {
             if (timeoutMs < 0) {
                 throw new ArgumentException($"The timeoutMs cannot be negative, but it was {timeoutMs}");
             }
-            Task timeoutTask = InterfaceManager.Delay(timeoutMs);
+            Task timeoutTask = Timing.Delay(timeoutMs);
             var completedTask = await Task.WhenAny(task, timeoutTask);
             await completedTask; // Propagates exceptions thrown in the task
             if (completedTask == timeoutTask) {
@@ -261,7 +261,7 @@ namespace UnityEPL {
             if (timeoutMs < 0) {
                 throw new ArgumentException($"The timeoutMs cannot be negative, but it was {timeoutMs}");
             }
-            Task timeoutTask = InterfaceManager.Delay(timeoutMs);
+            Task timeoutTask = Timing.Delay(timeoutMs);
             var completedTask = await Task.WhenAny(task, timeoutTask);
             await completedTask; // Propagates exceptions thrown in the task
             if (completedTask == timeoutTask) {
@@ -284,7 +284,7 @@ namespace UnityEPL {
             if (timeoutMs < 0) {
                 throw new ArgumentException($"The timeoutMs cannot be negative, but it was {timeoutMs}");
             }
-            Task timeoutTask = InterfaceManager.Delay(timeoutMs);
+            Task timeoutTask = Timing.Delay(timeoutMs);
             var completedTask = await Task.WhenAny(task, timeoutTask);
             await completedTask; // Propagates exceptions thrown in the task
             if (completedTask == timeoutTask) {

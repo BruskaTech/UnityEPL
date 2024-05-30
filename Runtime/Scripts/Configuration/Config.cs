@@ -47,6 +47,7 @@ namespace UnityEPL {
 
         // Hardware
         public static bool syncboxOn { get { return GetSetting<bool>("syncboxOn"); } }
+        public static int syncBoxTestDurationMs { get { return GetSetting<int>("syncBoxTestDurationMs"); } }
         public static bool ps4Controller { get { return GetSetting<bool>("ps4Contoller"); } }
 
         // Programmer Conveniences

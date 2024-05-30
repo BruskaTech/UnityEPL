@@ -7,22 +7,17 @@
 //UnityEPL is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 //You should have received a copy of the GNU General Public License along with UnityEPL. If not, see <https://www.gnu.org/licenses/>. 
 
-using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 using System.Threading.Tasks;
 using Unity.Collections;
 using UnityEngine;
-using UnityEngine.Profiling;
 using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
 
 namespace UnityEPL {
 
@@ -39,7 +34,6 @@ namespace UnityEPL {
             private set { }
         }
 
-        const string quitKey = "Escape"; // escape to quit
         const string SYSTEM_CONFIG = "config.json";
 
         //////////
@@ -77,12 +71,17 @@ namespace UnityEPL {
         //////////
         // StartTime
         //////////
-        public DateTime StartTimeTS { get; protected set; }
+        public DateTime StartTimeTS { 
+            get {
+                return new();
+            } 
+            protected set { } 
+        }
         public TimeSpan TimeSinceStartupTS {
             get { return Clock.UtcNow - StartTimeTS; }
             protected set { }
         }
-        public DateTime TimeStamp {
+        public DateTime TimeStampTS {
             get { return StartTimeTS.Add(TimeSinceStartupTS); }
             private set { }
         }
@@ -137,7 +136,7 @@ namespace UnityEPL {
 #if !UNITY_WEBGL // System.IO
             Config.SetupSystemConfig(fileManager.ConfigPath());
 #else // !UNITY_WEBGL
-        Config.SetupSystemConfig(Application.streamingAssetsPath);
+            Config.SetupSystemConfig(Application.streamingAssetsPath);
 #endif // !UNITY_WEBGL
 
             // Get all configuration files
@@ -209,94 +208,6 @@ namespace UnityEPL {
             //}
         }
 
-        // TODO: JPB: (feature) Make InterfaceManager.Delay() pause aware
-        // https://devblogs.microsoft.com/pfxteam/cooperatively-pausing-async-methods/
-#if !UNITY_WEBGL || UNITY_EDITOR // System.Threading
-        public static async Task Delay(int millisecondsDelay) {
-            if (millisecondsDelay < 0) {
-                throw new ArgumentOutOfRangeException($"millisecondsDelay <= 0 ({millisecondsDelay})");
-            } else if (millisecondsDelay == 0) {
-                return;
-            }
-
-            await Task.Delay(millisecondsDelay);
-        }
-
-        public static async Task Delay(int millisecondsDelay, CancellationToken cancellationToken) {
-            if (millisecondsDelay < 0) {
-                throw new ArgumentOutOfRangeException($"millisecondsDelay <= 0 ({millisecondsDelay})");
-            } else if (millisecondsDelay == 0) {
-                return;
-            }
-
-            await Task.Delay(millisecondsDelay, cancellationToken);
-        }
-
-        public static IEnumerator DelayE(int millisecondsDelay) {
-            //yield return new WaitForSeconds(millisecondsDelay / 1000.0f);
-            yield return InterfaceManager.Delay(millisecondsDelay).ToEnumerator();
-        }
-
-        public static IEnumerator DelayE(int millisecondsDelay, CancellationToken cancellationToken) {
-            yield return InterfaceManager.Delay(millisecondsDelay, cancellationToken).ToEnumerator();
-        }
-#else
-    public static async Task Delay(int millisecondsDelay) {
-        if (millisecondsDelay < 0) {
-            throw new ArgumentOutOfRangeException($"millisecondsDelay <= 0 ({millisecondsDelay})"); }
-        else if (millisecondsDelay == 0) {
-            return;
-        }
-
-        var tcs = new TaskCompletionSource<bool>();
-        float seconds = ((float)millisecondsDelay) / 1000;
-        Instance.StartCoroutine(WaitForSeconds(seconds, tcs));
-        await tcs.Task;
-    }
-
-    public static async Task Delay(int millisecondsDelay, CancellationToken cancellationToken) {
-        if (millisecondsDelay < 0) {
-            throw new ArgumentOutOfRangeException($"millisecondsDelay <= 0 ({millisecondsDelay})"); }
-        else if (millisecondsDelay == 0) {
-            return;
-        }
-
-        var tcs = new TaskCompletionSource<bool>();
-        float seconds = ((float)millisecondsDelay) / 1000;
-        Instance.StartCoroutine(WaitForSeconds(seconds, cancellationToken, tcs));
-        await tcs.Task;
-    }
-
-    public static IEnumerator DelayE(int millisecondsDelay) {
-        yield return InterfaceManager.Delay(millisecondsDelay).ToEnumerator();
-    }
-
-    public static IEnumerator DelayE(int millisecondsDelay, CancellationToken cancellationToken) {
-        yield return InterfaceManager.Delay(millisecondsDelay, cancellationToken).ToEnumerator();
-    }
-
-    protected static IEnumerator WaitForSeconds(float seconds, TaskCompletionSource<bool> tcs) {
-        yield return new WaitForSeconds(seconds);
-        tcs?.SetResult(true);
-    }
-
-    protected static IEnumerator WaitForSeconds(float seconds, CancellationToken cancellationToken, TaskCompletionSource<bool> tcs) {
-        var endTime = Time.fixedTime + seconds;
-        Console.WriteLine(seconds);
-        Console.WriteLine(Time.fixedTime);
-        Console.WriteLine(endTime);
-        while (Time.fixedTime < endTime) {
-            if (cancellationToken.IsCancellationRequested) {
-                Console.WriteLine("CANCELLED");
-                tcs?.SetResult(false);
-                yield break;
-            }
-            yield return null;
-        }
-        tcs?.SetResult(true);
-    }
-#endif
-
         protected void LaunchLauncher() {
             // Reset external hardware state if exiting task
             //syncBox.StopPulse();
@@ -336,8 +247,8 @@ namespace UnityEPL {
             }
 
             EventReporter.Instance.LogTS("experiment quitted");
-            await Delay(500);
-            ((MonoBehaviour)this).Quit();
+            await Timing.Delay(500);
+            this.Quit();
         }
 
 

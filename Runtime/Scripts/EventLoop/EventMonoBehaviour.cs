@@ -86,7 +86,7 @@ namespace UnityEPL {
             object current = null;
             while (true) {
                 try {
-                    if (Time.timeScale != 0) {
+                    if (UnityEngine.Time.timeScale != 0) {
                         if (enumerator.MoveNext() == false) {
                             break;
                         }
@@ -293,7 +293,7 @@ namespace UnityEPL {
         protected async Task DoIn(int millisecondsDelay, Func<Task> func) {
             MonoBehaviourSafetyCheck();
             try {
-                await InterfaceManager.Delay(millisecondsDelay);
+                await Timing.Delay(millisecondsDelay);
                 await func();
             } catch (Exception e) {
                 ErrorNotifier.ErrorTS(e);
@@ -303,7 +303,7 @@ namespace UnityEPL {
         protected async Task DoIn<T>(int millisecondsDelay, Func<T, Task> func, T t) {
             MonoBehaviourSafetyCheck();
             try {
-                await InterfaceManager.Delay(millisecondsDelay);
+                await Timing.Delay(millisecondsDelay);
                 await func(t);
             } catch (Exception e) {
                 ErrorNotifier.ErrorTS(e);
@@ -313,7 +313,7 @@ namespace UnityEPL {
         protected async Task DoIn<T, U>(int millisecondsDelay, Func<T, U, Task> func, T t, U u) {
             MonoBehaviourSafetyCheck();
             try {
-                await InterfaceManager.Delay(millisecondsDelay);
+                await Timing.Delay(millisecondsDelay);
                 await func(t, u);
             } catch (Exception e) {
                 ErrorNotifier.ErrorTS(e);
@@ -323,7 +323,7 @@ namespace UnityEPL {
         protected async Task DoIn<T, U, V>(int millisecondsDelay, Func<T, U, V, Task> func, T t, U u, V v) {
             MonoBehaviourSafetyCheck();
             try {
-                await InterfaceManager.Delay(millisecondsDelay);
+                await Timing.Delay(millisecondsDelay);
                 await func(t, u, v);
             } catch (Exception e) {
                 ErrorNotifier.ErrorTS(e);
@@ -333,7 +333,7 @@ namespace UnityEPL {
         protected async Task DoIn<T, U, V, W>(int millisecondsDelay, Func<T, U, V, W, Task> func, T t, U u, V v, W w) {
             MonoBehaviourSafetyCheck();
             try {
-                await InterfaceManager.Delay(millisecondsDelay);
+                await Timing.Delay(millisecondsDelay);
                 await func(t, u, v, w);
             } catch (Exception e) {
                 ErrorNotifier.ErrorTS(e);
@@ -1550,27 +1550,27 @@ namespace UnityEPL {
         // -------------------------------------
 
         private IEnumerator DelayedEnumeratorCaller(int millisecondsDelay, IEnumerator func) {
-            yield return InterfaceManager.DelayE(millisecondsDelay);
+            yield return Timing.DelayE(millisecondsDelay);
             yield return func;
         }
         private IEnumerator DelayedEnumeratorCaller(int millisecondsDelay, Action func) {
-            yield return InterfaceManager.DelayE(millisecondsDelay);
+            yield return Timing.DelayE(millisecondsDelay);
             func();
         }
         private IEnumerator DelayedEnumeratorCaller<T>(int millisecondsDelay, Action<T> func, T t) {
-            yield return InterfaceManager.DelayE(millisecondsDelay);
+            yield return Timing.DelayE(millisecondsDelay);
             func(t);
         }
         private IEnumerator DelayedEnumeratorCaller<T, U>(int millisecondsDelay, Action<T, U> func, T t, U u) {
-            yield return InterfaceManager.DelayE(millisecondsDelay);
+            yield return Timing.DelayE(millisecondsDelay);
             func(t, u);
         }
         private IEnumerator DelayedEnumeratorCaller<T, U, V>(int millisecondsDelay, Action<T, U, V> func, T t, U u, V v) {
-            yield return InterfaceManager.DelayE(millisecondsDelay);
+            yield return Timing.DelayE(millisecondsDelay);
             func(t, u, v);
         }
         private IEnumerator DelayedEnumeratorCaller<T, U, V, W>(int millisecondsDelay, Action<T, U, V, W> func, T t, U u, V v, W w) {
-            yield return InterfaceManager.DelayE(millisecondsDelay);
+            yield return Timing.DelayE(millisecondsDelay);
             func(t, u, v, w);
         }
 
@@ -1580,7 +1580,7 @@ namespace UnityEPL {
         // -------------------------------------
 
         private IEnumerator RepeatingEnumeratorCaller(CancellationTokenSource cts, int delayMs, int intervalMs, uint? iterations, Func<IEnumerator> func) {
-            if (delayMs != 0) { yield return InterfaceManager.DelayE(delayMs); }
+            if (delayMs != 0) { yield return Timing.DelayE(delayMs); }
 
             uint totalIterations = iterations ?? uint.MaxValue;
             var initTime = Clock.UtcNow;
@@ -1589,11 +1589,11 @@ namespace UnityEPL {
                 yield return MakeEventEnumerator(func());
                 var delayTime = (i + 1) * intervalMs - (Clock.UtcNow - initTime).TotalMilliseconds;
                 if (delayTime < 0) { throw new TimeoutException("DoRepeating execution took longer than the interval assigned"); }
-                yield return InterfaceManager.DelayE((int)delayTime);
+                yield return Timing.DelayE((int)delayTime);
             }
         }
         private IEnumerator RepeatingEnumeratorCaller<T>(CancellationTokenSource cts, int delayMs, int intervalMs, uint? iterations, Func<T, IEnumerator> func, T t) {
-            if (delayMs != 0) { yield return InterfaceManager.DelayE(delayMs); }
+            if (delayMs != 0) { yield return Timing.DelayE(delayMs); }
 
             uint totalIterations = iterations ?? uint.MaxValue;
             var initTime = Clock.UtcNow;
@@ -1602,11 +1602,11 @@ namespace UnityEPL {
                 yield return MakeEventEnumerator(func(t));
                 var delayTime = (i + 1) * intervalMs - (Clock.UtcNow - initTime).TotalMilliseconds;
                 if (delayTime < 0) { throw new TimeoutException("DoRepeating execution took longer than the interval assigned"); }
-                yield return InterfaceManager.DelayE((int)delayTime);
+                yield return Timing.DelayE((int)delayTime);
             }
         }
         private IEnumerator RepeatingEnumeratorCaller<T, U>(CancellationTokenSource cts, int delayMs, int intervalMs, uint? iterations, Func<T, U, IEnumerator> func, T t, U u) {
-            if (delayMs != 0) { yield return InterfaceManager.DelayE(delayMs); }
+            if (delayMs != 0) { yield return Timing.DelayE(delayMs); }
 
             uint totalIterations = iterations ?? uint.MaxValue;
             var initTime = Clock.UtcNow;
@@ -1615,11 +1615,11 @@ namespace UnityEPL {
                 yield return MakeEventEnumerator(func(t, u));
                 var delayTime = (i + 1) * intervalMs - (Clock.UtcNow - initTime).TotalMilliseconds;
                 if (delayTime < 0) { throw new TimeoutException("DoRepeating execution took longer than the interval assigned"); }
-                yield return InterfaceManager.DelayE((int)delayTime);
+                yield return Timing.DelayE((int)delayTime);
             }
         }
         private IEnumerator RepeatingEnumeratorCaller<T, U, V>(CancellationTokenSource cts, int delayMs, int intervalMs, uint? iterations, Func<T, U, V, IEnumerator> func, T t, U u, V v) {
-            if (delayMs != 0) { yield return InterfaceManager.DelayE(delayMs); }
+            if (delayMs != 0) { yield return Timing.DelayE(delayMs); }
 
             uint totalIterations = iterations ?? uint.MaxValue;
             var initTime = Clock.UtcNow;
@@ -1628,11 +1628,11 @@ namespace UnityEPL {
                 yield return MakeEventEnumerator(func(t, u, v));
                 var delayTime = (i + 1) * intervalMs - (Clock.UtcNow - initTime).TotalMilliseconds;
                 if (delayTime < 0) { throw new TimeoutException("DoRepeating execution took longer than the interval assigned"); }
-                yield return InterfaceManager.DelayE((int)delayTime);
+                yield return Timing.DelayE((int)delayTime);
             }
         }
         private IEnumerator RepeatingEnumeratorCaller<T, U, V, W>(CancellationTokenSource cts, int delayMs, int intervalMs, uint? iterations, Func<T, U, V, W, IEnumerator> func, T t, U u, V v, W w) {
-            if (delayMs != 0) { yield return InterfaceManager.DelayE(delayMs); }
+            if (delayMs != 0) { yield return Timing.DelayE(delayMs); }
 
             uint totalIterations = iterations ?? uint.MaxValue;
             var initTime = Clock.UtcNow;
@@ -1641,12 +1641,12 @@ namespace UnityEPL {
                 yield return MakeEventEnumerator(func(t, u, v, w));
                 var delayTime = (i + 1) * intervalMs - (Clock.UtcNow - initTime).TotalMilliseconds;
                 if (delayTime < 0) { throw new TimeoutException("DoRepeating execution took longer than the interval assigned"); }
-                yield return InterfaceManager.DelayE((int)delayTime);
+                yield return Timing.DelayE((int)delayTime);
             }
         }
 
         private IEnumerator RepeatingEnumeratorCaller(CancellationTokenSource cts, int delayMs, int intervalMs, uint? iterations, Action func) {
-            if (delayMs != 0) { yield return InterfaceManager.DelayE(delayMs); }
+            if (delayMs != 0) { yield return Timing.DelayE(delayMs); }
 
             uint totalIterations = iterations ?? uint.MaxValue;
             var initTime = Clock.UtcNow;
@@ -1655,11 +1655,11 @@ namespace UnityEPL {
                 func();
                 var delayTime = (i + 1) * intervalMs - (Clock.UtcNow - initTime).TotalMilliseconds;
                 if (delayTime < 0) { throw new TimeoutException("DoRepeating execution took longer than the interval assigned"); }
-                yield return InterfaceManager.DelayE((int)delayTime);
+                yield return Timing.DelayE((int)delayTime);
             }
         }
         private IEnumerator RepeatingEnumeratorCaller<T>(CancellationTokenSource cts, int delayMs, int intervalMs, uint? iterations, Action<T> func, T t) {
-            if (delayMs != 0) { yield return InterfaceManager.DelayE(delayMs); }
+            if (delayMs != 0) { yield return Timing.DelayE(delayMs); }
 
             uint totalIterations = iterations ?? uint.MaxValue;
             var initTime = Clock.UtcNow;
@@ -1668,11 +1668,11 @@ namespace UnityEPL {
                 func(t);
                 var delayTime = (i + 1) * intervalMs - (Clock.UtcNow - initTime).TotalMilliseconds;
                 if (delayTime < 0) { throw new TimeoutException("DoRepeating execution took longer than the interval assigned"); }
-                yield return InterfaceManager.DelayE((int)delayTime);
+                yield return Timing.DelayE((int)delayTime);
             }
         }
         private IEnumerator RepeatingEnumeratorCaller<T, U>(CancellationTokenSource cts, int delayMs, int intervalMs, uint? iterations, Action<T, U> func, T t, U u) {
-            if (delayMs != 0) { yield return InterfaceManager.DelayE(delayMs); }
+            if (delayMs != 0) { yield return Timing.DelayE(delayMs); }
 
             uint totalIterations = iterations ?? uint.MaxValue;
             var initTime = Clock.UtcNow;
@@ -1681,11 +1681,11 @@ namespace UnityEPL {
                 func(t, u);
                 var delayTime = (i + 1) * intervalMs - (Clock.UtcNow - initTime).TotalMilliseconds;
                 if (delayTime < 0) { throw new TimeoutException("DoRepeating execution took longer than the interval assigned"); }
-                yield return InterfaceManager.DelayE((int)delayTime);
+                yield return Timing.DelayE((int)delayTime);
             }
         }
         private IEnumerator RepeatingEnumeratorCaller<T, U, V>(CancellationTokenSource cts, int delayMs, int intervalMs, uint? iterations, Action<T, U, V> func, T t, U u, V v) {
-            if (delayMs != 0) { yield return InterfaceManager.DelayE(delayMs); }
+            if (delayMs != 0) { yield return Timing.DelayE(delayMs); }
 
             uint totalIterations = iterations ?? uint.MaxValue;
             var initTime = Clock.UtcNow;
@@ -1694,11 +1694,11 @@ namespace UnityEPL {
                 func(t, u, v);
                 var delayTime = (i + 1) * intervalMs - (Clock.UtcNow - initTime).TotalMilliseconds;
                 if (delayTime < 0) { throw new TimeoutException("DoRepeating execution took longer than the interval assigned"); }
-                yield return InterfaceManager.DelayE((int)delayTime);
+                yield return Timing.DelayE((int)delayTime);
             }
         }
         private IEnumerator RepeatingEnumeratorCaller<T, U, V, W>(CancellationTokenSource cts, int delayMs, int intervalMs, uint? iterations, Action<T, U, V, W> func, T t, U u, V v, W w) {
-            if (delayMs != 0) { yield return InterfaceManager.DelayE(delayMs); }
+            if (delayMs != 0) { yield return Timing.DelayE(delayMs); }
 
             uint totalIterations = iterations ?? uint.MaxValue;
             var initTime = Clock.UtcNow;
@@ -1707,7 +1707,7 @@ namespace UnityEPL {
                 func(t, u, v, w);
                 var delayTime = (i + 1) * intervalMs - (Clock.UtcNow - initTime).TotalMilliseconds;
                 if (delayTime < 0) { throw new TimeoutException("DoRepeating execution took longer than the interval assigned"); }
-                yield return InterfaceManager.DelayE((int)delayTime);
+                yield return Timing.DelayE((int)delayTime);
             }
         }
 

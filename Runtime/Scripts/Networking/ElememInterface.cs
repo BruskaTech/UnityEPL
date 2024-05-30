@@ -113,7 +113,7 @@ namespace UnityEPL {
                     throw new TimeoutException($"Single heartbeat time greater than {maxSingleTimeMs}ms");
                 }
 
-                await InterfaceManager.Delay(50 - (int)delay[i]);
+                await Timing.Delay(50 - (int)delay[i]);
             }
 
             // Check average latency

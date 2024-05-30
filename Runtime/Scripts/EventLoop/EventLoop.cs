@@ -43,7 +43,7 @@ namespace UnityEPL {
             // Init threadlocal variables
             DoTS(async () => {
                 startTime = Clock.UtcNow;
-                await InterfaceManager.Delay(1);
+                await Timing.Delay(1);
             });
         }
 
@@ -57,7 +57,7 @@ namespace UnityEPL {
 
         public async void Abort() {
             cts.Cancel();
-            await InterfaceManager.Delay(5000);
+            await Timing.Delay(5000);
             scheduler.Abort();
         }
 
@@ -147,14 +147,14 @@ namespace UnityEPL {
 
         protected void DoInTS(int delayMs, Action func) {
             DoTS(async () => {
-                await InterfaceManager.Delay(delayMs);
+                await Timing.Delay(delayMs);
                 func();
             });
         }
         protected void DoInTS<T>(int delayMs, Action<T> func, T t)
                 where T : struct {
             DoTS(async () => {
-                await InterfaceManager.Delay(delayMs);
+                await Timing.Delay(delayMs);
                 func(t);
             });
         }
@@ -162,7 +162,7 @@ namespace UnityEPL {
                 where T : struct
                 where U : struct {
             DoTS(async () => {
-                await InterfaceManager.Delay(delayMs);
+                await Timing.Delay(delayMs);
                 func(t, u);
             });
         }
@@ -171,7 +171,7 @@ namespace UnityEPL {
                 where U : struct
                 where V : struct {
             DoTS(async () => {
-                await InterfaceManager.Delay(delayMs);
+                await Timing.Delay(delayMs);
                 func(t, u, v);
             });
         }
@@ -181,21 +181,21 @@ namespace UnityEPL {
                 where V : struct
                 where W : struct {
             DoTS(async () => {
-                await InterfaceManager.Delay(delayMs);
+                await Timing.Delay(delayMs);
                 func(t, u, v, w);
             });
         }
 
         protected void DoInTS(int delayMs, Func<Task> func) {
             DoTS(async () => {
-                await InterfaceManager.Delay(delayMs);
+                await Timing.Delay(delayMs);
                 await func();
             });
         }
         protected void DoInTS<T>(int delayMs, Func<T, Task> func, T t)
                 where T : struct {
             DoTS(async () => {
-                await InterfaceManager.Delay(delayMs);
+                await Timing.Delay(delayMs);
                 await func(t);
             });
         }
@@ -203,7 +203,7 @@ namespace UnityEPL {
                 where T : struct
                 where U : struct {
             DoTS(async () => {
-                await InterfaceManager.Delay(delayMs);
+                await Timing.Delay(delayMs);
                 await func(t, u);
             });
         }
@@ -212,7 +212,7 @@ namespace UnityEPL {
                 where U : struct
                 where V : struct {
             DoTS(async () => {
-                await InterfaceManager.Delay(delayMs);
+                await Timing.Delay(delayMs);
                 await func(t, u, v);
             });
         }
@@ -222,7 +222,7 @@ namespace UnityEPL {
                 where V : struct
                 where W : struct {
             DoTS(async () => {
-                await InterfaceManager.Delay(delayMs);
+                await Timing.Delay(delayMs);
                 await func(t, u, v, w);
             });
         }
@@ -235,7 +235,7 @@ namespace UnityEPL {
             }
             CancellationTokenSource cts = new();
             DoTS(async () => {
-                await InterfaceManager.Delay(delayMs);
+                await Timing.Delay(delayMs);
 
                 uint totalIterations = iterations ?? uint.MaxValue;
                 var initTime = Clock.UtcNow;
@@ -243,7 +243,7 @@ namespace UnityEPL {
                     if (cts.IsCancellationRequested) { break; }
                     func();
                     var delayTime = (i + 1) * intervalMs - (Clock.UtcNow - initTime).TotalMilliseconds;
-                    await InterfaceManager.Delay((int)delayTime);
+                    await Timing.Delay((int)delayTime);
                 }
             });
             return cts;
@@ -253,7 +253,7 @@ namespace UnityEPL {
             if (intervalMs <= 0) { throw new ArgumentOutOfRangeException($"intervalMs <= 0 ({intervalMs})"); }
             CancellationTokenSource cts = new();
             DoTS(async (t) => {
-                await InterfaceManager.Delay(delayMs);
+                await Timing.Delay(delayMs);
 
                 uint totalIterations = iterations ?? uint.MaxValue;
                 var initTime = Clock.UtcNow;
@@ -261,7 +261,7 @@ namespace UnityEPL {
                     if (cts.IsCancellationRequested) { break; }
                     func(t);
                     var delayTime = (i + 1) * intervalMs - (Clock.UtcNow - initTime).TotalMilliseconds;
-                    await InterfaceManager.Delay((int)delayTime);
+                    await Timing.Delay((int)delayTime);
                 }
             }, t);
             return cts;
@@ -272,7 +272,7 @@ namespace UnityEPL {
             if (intervalMs <= 0) { throw new ArgumentOutOfRangeException($"intervalMs <= 0 ({intervalMs})"); }
             CancellationTokenSource cts = new();
             DoTS(async (t, u) => {
-                await InterfaceManager.Delay(delayMs);
+                await Timing.Delay(delayMs);
 
                 uint totalIterations = iterations ?? uint.MaxValue;
                 var initTime = Clock.UtcNow;
@@ -280,7 +280,7 @@ namespace UnityEPL {
                     if (cts.IsCancellationRequested) { break; }
                     func(t, u);
                     var delayTime = (i + 1) * intervalMs - (Clock.UtcNow - initTime).TotalMilliseconds;
-                    await InterfaceManager.Delay((int)delayTime);
+                    await Timing.Delay((int)delayTime);
                 }
             }, t, u);
             return cts;
@@ -292,7 +292,7 @@ namespace UnityEPL {
             if (intervalMs <= 0) { throw new ArgumentOutOfRangeException($"intervalMs <= 0 ({intervalMs})"); }
             CancellationTokenSource cts = new();
             DoTS(async (t, u, v) => {
-                await InterfaceManager.Delay(delayMs);
+                await Timing.Delay(delayMs);
 
                 uint totalIterations = iterations ?? uint.MaxValue;
                 var initTime = Clock.UtcNow;
@@ -300,7 +300,7 @@ namespace UnityEPL {
                     if (cts.IsCancellationRequested) { break; }
                     func(t, u, v);
                     var delayTime = (i + 1) * intervalMs - (Clock.UtcNow - initTime).TotalMilliseconds;
-                    await InterfaceManager.Delay((int)delayTime);
+                    await Timing.Delay((int)delayTime);
                 }
             }, t, u, v);
             return cts;
@@ -313,7 +313,7 @@ namespace UnityEPL {
             if (intervalMs <= 0) { throw new ArgumentOutOfRangeException($"intervalMs <= 0 ({intervalMs})"); }
             CancellationTokenSource cts = new();
             DoTS(async (t, u, v, w) => {
-                await InterfaceManager.Delay(delayMs);
+                await Timing.Delay(delayMs);
 
                 uint totalIterations = iterations ?? uint.MaxValue;
                 var initTime = Clock.UtcNow;
@@ -321,7 +321,7 @@ namespace UnityEPL {
                     if (cts.IsCancellationRequested) { break; }
                     func(t, u, v, w);
                     var delayTime = (i + 1) * intervalMs - (Clock.UtcNow - initTime).TotalMilliseconds;
-                    await InterfaceManager.Delay((int)delayTime);
+                    await Timing.Delay((int)delayTime);
                 }
             }, t, u, v, w);
             return cts;
@@ -333,7 +333,7 @@ namespace UnityEPL {
             }
             CancellationTokenSource cts = new();
             DoTS(async () => {
-                await InterfaceManager.Delay(delayMs);
+                await Timing.Delay(delayMs);
 
                 uint totalIterations = iterations ?? uint.MaxValue;
                 var initTime = Clock.UtcNow;
@@ -341,7 +341,7 @@ namespace UnityEPL {
                     if (cts.IsCancellationRequested) { break; }
                     await func();
                     var delayTime = (i + 1) * intervalMs - (Clock.UtcNow - initTime).TotalMilliseconds;
-                    await InterfaceManager.Delay((int)delayTime);
+                    await Timing.Delay((int)delayTime);
                 }
             });
             return cts;
@@ -351,7 +351,7 @@ namespace UnityEPL {
             if (intervalMs <= 0) { throw new ArgumentOutOfRangeException($"intervalMs <= 0 ({intervalMs})"); }
             CancellationTokenSource cts = new();
             DoTS(async (t) => {
-                await InterfaceManager.Delay(delayMs);
+                await Timing.Delay(delayMs);
 
                 uint totalIterations = iterations ?? uint.MaxValue;
                 var initTime = Clock.UtcNow;
@@ -359,7 +359,7 @@ namespace UnityEPL {
                     if (cts.IsCancellationRequested) { break; }
                     await func(t);
                     var delayTime = (i + 1) * intervalMs - (Clock.UtcNow - initTime).TotalMilliseconds;
-                    await InterfaceManager.Delay((int)delayTime);
+                    await Timing.Delay((int)delayTime);
                 }
             }, t);
             return cts;
@@ -370,7 +370,7 @@ namespace UnityEPL {
             if (intervalMs <= 0) { throw new ArgumentOutOfRangeException($"intervalMs <= 0 ({intervalMs})"); }
             CancellationTokenSource cts = new();
             DoTS(async (t, u) => {
-                await InterfaceManager.Delay(delayMs);
+                await Timing.Delay(delayMs);
 
                 uint totalIterations = iterations ?? uint.MaxValue;
                 var initTime = Clock.UtcNow;
@@ -378,7 +378,7 @@ namespace UnityEPL {
                     if (cts.IsCancellationRequested) { break; }
                     await func(t, u);
                     var delayTime = (i + 1) * intervalMs - (Clock.UtcNow - initTime).TotalMilliseconds;
-                    await InterfaceManager.Delay((int)delayTime);
+                    await Timing.Delay((int)delayTime);
                 }
             }, t, u);
             return cts;
@@ -390,7 +390,7 @@ namespace UnityEPL {
             if (intervalMs <= 0) { throw new ArgumentOutOfRangeException($"intervalMs <= 0 ({intervalMs})"); }
             CancellationTokenSource cts = new();
             DoTS(async (t, u, v) => {
-                await InterfaceManager.Delay(delayMs);
+                await Timing.Delay(delayMs);
 
                 uint totalIterations = iterations ?? uint.MaxValue;
                 var initTime = Clock.UtcNow;
@@ -398,7 +398,7 @@ namespace UnityEPL {
                     if (cts.IsCancellationRequested) { break; }
                     await func(t, u, v);
                     var delayTime = (i + 1) * intervalMs - (Clock.UtcNow - initTime).TotalMilliseconds;
-                    await InterfaceManager.Delay((int)delayTime);
+                    await Timing.Delay((int)delayTime);
                 }
             }, t, u, v);
             return cts;
@@ -411,7 +411,7 @@ namespace UnityEPL {
             if (intervalMs <= 0) { throw new ArgumentOutOfRangeException($"intervalMs <= 0 ({intervalMs})"); }
             CancellationTokenSource cts = new();
             DoTS(async (t, u, v, w) => {
-                await InterfaceManager.Delay(delayMs);
+                await Timing.Delay(delayMs);
 
                 uint totalIterations = iterations ?? uint.MaxValue;
                 var initTime = Clock.UtcNow;
@@ -419,7 +419,7 @@ namespace UnityEPL {
                     if (cts.IsCancellationRequested) { break; }
                     await func(t, u, v, w);
                     var delayTime = (i + 1) * intervalMs - (Clock.UtcNow - initTime).TotalMilliseconds;
-                    await InterfaceManager.Delay((int)delayTime);
+                    await Timing.Delay((int)delayTime);
                 }
             }, t, u, v, w);
             return cts;
