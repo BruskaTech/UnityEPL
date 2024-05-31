@@ -235,7 +235,7 @@ namespace UnityEPL {
         }
         protected void ClearTextHelper() {
             textElement.text = "";
-            textElement.enableAutoSizing = false;
+            textElement.enableAutoSizing = true;
             if (eventReporter != null)
                 eventReporter.LogTS("text display cleared", new());
         }
@@ -261,7 +261,7 @@ namespace UnityEPL {
         protected void ClearOnlyHelper() {
             titleElement.text = "";
             textElement.text = "";
-            textElement.enableAutoSizing = false;
+            textElement.enableAutoSizing = true;
             if (eventReporter != null)
                 eventReporter.LogTS("title display cleared", new());
         }
