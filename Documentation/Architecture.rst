@@ -19,15 +19,15 @@ Important Code Structures
 These are the important structures within the code.
 
 =============
-InterfaceManager
+MainManager
 =============
-The InterfaceManager has two main jobs
+The MainManager has two main jobs
 
 #. Hold the objects for all EventLoops
 #. Allow other event loops to interact with unity objects/functions
 
 This is a bit monolithic, but is allows the objects to be held in one consistent object and allows for a clean interface with Unity.
-This also means the InterfaceManager is running on the main unity thread. 
+This also means the MainManager is running on the main unity thread. 
 
 =============
 Events/Tasks
@@ -108,7 +108,7 @@ Some small things that are good to at least read once.
 Important Coding Practices
 *************
 These are the important practices that are critical for all coders to understand and follow.
-- Do NOT use *Task.Delay()*. Instead, use *InterfaceManager.Delay()*. They act exactly the same, but InterfaceManager.Delay knows how to handle the single threaded nature of webgl
+- Do NOT use *Task.Delay()*. Instead, use *Timing.Delay()*. They act exactly the same, but Timing.Delay knows how to handle the single threaded nature of webgl
 
 *************
 Acronyms and Terms
