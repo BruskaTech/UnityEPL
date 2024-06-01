@@ -199,11 +199,13 @@ namespace UnityEPL {
                 await Timing.Delay(100); // This is needed so you don't hear the end of the beep in the recording
 
                 manager.recorder.StartRecording(wavPath);
-                textDisplayer.DisplayText("microphone test recording", "<color=red>Recording...</color>");
+                var coloredTestRec = LangStrings.GenForAllLangs("<color=red>") + LangStrings.MicrophoneTestRecording() + LangStrings.GenForAllLangs("</color>");
+                textDisplayer.DisplayText("microphone test recording", coloredTestRec);
                 await Timing.Delay(Config.micTestDurationMs);
                 var clip = manager.recorder.StopRecording();
 
-                textDisplayer.DisplayText("microphone test playing", "<color=green>Playing...</color>");
+                var coloredTestPlay = LangStrings.GenForAllLangs("<color=green>") + LangStrings.MicrophoneTestPlaying() + LangStrings.GenForAllLangs("</color>");
+                textDisplayer.DisplayText("microphone test playing", coloredTestPlay);
                 manager.playback.Play(clip);
                 await Timing.Delay(Config.micTestDurationMs);
             }, "repeat mic test", LangStrings.RepeatMicTest(), new());

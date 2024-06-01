@@ -25,20 +25,16 @@ namespace UnityEPL {
     public static partial class LangStrings {
         public static Language Language {get; private set;} = Language.English;
 
-        public static LangString Blank() { 
+        public static LangString GenForAllLangs(string val) {
             Dictionary<Language, string> strings = new();
             foreach (Language lang in Enum.GetValues(typeof(Language))) {
-                strings.Add(lang, "");
+                strings.Add(lang, val);
             }
             return new(strings);
         }
-        public static LangString NewLine() { 
-            Dictionary<Language, string> strings = new();
-            foreach (Language lang in Enum.GetValues(typeof(Language))) {
-                strings.Add(lang, "\n");
-            }
-            return new(strings);
-        }
+
+        public static LangString Blank() { return GenForAllLangs(""); }
+        public static LangString NewLine() { return GenForAllLangs("\n"); }
 
         public static LangString ShowInstructionVideo() { return new( new() {
             { Language.English, "Press any key to show instruction video" },
@@ -55,8 +51,15 @@ namespace UnityEPL {
         public static LangString SlideControlLine() { return new( new() {
             { Language.English, "\n\n(go backward) '<-'   |   '->' (go forward) " },
         }); }
+        public static LangString MicrophoneTestRecording() { return new( new() {
+            { Language.English, "Recording..." },
+        }); }
+        public static LangString MicrophoneTestPlaying() { return new( new() {
+            { Language.English, "Playing..." },
+        }); }
 
-        // Move these to MyLanguageSwitcher.cs
+
+        // TODO: JPB: (needed) Move these LangStrings to MyLanguageSwitcher.cs
         public static LangString RepeatSpatialRecallSelection() { return new( new() {
             { Language.English, "Do you want to select this location?\n\nPress Y to continue, \n Press N to select another spot." },
         }); }

@@ -106,10 +106,10 @@ namespace UnityEPL {
         /// </summary>
         /// <param name="description">Description.</param>
         /// <param name="text">Text.</param>
-        public void DisplayText(string description, string text, float textFontSize = 0) {
+        public void DisplayText(string description, LangString text, float textFontSize = 0) {
             Do(DisplayTextHelper, description.ToNativeText(), text.ToNativeText(), textFontSize);
         }
-        public void DisplayTextTS(string description, string text, float textFontSize = 0) {
+        public void DisplayTextTS(string description, LangString text, float textFontSize = 0) {
             DoTS(DisplayTextHelper, description.ToNativeText(), text.ToNativeText(), textFontSize);
         }
         protected void DisplayTextHelper(NativeText description, NativeText text, float textFontSize) {
@@ -138,10 +138,10 @@ namespace UnityEPL {
             text.Dispose();
         }
 
-        public void DisplayTitle(string description, string title) {
+        public void DisplayTitle(string description, LangString title) {
             Do(DisplayTitleHelper, description.ToNativeText(), title.ToNativeText());
         }
-        public void DisplayTitleTS(string description, string title) {
+        public void DisplayTitleTS(string description, LangString title) {
             DoTS(DisplayTitleHelper, description.ToNativeText(), title.ToNativeText());
         }
         protected void DisplayTitleHelper(NativeText description, NativeText title) {
