@@ -17,6 +17,7 @@ using Unity.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Linq;
 
 namespace UnityEPL {
 
@@ -167,7 +168,7 @@ namespace UnityEPL {
         public void Display(string description, string title, string text, float textFontSize = 0) {
             Do(DisplayHelper, description.ToNativeText(), title.ToNativeText(), text.ToNativeText(), textFontSize);
         }
-        public void DisplayTS(string description, string title, string text, float textFontSize = 0) {
+        public void DisplayTS(string description, LangString title, LangString text, float textFontSize = 0) {
             DoTS(DisplayHelper, description.ToNativeText(), title.ToNativeText(), text.ToNativeText(), textFontSize);
         }
         protected void DisplayHelper(NativeText description, NativeText title, NativeText text, float textFontSize) {
@@ -202,7 +203,7 @@ namespace UnityEPL {
             text.Dispose();
         }
 
-        public async Task DisplayForTask(string description, string title, string text, float textFontSize, CancellationToken ct, Func<CancellationToken, Task> func) {
+        public async Task DisplayForTask(string description, LangString title, LangString text, float textFontSize, CancellationToken ct, Func<CancellationToken, Task> func) {
             // Remember the current state
             var activeOld = IsActive();
             var titleOld = titleElement.text;
@@ -210,7 +211,7 @@ namespace UnityEPL {
             var textAutoSizingOld = textElement.enableAutoSizing;
 
             // Display the new text and wait for the task to complete
-            Display(description, title, text, textFontSize);
+            Display(description, title.ToString(), text.ToString(), textFontSize);
             await func(ct);
 
             // Put the old state back
@@ -219,7 +220,7 @@ namespace UnityEPL {
             textElement.enableAutoSizing = textAutoSizingOld;
             if (!activeOld) { Hide(); }
         }
-        public async Task DisplayForTask(string description, string title, string text, CancellationToken ct, Func<CancellationToken, Task> func) {
+        public async Task DisplayForTask(string description, LangString title, LangString text, CancellationToken ct, Func<CancellationToken, Task> func) {
             await DisplayForTask(description, title, text, 0, ct, func);
         }
 
@@ -347,11 +348,13 @@ namespace UnityEPL {
             return keyCode;
         }
 
-        public float FindMaxFittingFontSize(List<string> strings) {
-            return DoGet(FindMaxFittingFontSizeHelper, strings.ToNativeArray());
+        public float FindMaxFittingFontSize(List<LangString> strings) {
+            List<string> strs = strings.Select(str => str.ToString()).ToList();
+            return DoGet(FindMaxFittingFontSizeHelper, strs.ToNativeArray());
         }
-        public async Task<float> FindMaxFittingFontSizeTS(List<string> strings) {
-            return await DoGetTS(FindMaxFittingFontSizeHelper, strings.ToNativeArray());
+        public async Task<float> FindMaxFittingFontSizeTS(List<LangString> strings) {
+            List<string> strs = strings.Select(str => str.ToString()).ToList();
+            return await DoGetTS(FindMaxFittingFontSizeHelper, strs.ToNativeArray());
         }
         protected float FindMaxFittingFontSizeHelper(NativeArray<NativeText> strings) {
             // Remember the current state

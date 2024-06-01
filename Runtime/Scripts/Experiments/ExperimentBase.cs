@@ -32,10 +32,10 @@ namespace UnityEPL {
 
     public readonly struct TextSlide {
         public readonly string description;
-        public readonly string title;
-        public readonly string text;
+        public readonly LangString title;
+        public readonly LangString text;
 
-        public TextSlide(string description, string title, string text) {
+        public TextSlide(string description, LangString title, LangString text) {
             this.description = description;
             this.title = title;
             this.text = text;
@@ -127,7 +127,7 @@ namespace UnityEPL {
                     await inputManager.GetKeyTS(new List<KeyCode>() { KeyCode.Q });
                     // Pause everything and ask if they want to quit
                     manager.PauseTS(true);
-                }, "Experiment quit", $"Do you want to quit\nPress Y to Quit, N to Resume.", new(), unpausable: true);
+                }, "experiment quit", LangStrings.ExperimentQuit(), new(), unpausable: true);
                 
                 UnityEngine.Debug.Log("QUITTING!");
                 manager.QuitTS();
@@ -143,14 +143,14 @@ namespace UnityEPL {
         protected virtual void SendRamulatorStateMsg(HostPcStateMsg state, bool stateToggle, Dictionary<string, object> extraData = null) {
             // Do nothing by default
         }
-        protected async Task RepeatUntilYes(Func<CancellationToken, Task> preFunc, string description, string displayText, CancellationToken ct, Func<bool, CancellationToken, Task> postFunc = null, bool unpausable = false) {
+        protected async Task RepeatUntilYes(Func<CancellationToken, Task> preFunc, string description, LangString displayText, CancellationToken ct, Func<bool, CancellationToken, Task> postFunc = null, bool unpausable = false) {
             var repeat = true;
             while (repeat && !ct.IsCancellationRequested) {
                 await preFunc(ct);
                 ct.ThrowIfCancellationRequested();
 
                 SendRamulatorStateMsg(HostPcStateMsg.WAITING(), true);
-                await textDisplayer.DisplayForTask(description, "", displayText, ct, async (CancellationToken ct) => {
+                await textDisplayer.DisplayForTask(description, LangStrings.Blank(), displayText, ct, async (CancellationToken ct) => {
                     var keyCode = await inputManager.WaitForKey(new List<KeyCode>() { KeyCode.Y, KeyCode.N }, unpausable: unpausable, ct: ct);
                     repeat = keyCode != KeyCode.Y;
                 });
@@ -160,14 +160,14 @@ namespace UnityEPL {
                 if (postFunc != null) { await postFunc(repeat, ct); }
             }
         }
-        protected async Task RepeatUntilNo(Func<CancellationToken, Task> preFunc, string description, string displayText, CancellationToken ct, Func<bool, CancellationToken, Task> postFunc = null, bool unpausable = false) {
+        protected async Task RepeatUntilNo(Func<CancellationToken, Task> preFunc, string description, LangString displayText, CancellationToken ct, Func<bool, CancellationToken, Task> postFunc = null, bool unpausable = false) {
             var repeat = true;
             while (repeat && !ct.IsCancellationRequested) {
                 await preFunc(ct);
                 ct.ThrowIfCancellationRequested();
 
                 SendRamulatorStateMsg(HostPcStateMsg.WAITING(), true);
-                await textDisplayer.DisplayForTask(description, "", displayText, ct, async (CancellationToken ct) => {
+                await textDisplayer.DisplayForTask(description, LangStrings.Blank(), displayText, ct, async (CancellationToken ct) => {
                     var keyCode = await inputManager.WaitForKey(new List<KeyCode>() { KeyCode.Y, KeyCode.N }, unpausable: unpausable, ct: ct);
                     repeat = keyCode != KeyCode.N;
                 });
@@ -185,7 +185,7 @@ namespace UnityEPL {
 
                 manager.videoControl.SetVideo(Config.introductionVideo, true);
                 await manager.videoControl.PlayVideo();
-            }, "repeat introduction video", "Press Y to continue, \n Press N to replay instructional video.", new());
+            }, "repeat introduction video", LangStrings.RepeatIntroductionVideo(), new());
         }
         protected virtual async Task MicrophoneTest() {
             await RepeatUntilYes(async (CancellationToken ct) => {
@@ -206,7 +206,7 @@ namespace UnityEPL {
                 textDisplayer.DisplayText("microphone test playing", "<color=green>Playing...</color>");
                 manager.playback.Play(clip);
                 await Timing.Delay(Config.micTestDurationMs);
-            }, "repeat mic test", "Did you hear the recording ? \n(Y = Continue / N = Try Again).", new());
+            }, "repeat mic test", LangStrings.RepeatMicTest(), new());
         }
         protected virtual async Task QuitPrompt() {
             SendRamulatorStateMsg(HostPcStateMsg.WAITING(), true);
@@ -230,11 +230,8 @@ namespace UnityEPL {
                 "Press any key to continue to start.");
         }
         protected async Task DisplayTextSlides(List<TextSlide> textSlides) {
-            // setup
-            var slideControlStr = "\n\n(go backward) '<-'   |   '->' (go forward) ";
-
             // Resize based on all text item sizes
-            var strList = textSlides.Select(item => item.text + slideControlStr).ToList();
+            var strList = textSlides.Select(item => item.text + LangStrings.SlideControlLine()).ToList();
             var fontSize = (int)textDisplayer.FindMaxFittingFontSize(strList);
             // UnityEngine.Debug.Log("Font size: " + fontSize);
 
@@ -242,7 +239,7 @@ namespace UnityEPL {
             var keys = new List<KeyCode>() { KeyCode.LeftArrow, KeyCode.RightArrow };
             for (int i = 0; i < textSlides.Count; ++i) {
                 var slide = textSlides[i];
-                var text = slide.text + slideControlStr;
+                var text = slide.text + LangStrings.SlideControlLine();
                 await textDisplayer.DisplayForTask(slide.description, slide.title, text, new(), async (CancellationToken ct) => {
                     var keycode = await inputManager.WaitForKey(keys, ct: ct);
                     if (keycode == KeyCode.LeftArrow && i > 0) { i -= 2; }
