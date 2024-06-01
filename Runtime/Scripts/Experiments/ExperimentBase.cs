@@ -196,7 +196,7 @@ namespace UnityEPL {
 
                 manager.lowBeep.Play();
                 await DoWaitWhile(() => manager.lowBeep.isPlaying);
-                await Timing.Delay(100); // This is needed so you don't hear the end of the beep
+                await Timing.Delay(100); // This is needed so you don't hear the end of the beep in the recording
 
                 manager.recorder.StartRecording(wavPath);
                 textDisplayer.DisplayText("microphone test recording", "<color=red>Recording...</color>");
