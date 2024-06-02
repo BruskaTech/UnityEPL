@@ -165,7 +165,7 @@ namespace UnityEPL {
             title.Dispose();
         }
 
-        public void Display(string description, string title, string text, float textFontSize = 0) {
+        public void Display(string description, LangString title, LangString text, float textFontSize = 0) {
             Do(DisplayHelper, description.ToNativeText(), title.ToNativeText(), text.ToNativeText(), textFontSize);
         }
         public void DisplayTS(string description, LangString title, LangString text, float textFontSize = 0) {
@@ -211,7 +211,7 @@ namespace UnityEPL {
             var textAutoSizingOld = textElement.enableAutoSizing;
 
             // Display the new text and wait for the task to complete
-            Display(description, title.ToString(), text.ToString(), textFontSize);
+            Display(description, title, text, textFontSize);
             await func(ct);
 
             // Put the old state back
@@ -339,12 +339,11 @@ namespace UnityEPL {
         protected async Task<KeyCode> PressAnyKeyHelper(NativeText description, NativeText displayTitle, NativeText displayText) {
             _ = manager.hostPC?.SendStateMsgTS(HostPcStateMsg.WAITING());
             // TODO: JPB: (needed) Add Ramulator to match this
-            Display($"{description.ToString()} (press any key prompt)", displayTitle.ToString(), displayText.ToString());
+            var displayTitleStr = LangStrings.GenForCurrLang(displayTitle.ToStringAndDispose());
+            var displayTextStr = LangStrings.GenForCurrLang(displayText.ToStringAndDispose());
+            Display($"{description.ToStringAndDispose()} (press any key prompt)", displayTitleStr, displayTextStr);
             var keyCode = await InputManager.Instance.GetKeyTS();
             Clear();
-            description.Dispose();
-            displayTitle.Dispose();
-            displayText.Dispose();
             return keyCode;
         }
 

@@ -21,10 +21,25 @@ namespace UnityEPL {
         Spanish = 2,
     }
 
-    // Only make arguments that would not change per language (ex: numbers, file paths, subject id)
+    // Maybe change name to LangStrs or LangCtrl and chage LangString to LangStr
     public static partial class LangStrings {
         public static Language Language {get; private set;} = Language.English;
 
+        /// <summary>
+        /// Set the current language for the LangStrings
+        /// </summary>
+        /// <param name="lang">The language to set</param>
+        public static void SetLanguage(Language lang) {
+            Language = lang;
+        }
+
+        /// <summary>
+        /// Generate a LangString for all languages
+        /// ONLY USE THIS FUNCTION IF YOU ARE SURE THE STRING IS THE SAME FOR ALL LANGUAGES
+        /// Examples of this would be: numbers, file paths, subject ids, rich text formatting, etc.
+        /// </summary>
+        /// <param name="val">The string value for all languages</param>
+        /// <returns>A LangString with the value for all languages</returns>
         public static LangString GenForAllLangs(string val) {
             Dictionary<Language, string> strings = new();
             foreach (Language lang in Enum.GetValues(typeof(Language))) {
@@ -32,10 +47,27 @@ namespace UnityEPL {
             }
             return new(strings);
         }
+        
+        /// <summary>
+        /// Generate a LangString for the current language
+        /// ONLY USE THIS FUNCTION IF YOU ARE SURE THE STRING IS THE SAME FOR ALL LANGUAGES
+        /// Examples of this would be: numbers, file paths, subject ids, rich text formatting, etc.
+        /// </summary>
+        /// <param name="val">The string value for the current language</param>
+        /// <returns>A LangString with the value for the current language</returns>
+        public static LangString GenForCurrLang(string val) {
+            return new(new() { { Language, val } });
+        }
 
-        public static LangString Blank() { return GenForAllLangs(""); }
-        public static LangString NewLine() { return GenForAllLangs("\n"); }
+        public static LangString Blank() { return GenForCurrLang(""); }
+        public static LangString NewLine() { return GenForCurrLang("\n"); }
 
+        public static LangString Error() { return new( new() {
+            { Language.English, "Error" },
+        }); }
+        public static LangString Warning() { return new( new() {
+            { Language.English, "Warning" },
+        }); }
         public static LangString ShowInstructionVideo() { return new( new() {
             { Language.English, "Press any key to show instruction video" },
         }); }
@@ -73,6 +105,19 @@ namespace UnityEPL {
         }); }
         public static LangString MicrophoneTestPlaying() { return new( new() {
             { Language.English, "Playing..." },
+        }); }
+        public static LangString SubjectSessionConfirmation(string subject, int sessionNum, string experimentName) { return new( new() {
+            { Language.English, $"Running {subject} in session {sessionNum} of {experimentName}."
+                + "\nPress Y to continue, N to quit." },
+        }); }
+        public static LangString VerbalRecallDisplay() { return new( new() {
+            { Language.English, "*****" },
+        }); }
+        public static LangString ElememConnection() { return new( new() {
+            { Language.English, "Waiting for Elemem connection..." },
+        }); }
+        public static LangString RamulatorConnection() { return new( new() {
+            { Language.English, "Waiting for Ramulator connection..." },
         }); }
 
 
@@ -148,6 +193,14 @@ namespace UnityEPL {
             + $"You got {incorrectRecalls} out of {totalRecalls} incorrect.\n"
             + "\nPress any key to continue." },
         }); }
+        public static LangString RepeatPracticeQuestion() { return new( new() {
+            { Language.English, "Would you like to do another practice?"
+                + "\n\nPress Y to do another practice round."
+                + "\nPress N to continue to the real task." },
+        }); }
+        public static LangString SessionEnd() { return new( new() {
+            { Language.English, "Yay! Session Complete." },
+        }); }
     }
 
     public class LangString {
@@ -166,15 +219,32 @@ namespace UnityEPL {
             }
             return strings[language];
         }
+        public static implicit operator string(LangString str) {
+            return str.ToString();
+        }
         public NativeText ToNativeText() {
             return ToString().ToNativeText();
         }
-
         public static LangString operator +(LangString str1, LangString str2) {
             Dictionary<Language, string> strings = new();
             foreach (Language lang in Enum.GetValues(typeof(Language))) {
                 if (str1.strings.ContainsKey(lang) && str2.strings.ContainsKey(lang)) {
                     strings.Add(lang, str1.strings[lang] + str2.strings[lang]);
+                }
+            }
+            return new(strings);
+        }
+
+        /// <summary>
+        /// Color the text of the LangString using RichText
+        /// </summary>
+        /// <param name="color">The color to use in RichText format</param>
+        /// <returns>A new LangString with the color applied</returns>
+        public LangString Color(string color) {
+            Dictionary<Language, string> strings = new();
+            foreach (Language lang in Enum.GetValues(typeof(Language))) {
+                if (this.strings.ContainsKey(lang)) {
+                    strings.Add(lang, $"<color={color}>{this.strings[lang]}</color>");
                 }
             }
             return new(strings);

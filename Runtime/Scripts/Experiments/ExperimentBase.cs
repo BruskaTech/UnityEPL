@@ -199,12 +199,12 @@ namespace UnityEPL {
                 await Timing.Delay(100); // This is needed so you don't hear the end of the beep in the recording
 
                 manager.recorder.StartRecording(wavPath);
-                var coloredTestRec = LangStrings.GenForAllLangs("<color=red>") + LangStrings.MicrophoneTestRecording() + LangStrings.GenForAllLangs("</color>");
+                var coloredTestRec = LangStrings.MicrophoneTestRecording().Color("red");
                 textDisplayer.DisplayText("microphone test recording", coloredTestRec);
                 await Timing.Delay(Config.micTestDurationMs);
                 var clip = manager.recorder.StopRecording();
 
-                var coloredTestPlay = LangStrings.GenForAllLangs("<color=green>") + LangStrings.MicrophoneTestPlaying() + LangStrings.GenForAllLangs("</color>");
+                var coloredTestPlay = LangStrings.MicrophoneTestPlaying().Color("green");
                 textDisplayer.DisplayText("microphone test playing", coloredTestPlay);
                 manager.playback.Play(clip);
                 await Timing.Delay(Config.micTestDurationMs);
@@ -214,9 +214,8 @@ namespace UnityEPL {
             SendRamulatorStateMsg(HostPcStateMsg.WAITING(), true);
             manager.hostPC?.SendStateMsgTS(HostPcStateMsg.WAITING());
 
-            textDisplayer.Display("subject/session confirmation", "",
-                $"Running {Config.subject} in session {Config.sessionNum} of {Config.experimentName}." +
-                "\nPress Y to continue, N to quit.");
+            textDisplayer.Display("subject/session confirmation", LangStrings.Blank(),
+                LangStrings.SubjectSessionConfirmation(Config.subject, Config.sessionNum.Value, Config.experimentName));
             var keyCode = await inputManager.GetKeyTS(new List<KeyCode>() { KeyCode.Y, KeyCode.N });
 
             SendRamulatorStateMsg(HostPcStateMsg.WAITING(), false);

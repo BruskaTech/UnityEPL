@@ -38,7 +38,7 @@ namespace UnityEPL {
                     errorSet = true;
                     var msg = e.Message == "" ? e.GetType().Name : e.Message;
                     msg += "\n\nPress Q to quit";
-                    TextDisplayer.Instance.Display("Error", "<color=red><b>Error</b></color>", msg);
+                    TextDisplayer.Instance.Display("Error", LangStrings.Error().Color("red"), LangStrings.GenForCurrLang(msg));
                     Debug.Log($"Error: {msg}\n{e.StackTrace}");
                 }
                 EventReporter.Instance.LogTS("Error", new() {
@@ -69,7 +69,7 @@ namespace UnityEPL {
             Instance.DoTS(Instance.WarningHelper, exception.Message.ToNativeText(), exception.StackTrace.ToNativeText());
         }
         protected void WarningHelper(NativeText message, NativeText stackTrace) {
-            TextDisplayer.Instance.Display("Warning", "<color=yellow><b>Warning</b></color>", message.ToString());
+            TextDisplayer.Instance.Display("Warning", LangStrings.Warning().Color("yellow"), LangStrings.GenForCurrLang(message.ToString()));
             Debug.Log($"Warning: {message}\n{stackTrace}");
             EventReporter.Instance.LogTS("Warning", new() {
                 { "message", message.ToString() },
