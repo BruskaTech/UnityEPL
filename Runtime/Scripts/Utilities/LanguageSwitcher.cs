@@ -39,6 +39,23 @@ namespace UnityEPL {
         public static LangString ShowInstructionVideo() { return new( new() {
             { Language.English, "Press any key to show instruction video" },
         }); }
+        public static LangString MicrophoneTestTitle() { return new( new() {
+            { Language.English, "Microphone Test" },
+        }); }
+        public static LangString MicrophoneTest() { return new( new() {
+            { Language.English, "Press any key to record a sound after the beep." },
+        }); }
+        public static LangString ConfirmStart() { return new( new() {
+            { Language.English, "Please let the experimenter know if you have any questions about the task.\n\n" +
+                "If you think you understand, please explain the task to the experimenter in your own words.\n\n" +
+                "Press any key to continue to start." },
+        }); }
+        public static LangString PauseBeforeTrial(uint trialNum) { return new( new() {
+            { Language.English, $"Press any key to start Trial {trialNum}." },
+        }); }
+        public static LangString PauseBeforePracticeTrial(uint trialNum) { return new( new() {
+            { Language.English, $"Press any key to start Practice Trial {trialNum}." },
+        }); }
         public static LangString ExperimentQuit() { return new( new() {
             { Language.English, "Do you want to quit\nPress Y to Quit, N to Resume." },
         }); }
@@ -119,7 +136,18 @@ namespace UnityEPL {
         public static LangString IntroSlidesAskStaff() { return new( new() {
             { Language.English, "Please ask the staff now if you have any questions." },
         }); }
-
+        public static LangString DisplayScoresCongratulations() { return new( new() {
+            { Language.English, "Congratulations! You got half of the spatial recalls correct!\n" },
+        }); }
+        public static LangString DisplayScoresEncoragement() { return new( new() {
+            { Language.English, "It's very hard! Keep trying!\n" },
+        }); }
+        public static LangString DisplayScoresRecall(int correctRecalls, int closeRecalls, int incorrectRecalls, int totalRecalls) { return new( new() {
+            { Language.English, $"You got {correctRecalls} out of {totalRecalls} correct.\n"
+            + $"You got {closeRecalls} out of {totalRecalls} close.\n"
+            + $"You got {incorrectRecalls} out of {totalRecalls} incorrect.\n"
+            + "\nPress any key to continue." },
+        }); }
     }
 
     public class LangString {

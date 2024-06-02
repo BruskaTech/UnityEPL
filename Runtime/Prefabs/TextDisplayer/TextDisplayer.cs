@@ -324,16 +324,16 @@ namespace UnityEPL {
         /// <param name="displayText"></param>
         /// <param name="displayText"></param>
         /// <returns></returns>
-        public Task<KeyCode> PressAnyKey(string description, string displayText) {
-            return PressAnyKey(description, "", displayText);
+        public Task<KeyCode> PressAnyKey(string description, LangString displayText) {
+            return PressAnyKey(description, LangStrings.Blank(), displayText);
         }
-        public Task<KeyCode> PressAnyKeyTS(string description, string displayText) {
-            return PressAnyKeyTS(description, "", displayText);
+        public Task<KeyCode> PressAnyKeyTS(string description, LangString displayText) {
+            return PressAnyKeyTS(description, LangStrings.Blank(), displayText);
         }
-        public Task<KeyCode> PressAnyKey(string description, string displayTitle, string displayText) {
+        public Task<KeyCode> PressAnyKey(string description, LangString displayTitle, LangString displayText) {
             return DoGet(PressAnyKeyHelper, description.ToNativeText(), displayTitle.ToNativeText(), displayText.ToNativeText());
         }
-        public Task<KeyCode> PressAnyKeyTS(string description, string displayTitle, string displayText) {
+        public Task<KeyCode> PressAnyKeyTS(string description, LangString displayTitle, LangString displayText) {
             return DoGetTS(PressAnyKeyHelper, description.ToNativeText(), displayTitle.ToNativeText(), displayText.ToNativeText());
         }
         protected async Task<KeyCode> PressAnyKeyHelper(NativeText description, NativeText displayTitle, NativeText displayText) {

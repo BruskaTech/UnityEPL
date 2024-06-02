@@ -181,7 +181,7 @@ namespace UnityEPL {
         // Pre-Trial States
         protected virtual async Task Introduction() {
             await RepeatUntilYes(async (CancellationToken ct) => {
-                await textDisplayer.PressAnyKey("show instruction video", "Press any key to show instruction video");
+                await textDisplayer.PressAnyKey("show instruction video", LangStrings.ShowInstructionVideo());
 
                 manager.videoControl.SetVideo(Config.introductionVideo, true);
                 await manager.videoControl.PlayVideo();
@@ -189,7 +189,7 @@ namespace UnityEPL {
         }
         protected virtual async Task MicrophoneTest() {
             await RepeatUntilYes(async (CancellationToken ct) => {
-                await textDisplayer.PressAnyKey("microphone test prompt", "Microphone Test", "Press any key to record a sound after the beep.");
+                await textDisplayer.PressAnyKey("microphone test prompt", LangStrings.MicrophoneTestTitle(), LangStrings.MicrophoneTest());
 
                 string wavPath = System.IO.Path.Combine(manager.fileManager.SessionPath(), "microphone_test_"
                         + Clock.UtcNow.ToString("yyyy-MM-dd_HH_mm_ss") + ".wav");
@@ -226,10 +226,7 @@ namespace UnityEPL {
             }
         }
         protected virtual async Task ConfirmStart() {
-            await textDisplayer.PressAnyKey("confirm start",
-                "Please let the experimenter know if you have any questions about the task.\n\n" +
-                "If you think you understand, please explain the task to the experimenter in your own words.\n\n" +
-                "Press any key to continue to start.");
+            await textDisplayer.PressAnyKey("confirm start", LangStrings.ConfirmStart());
         }
         protected async Task DisplayTextSlides(List<TextSlide> textSlides) {
             // Resize based on all text item sizes
