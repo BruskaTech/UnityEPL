@@ -212,6 +212,7 @@ namespace UnityEPL {
 
             // Display the new text and wait for the task to complete
             Display(description, title, text, textFontSize);
+            await Awaitable.NextFrameAsync();
             await func(ct);
 
             // Put the old state back
