@@ -67,21 +67,16 @@ namespace UnityEPL {
             ExperimentActive.SetActive(false);
         }
 
-        private bool endTrials = false;
-        private bool endPracticeTrials = false;
-        protected uint trialNum { get; private set; } = 0;
-        protected bool inPracticeTrials { get; private set; } = false;
+        protected uint TrialNum { get; private set; } = 0;
+        protected bool InPracticeTrials { get; private set; } = false;
 
         protected abstract Task PreTrialStates();
         protected abstract Task PracticeTrialStates();
         protected abstract Task TrialStates();
         protected abstract Task PostTrialStates();
 
-        protected void EndTrials() {
-            endTrials = true;
-        }
-        protected void EndPracticeTrials() {
-            endPracticeTrials = true;
+        protected void EndCurrentTrials() {
+            throw new EndTrialsException();
         }
 
         protected void Run() {
@@ -90,17 +85,24 @@ namespace UnityEPL {
         protected async Task RunHelper() {
             DoTS(ExperimentQuit);
             await PreTrialStates();
-            inPracticeTrials = true;
-            while (!endPracticeTrials) {
-                trialNum++;
-                await PracticeTrialStates();
-            }
-            trialNum = 0;
-            inPracticeTrials = false;
-            while (!endTrials) {
-                trialNum++;
-                await TrialStates();
-            }
+
+            InPracticeTrials = true;
+            try {
+                while (true) {
+                    TrialNum++;
+                    await PracticeTrialStates();
+                }
+            } catch (EndTrialsException) {} // do nothing
+
+            TrialNum = 0;
+            InPracticeTrials = false;
+            try {
+                while (true) {
+                    TrialNum++;
+                    await TrialStates();
+                }
+            } catch (EndTrialsException) {} // do nothing
+
             await PostTrialStates();
             manager.QuitTS();
         }
