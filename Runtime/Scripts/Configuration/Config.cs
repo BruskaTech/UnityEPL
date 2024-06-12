@@ -230,7 +230,7 @@ namespace UnityEPL {
             string expConfigNotLoaded = IsExperimentConfigSetup() ? "" : "\nNote: Experiment config not loaded yet.";
             var exception = new MissingFieldException("Missing Config Setting " + setting + "." + expConfigNotLoaded);
             ErrorNotifier.ErrorTS(exception);
-            throw exception;
+            throw exception; // never called
         }
 
         private static void SetSetting<T>(string setting, T value) {

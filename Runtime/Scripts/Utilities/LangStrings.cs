@@ -82,10 +82,10 @@ namespace UnityEPL {
                 "If you think you understand, please explain the task to the experimenter in your own words.\n\n" +
                 "Press any key to continue to start." },
         }); }
-        public static LangString PauseBeforeTrial(uint trialNum) { return new( new() {
+        public static LangString TrialPrompt(uint trialNum) { return new( new() {
             { Language.English, $"Press any key to start Trial {trialNum}." },
         }); }
-        public static LangString PauseBeforePracticeTrial(uint trialNum) { return new( new() {
+        public static LangString PracticeTrialPrompt(uint trialNum) { return new( new() {
             { Language.English, $"Press any key to start Practice Trial {trialNum}." },
         }); }
         public static LangString ExperimentQuit() { return new( new() {
