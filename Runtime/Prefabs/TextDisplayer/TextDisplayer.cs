@@ -325,17 +325,17 @@ namespace UnityEPL {
         /// <param name="displayText"></param>
         /// <param name="displayText"></param>
         /// <returns></returns>
-        public Task<KeyCode> PressAnyKey(string description, LangString displayText) {
-            return PressAnyKey(description, LangStrings.Blank(), displayText);
+        public async Task<KeyCode> PressAnyKey(string description, LangString displayText) {
+            return await PressAnyKey(description, LangStrings.Blank(), displayText);
         }
-        public Task<KeyCode> PressAnyKeyTS(string description, LangString displayText) {
-            return PressAnyKeyTS(description, LangStrings.Blank(), displayText);
+        public async Task<KeyCode> PressAnyKeyTS(string description, LangString displayText) {
+            return await PressAnyKeyTS(description, LangStrings.Blank(), displayText);
         }
-        public Task<KeyCode> PressAnyKey(string description, LangString displayTitle, LangString displayText) {
-            return DoGet(PressAnyKeyHelper, description.ToNativeText(), displayTitle.ToNativeText(), displayText.ToNativeText());
+        public async Task<KeyCode> PressAnyKey(string description, LangString displayTitle, LangString displayText) {
+            return await DoGet(PressAnyKeyHelper, description.ToNativeText(), displayTitle.ToNativeText(), displayText.ToNativeText());
         }
-        public Task<KeyCode> PressAnyKeyTS(string description, LangString displayTitle, LangString displayText) {
-            return DoGetTS(PressAnyKeyHelper, description.ToNativeText(), displayTitle.ToNativeText(), displayText.ToNativeText());
+        public async Task<KeyCode> PressAnyKeyTS(string description, LangString displayTitle, LangString displayText) {
+            return await DoGetTS(PressAnyKeyHelper, description.ToNativeText(), displayTitle.ToNativeText(), displayText.ToNativeText());
         }
         protected async Task<KeyCode> PressAnyKeyHelper(NativeText description, NativeText displayTitle, NativeText displayText) {
             _ = manager.hostPC?.SendStateMsgTS(HostPcStateMsg.WAITING());

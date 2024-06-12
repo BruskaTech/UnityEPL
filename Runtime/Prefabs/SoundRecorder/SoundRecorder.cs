@@ -76,8 +76,8 @@ namespace UnityEPL {
         public AudioClip StopRecording() {
             return DoGet(StopRecordingHelper);
         }
-        public Task<AudioClip> StopRecordingTS() {
-            return DoGetRelaxedTS(StopRecordingHelper);
+        public async Task<AudioClip> StopRecordingTS() {
+            return await DoGetRelaxedTS(StopRecordingHelper);
         }
         protected AudioClip StopRecordingHelper() {
             if (!isRecording) {
@@ -100,8 +100,8 @@ namespace UnityEPL {
         public float[] GetLastSamples(int howManySamples) {
             return DoGet(GetLastSamplesHelper, howManySamples);
         }
-        public Task<float[]> GetLastSamplesTS(int howManySamples) {
-            return DoGetRelaxedTS(GetLastSamplesHelper, howManySamples);
+        public async Task<float[]> GetLastSamplesTS(int howManySamples) {
+            return await DoGetRelaxedTS(GetLastSamplesHelper, howManySamples);
         }
         public float[] GetLastSamplesHelper(int howManySamples) {
             float[] lastSamples = new float[howManySamples];

@@ -813,8 +813,8 @@ namespace UnityEPLTests {
             }
 
 #if EVENTMONOBEHAVIOR_TASK_OPERATORS
-            public Task<int> GetMutexValTaskMB() {
-                return DoGet<int>(GetMutexValTaskMBHelper);
+            public async Task<int> GetMutexValTaskMB() {
+                return await DoGet<int>(GetMutexValTaskMBHelper);
             }
             protected async Task<int> GetMutexValTaskMBHelper() {
                 await Timing.Delay(1);
@@ -822,23 +822,23 @@ namespace UnityEPLTests {
             }
 #endif // EVENTMONOBEHAVIOR_TASK_OPERATORS
 
-            public Task<int> GetMutexValEnum() {
-                return DoGetTS<int>(GetMutexValEnumHelper);
+            public async Task<int> GetMutexValEnum() {
+                return await DoGetTS<int>(GetMutexValEnumHelper);
             }
             protected IEnumerator<int> GetMutexValEnumHelper() {
                 yield return mutex.Get();
             }
 
-            public Task<int> GetMutexValFunc() {
-                return DoGetTS<int>(GetMutexValFuncHelper);
+            public async Task<int> GetMutexValFunc() {
+                return await DoGetTS<int>(GetMutexValFuncHelper);
             }
             protected int GetMutexValFuncHelper() {
                 return mutex.Get();
             }
 
 #if EVENTMONOBEHAVIOR_TASK_OPERATORS
-            public Task<int> GetMutexValTask() {
-                return DoGetTS<int>(GetMutexValTaskHelper);
+            public async Task<int> GetMutexValTask() {
+                return await DoGetTS<int>(GetMutexValTaskHelper);
             }
             protected async Task<int> GetMutexValTaskHelper() {
                 await Timing.Delay(1);
@@ -846,8 +846,8 @@ namespace UnityEPLTests {
             }
 #endif // EVENTMONOBEHAVIOR_TASK_OPERATORS
 
-            public Task<int> GetMutexValManualTriggerEnum() {
-                return DoGetManualTriggerTS<int>(GetMutexValManualTriggerEnumHelper);
+            public async Task<int> GetMutexValManualTriggerEnum() {
+                return await DoGetManualTriggerTS<int>(GetMutexValManualTriggerEnumHelper);
             }
             protected IEnumerator GetMutexValManualTriggerEnumHelper(TaskCompletionSource<int> tcs) {
                 tcs.SetResult(mutex.Get());
@@ -855,16 +855,16 @@ namespace UnityEPLTests {
             }
 
 #if EVENTMONOBEHAVIOR_MANUAL_RESULT_SET
-            public Task<int> GetMutexValManualTriggerFunc() {
-                return DoGetManualTriggerTS<int>(GetMutexValManualTriggerFuncHelper);
+            public async Task<int> GetMutexValManualTriggerFunc() {
+                return await DoGetManualTriggerTS<int>(GetMutexValManualTriggerFuncHelper);
             }
             protected void GetMutexValManualTriggerFuncHelper(TaskCompletionSource<int> tcs) {
                 tcs.SetResult(mutex.Get());
             }
 
 #if EVENTMONOBEHAVIOR_TASK_OPERATORS
-            public Task<int> GetMutexValManualTriggerTask() {
-                return DoGetManualTriggerTS<int>(GetMutexValManualTriggerTaskHelper);
+            public async Task<int> GetMutexValManualTriggerTask() {
+                return await DoGetManualTriggerTS<int>(GetMutexValManualTriggerTaskHelper);
             }
             protected Task GetMutexValManualTriggerTaskHelper(TaskCompletionSource<int> tcs) {
                 tcs.SetResult(mutex.Get());
@@ -916,8 +916,8 @@ namespace UnityEPLTests {
             }
 
 #if EVENTMONOBEHAVIOR_TASK_OPERATORS
-            public Task DelayedIncAndWaitTaskMB(int millisecondsDelay) {
-                return DoWaitFor(DelayedIncAndWaitTaskMBHelper, millisecondsDelay);
+            public async Task DelayedIncAndWaitTaskMB(int millisecondsDelay) {
+                await DoWaitFor(DelayedIncAndWaitTaskMBHelper, millisecondsDelay);
             }
             protected async Task DelayedIncAndWaitTaskMBHelper(int millisecondsDelay) {
                 await Timing.Delay(1000);
@@ -999,8 +999,8 @@ namespace UnityEPLTests {
             }
 
 #if EVENTMONOBEHAVIOR_TASK_OPERATORS
-            public Task DelayedIncAndWaitTask(int millisecondsDelay) {
-                return DoWaitForTS(DelayedIncAndWaitTaskHelper, millisecondsDelay);
+            public async Task DelayedIncAndWaitTask(int millisecondsDelay) {
+                await DoWaitForTS(DelayedIncAndWaitTaskHelper, millisecondsDelay);
             }
             protected async Task DelayedIncAndWaitTaskHelper(int millisecondsDelay) {
                 await Timing.Delay(1000);
@@ -1010,8 +1010,8 @@ namespace UnityEPLTests {
 
 
 #if EVENTMONOBEHAVIOR_MANUAL_RESULT_SET
-            public Task DelayedIncAndWaitManualTriggerEnum(int millisecondsDelay) {
-                return DoWaitForManualTriggerTS(DelayedIncAndWaitManualTriggerEnumHelper, millisecondsDelay);
+            public async Task DelayedIncAndWaitManualTriggerEnum(int millisecondsDelay) {
+                await DoWaitForManualTriggerTS(DelayedIncAndWaitManualTriggerEnumHelper, millisecondsDelay);
             }
             protected IEnumerator DelayedIncAndWaitManualTriggerEnumHelper(TaskCompletionSource<bool> tcs, int millisecondsDelay) {
                 yield return Timing.DelayE(1000);
@@ -1019,8 +1019,8 @@ namespace UnityEPLTests {
                 tcs.SetResult(true);
             }
 
-            public Task DelayedIncAndWaitManualTriggerAct(int millisecondsDelay) {
-                return DoWaitForManualTriggerTS(DelayedIncAndWaitManualTriggerActHelper, millisecondsDelay);
+            public async Task DelayedIncAndWaitManualTriggerAct(int millisecondsDelay) {
+                await DoWaitForManualTriggerTS(DelayedIncAndWaitManualTriggerActHelper, millisecondsDelay);
             }
             protected void DelayedIncAndWaitManualTriggerActHelper(TaskCompletionSource<bool> tcs, int millisecondsDelay) {
                 var start = Clock.UtcNow;
@@ -1030,8 +1030,8 @@ namespace UnityEPLTests {
             }
 
 #if EVENTMONOBEHAVIOR_TASK_OPERATORS
-            public Task DelayedIncAndWaitManualTriggerTask(int millisecondsDelay) {
-                return DoWaitForManualTriggerTS(DelayedIncAndWaitManualTriggerTaskHelper, millisecondsDelay);
+            public async Task DelayedIncAndWaitManualTriggerTask(int millisecondsDelay) {
+                await DoWaitForManualTriggerTS(DelayedIncAndWaitManualTriggerTaskHelper, millisecondsDelay);
             }
             protected async Task DelayedIncAndWaitManualTriggerTaskHelper(TaskCompletionSource<bool> tcs, int millisecondsDelay) {
                 await Timing.Delay(1000);

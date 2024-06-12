@@ -99,11 +99,11 @@ namespace UnityEPL {
             videoPath.Dispose();
         }
 
-        public Task PlayVideo() {
-            return DoWaitFor(PlayVideoHelper);
+        public async Task PlayVideo() {
+            await DoWaitFor(PlayVideoHelper);
         }
-        public Task PlayVideoTS() {
-            return DoWaitForTS(PlayVideoHelper);
+        public async Task PlayVideoTS() {
+            await DoWaitForTS(PlayVideoHelper);
         }
         protected async Task PlayVideoHelper() {
             videoFinished = new();
