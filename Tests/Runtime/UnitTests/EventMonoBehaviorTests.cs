@@ -866,9 +866,9 @@ namespace UnityEPLTests {
             public async Task<int> GetMutexValManualTriggerTask() {
                 return await DoGetManualTriggerTS<int>(GetMutexValManualTriggerTaskHelper);
             }
-            protected Task GetMutexValManualTriggerTaskHelper(TaskCompletionSource<int> tcs) {
+            protected async Task GetMutexValManualTriggerTaskHelper(TaskCompletionSource<int> tcs) {
                 tcs.SetResult(mutex.Get());
-                return tcs.Task;
+                await tcs.Task;
             }
 #endif // EVENTMONOBEHAVIOR_TASK_OPERATORS
 #endif // EVENTMONOBEHAVIOR_MANUAL_RESULT_SET

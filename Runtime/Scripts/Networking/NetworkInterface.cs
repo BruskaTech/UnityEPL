@@ -140,8 +140,8 @@ namespace UnityEPL {
         protected virtual Task<JObject> ReceiveTS(string type) {
             return ReceiveJsonTS(type);
         }
-        protected Task<JObject> ReceiveJsonTS(string type) {
-            return DoGetRelaxedTS(ReceiveJsonHelper, type.ToNativeText());
+        protected async Task<JObject> ReceiveJsonTS(string type) {
+            return await DoGetRelaxedTS(ReceiveJsonHelper, type.ToNativeText());
         }
         private Task<JObject> ReceiveJsonHelper(NativeText type) {
             if (tcpClient == null || stream == null) { 
@@ -183,8 +183,8 @@ namespace UnityEPL {
             return sendTask.Timeout(1000, cts, timeoutMessage);
         }
 
-        protected Task<JObject> SendAndReceiveTS(string sendType, string receiveType) {
-            return SendAndReceive(sendType, null, receiveType);
+        protected async Task<JObject> SendAndReceiveTS(string sendType, string receiveType) {
+            return await SendAndReceive(sendType, null, receiveType);
         }
         protected async Task<JObject> SendAndReceive(string sendType, Dictionary<string, object> sendData, string receiveType) {
             var recvTask = ReceiveTS(receiveType);
