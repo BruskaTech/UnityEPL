@@ -802,11 +802,11 @@ namespace UnityEPL {
         // DoWaitForTS
         // -------------------------------------
 
-        private Task DoWaitForHelper(IEnumerator enumerator) {
+        private async Task DoWaitForHelper(IEnumerator enumerator) {
 
             var tcs = new TaskCompletionSource<bool>();
             manager.events.Enqueue(TaskTrigger(tcs, enumerator));
-            return tcs.Task;
+            await tcs.Task;
         }
 
         protected async Task DoWaitForTS(Func<IEnumerator> func) {
@@ -1024,12 +1024,12 @@ namespace UnityEPL {
         // DoGetTS
         // -------------------------------------
 
-        private Task<Z> DoGetHelper<Z>(IEnumerator enumerator)
+        private async Task<Z> DoGetHelper<Z>(IEnumerator enumerator)
                 where Z : struct {
             AssertBlittable<Z>();
             var tcs = new TaskCompletionSource<Z>();
             manager.events.Enqueue(TaskTrigger(tcs, enumerator));
-            return tcs.Task;
+            return await tcs.Task;
         }
 
         protected async Task<Z> DoGetTS<Z>(Func<IEnumerator> func)

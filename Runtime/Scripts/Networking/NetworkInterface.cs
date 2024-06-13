@@ -143,7 +143,7 @@ namespace UnityEPL {
         protected async Task<JObject> ReceiveJsonTS(string type) {
             return await DoGetRelaxedTS(ReceiveJsonHelper, type.ToNativeText());
         }
-        private Task<JObject> ReceiveJsonHelper(NativeText type) {
+        private async Task<JObject> ReceiveJsonHelper(NativeText type) {
             if (tcpClient == null || stream == null) { 
                 throw new Exception($"Tried to receive {this.GetType().Name} network message \"{type}\" before connecting.");
             }
@@ -151,7 +151,7 @@ namespace UnityEPL {
             receiveRequests.Add((type.ToString(), tcs));
             var timeoutMessage = $"{this.GetType().Name} didn't receive message after waiting {receiveTimeoutMs}ms";
             type.Dispose();
-            return tcs.Task.Timeout(receiveTimeoutMs, new(), timeoutMessage);
+            return await tcs.Task.Timeout(receiveTimeoutMs, new(), timeoutMessage);
         }
 
         // TODO: JPB: (needed) Make NetworkInterface::Send use Mutex
@@ -159,9 +159,9 @@ namespace UnityEPL {
             await SendJsonTS(type, data);
         }
         protected async Task SendJsonTS(string type, Dictionary<string, object> data = null) {
-            await DoWaitForTS(() => { SendJsonHelper(type, data); });
+            await DoWaitForTS(async () => { await SendJsonHelper(type, data); });
         }
-        private Task SendJsonHelper(string type, Dictionary<string, object> data = null) {
+        private async Task SendJsonHelper(string type, Dictionary<string, object> data = null) {
             if (tcpClient == null || stream == null) { 
                 ErrorNotifier.ErrorTS(new Exception($"Tried to send {this.GetType().Name} network message \"{type}\" before connecting."));
             }
@@ -180,7 +180,7 @@ namespace UnityEPL {
             }
 
             ReportNetworkMessageTS(type, message, point.time, true);
-            return sendTask.Timeout(1000, cts, timeoutMessage);
+            await sendTask.Timeout(1000, cts, timeoutMessage);
         }
 
         protected async Task<JObject> SendAndReceiveTS(string sendType, string receiveType) {

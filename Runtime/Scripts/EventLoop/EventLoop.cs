@@ -647,11 +647,11 @@ namespace UnityEPL {
             cts.Token.ThrowIfCancellationRequested();
             await Task.Factory.StartNew(TaskErrorHandler(func), cts.Token, TaskCreationOptions.DenyChildAttach, scheduler);
         }
-        //private Task<Task> StartTask(Func<Task> func) {
-        //    return Task.Factory.StartNew(TaskErrorHandler(func), cts.Token, TaskCreationOptions.DenyChildAttach, scheduler);
+        //private async Task<Task> StartTask(Func<Task> func) {
+        //    return await Task.Factory.StartNew(TaskErrorHandler(func), cts.Token, TaskCreationOptions.DenyChildAttach, scheduler);
         //}
-        //private Task<Task<Z>> StartTask<Z>(Func<Task<Z>> func) {
-        //    return Task.Factory.StartNew(TaskErrorHandler(func), cts.Token, TaskCreationOptions.DenyChildAttach, scheduler);
+        //private async Task<Task<Z>> StartTask<Z>(Func<Task<Z>> func) {
+        //    return await Task.Factory.StartNew(TaskErrorHandler(func), cts.Token, TaskCreationOptions.DenyChildAttach, scheduler);
         //}
         private async Task<Z> StartTask<Z>(Func<Z> func) {
             cts.Token.ThrowIfCancellationRequested();
@@ -663,13 +663,13 @@ namespace UnityEPL {
             StackTrace stackTrace = Config.debugEventLoopExtendedStackTrace ? new(true) : null;
             await Task.Factory.StartNew(TaskErrorHandler(func, stackTrace), cts.Token, TaskCreationOptions.DenyChildAttach, scheduler);
         }
-        //private Task<Task> StartTask(Func<Task> func) {
+        //private async Task<Task> StartTask(Func<Task> func) {
         //    StackTrace stackTrace = Config.debugEventLoopExtendedStackTrace ? new(true) : null;
-        //    return Task.Factory.StartNew(TaskErrorHandler(func), cts.Token);
+        //    return await Task.Factory.StartNew(TaskErrorHandler(func), cts.Token);
         //}
-        //private Task<Task<Z>> StartTask<Z>(Func<Task<Z>> func) {
+        //private async Task<Task<Z>> StartTask<Z>(Func<Task<Z>> func) {
         //    StackTrace stackTrace = Config.debugEventLoopExtendedStackTrace ? new(true) : null;
-        //    return Task.Factory.StartNew(TaskErrorHandler(func, stackTrace), cts.Token);
+        //    return await Task.Factory.StartNew(TaskErrorHandler(func, stackTrace), cts.Token);
         //}
         private async Task<Z> StartTask<Z>(Func<Z> func) {
             cts.Token.ThrowIfCancellationRequested();

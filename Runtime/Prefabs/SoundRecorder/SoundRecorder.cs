@@ -124,8 +124,8 @@ namespace UnityEPL {
         private AudioClip AudioClipFromDatapath(string datapath) {
             return DoGet(AudioClipFromDatapathHelper, datapath.ToNativeText());
         }
-        private Task<AudioClip> AudioClipFromDatapathTS(string datapath) {
-            return DoGetRelaxedTS(AudioClipFromDatapathHelper, datapath.ToNativeText());
+        private async Task<AudioClip> AudioClipFromDatapathTS(string datapath) {
+            return await DoGetRelaxedTS(AudioClipFromDatapathHelper, datapath.ToNativeText());
         }
         protected AudioClip AudioClipFromDatapathHelper(NativeText datapath) {
             string url = "file:///" + datapath.ToString();
