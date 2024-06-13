@@ -343,7 +343,7 @@ namespace UnityEPL {
             var displayTitleStr = LangStrings.GenForCurrLang(displayTitle.ToStringAndDispose());
             var displayTextStr = LangStrings.GenForCurrLang(displayText.ToStringAndDispose());
             Display($"{description.ToStringAndDispose()} (press any key prompt)", displayTitleStr, displayTextStr);
-            var keyCode = await InputManager.Instance.GetKeyTS();
+            var keyCode = await InputManager.Instance.WaitForKey();
             Clear();
             return keyCode;
         }

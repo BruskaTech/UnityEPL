@@ -160,40 +160,61 @@ namespace UnityEPL {
             return retKey;
         }
 
-
-        public async Task<KeyCode> WaitForKeyTS() {
-            return await GetKeyTS(null, false);
+        
+        /// <summary>
+        /// Waits for any key to be pressed and returns the KeyCode of the pressed key.
+        /// A thread safe version of the WaitForKey function. 
+        /// </summary>
+        /// <param name="unpausable">Indicates whether the keypress is effected by game pauses.</param>
+        /// <returns>A task that returns the KeyCode of the pressed key.</returns>
+        [Obsolete("This is a bad paradigm. Make something in your experiment than handles it instead.")]
+        public async Task<KeyCode> WaitForKeyTS(bool unpausable = false) {
+            TimeSpan dur = DateTime.MaxValue - Clock.UtcNow - TimeSpan.FromDays(1);
+            return (await WaitForKeyTS(dur, unpausable)).Value;
         }
-        public async Task<KeyCode?> WaitForKeyTS(TimeSpan duration) {
+        /// <summary>
+        /// Waits for any key to be pressed within a specified duration.
+        /// </summary>
+        /// <param name="duration">The maximum duration to wait for the key press.</param>
+        /// <param name="unpausable">Indicates whether the keypress is effected by game pauses.</param>
+        /// <returns>The KeyCode of the key that was pressed, or null if the duration was exceeded.</returns>
+        [Obsolete("This is a bad paradigm. Make something in your experiment than handles it instead.")]
+        public async Task<KeyCode?> WaitForKeyTS(TimeSpan duration, bool unpausable = false) {
             try {
-                return await GetKeyTS(duration);
+                return await DoGetManualTriggerTS<NativeArray<KeyCode>, TimeSpan, Bool, KeyCode>(WaitForKeyHelper, new(), duration, unpausable);
             } catch (TaskCanceledException) {
                 return null;
-            } 
+            }
         }
-        public async Task<KeyCode> WaitForKeyTS(List<KeyCode> keyCodes) {
-            return await GetKeyTS(keyCodes);
+        /// <summary>
+        /// Waits for one of the provided keys to be pressed and returns the KeyCode of the pressed key.
+        /// A thread safe version of the WaitForKey function.
+        /// </summary>
+        /// <param name="keyCodes">The list of keys to wait for.</param>
+        /// <param name="unpausable">Indicates whether the keypress is effected by game pauses.</param>
+        /// <returns>A task that returns the KeyCode of the pressed key.</returns>
+        [Obsolete("This is a bad paradigm. Make something in your experiment than handles it instead.")]
+        public async Task<KeyCode> WaitForKeyTS(List<KeyCode> keyCodes, bool unpausable = false) {
+            TimeSpan dur = DateTime.MaxValue - Clock.UtcNow - TimeSpan.FromDays(1);
+            return (await WaitForKeyTS(keyCodes, dur, unpausable)).Value;
         }
-        public async Task<KeyCode?> WaitForKeyTS(List<KeyCode> keyCodes, TimeSpan duration) {
-            try {
-                return await GetKeyTS(keyCodes, duration);
-            } catch (TaskCanceledException) {
-                return null;
-            } 
-        }
-
-        // TODO: JPB: (refactor) Make GetKeyTS protected (only use WaitForKeyTS)
-        // These should actually be named GetKeyDownTS
-        public async Task<KeyCode> GetKeyTS(TimeSpan? duration = null, bool unpausable = false) {
-            TimeSpan dur = duration ?? DateTime.MaxValue - Clock.UtcNow - TimeSpan.FromDays(1);
-            return await DoGetManualTriggerTS<NativeArray<KeyCode>, TimeSpan, Bool, KeyCode>(GetKeyHelper, new(), dur, unpausable);
-        }
-        public async Task<KeyCode> GetKeyTS(List<KeyCode> keyCodes, TimeSpan? duration = null, bool unpausable = false) {
-            TimeSpan dur = duration ?? DateTime.MaxValue - Clock.UtcNow - TimeSpan.FromDays(1);
+        /// <summary>
+        /// Waits for one of the provided keys to be pressed within a specified duration.
+        /// </summary>
+        /// <param name="keyCodes">The list of keys to wait for.</param>
+        /// <param name="duration">The maximum duration to wait for the key press.</param>
+        /// <param name="unpausable">Indicates whether the keypress is effected by game pauses.</param>
+        /// <returns>The KeyCode of the key that was pressed, or null if the duration was exceeded.</returns>
+        [Obsolete("This is a bad paradigm. Make something in your experiment than handles it instead.")]
+        public async Task<KeyCode?> WaitForKeyTS(List<KeyCode> keyCodes, TimeSpan duration, bool unpausable = false) {
             var nativeKeyCodes = keyCodes.ToNativeArray(AllocatorManager.Persistent);
-            return await DoGetManualTriggerTS<NativeArray<KeyCode>, TimeSpan, Bool, KeyCode>(GetKeyHelper, nativeKeyCodes, dur, unpausable);
+            try {
+                return await DoGetManualTriggerTS<NativeArray<KeyCode>, TimeSpan, Bool, KeyCode>(WaitForKeyHelper, nativeKeyCodes, duration, unpausable);
+            } catch (TaskCanceledException) {
+                return null;
+            } 
         }
-        protected IEnumerator GetKeyHelper(TaskCompletionSource<KeyCode> tcs, NativeArray<KeyCode> keyCodes, TimeSpan duration, Bool unpausable) {
+        protected IEnumerator WaitForKeyHelper(TaskCompletionSource<KeyCode> tcs, NativeArray<KeyCode> keyCodes, TimeSpan duration, Bool unpausable) {
             var keyCodesList = keyCodes.ToList();
             foreach (KeyCode vKey in System.Enum.GetValues(typeof(KeyCode))) {
                 if (Input.GetKeyDown(vKey) && (keyCodesList.Count == 0 || keyCodesList.Exists(x => x == vKey))) {

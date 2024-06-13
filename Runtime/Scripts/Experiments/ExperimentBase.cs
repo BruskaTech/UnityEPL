@@ -126,7 +126,7 @@ namespace UnityEPL {
                     manager.PauseTS(false);
                     // Wait for the quit key
                     // TODO: JPB: Figure out how to add a Cancellation Token to GetKeyTS
-                    await inputManager.GetKeyTS(new List<KeyCode>() { KeyCode.Q });
+                    await inputManager.WaitForKey(new List<KeyCode>() { KeyCode.Q });
                     // Pause everything and ask if they want to quit
                     manager.PauseTS(true);
                 }, "experiment quit", LangStrings.ExperimentQuit(), new(), unpausable: true);
@@ -218,7 +218,7 @@ namespace UnityEPL {
 
             textDisplayer.Display("subject/session confirmation", LangStrings.Blank(),
                 LangStrings.SubjectSessionConfirmation(Config.subject, Config.sessionNum.Value, Config.experimentName));
-            var keyCode = await inputManager.GetKeyTS(new List<KeyCode>() { KeyCode.Y, KeyCode.N });
+            var keyCode = await inputManager.WaitForKey(new List<KeyCode>() { KeyCode.Y, KeyCode.N });
 
             SendRamulatorStateMsg(HostPcStateMsg.WAITING(), false);
 
