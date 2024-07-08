@@ -73,6 +73,10 @@ namespace UnityEPL {
             return await DoGet<Bool, CancellationToken, KeyCode>(WaitForKeyHelper, unpausable, ct);
         }
         protected async Task<KeyCode> WaitForKeyHelper(Bool unpausable, CancellationToken ct) {
+            // This first await is needed when WaitForKey is used in a tight loop.
+            // If it is, then it will repeatedly be checked over and over on the same frame, causing the program to hang
+            // It does add a one frame delay, but if you are using an await in the first place, you are probably not concerned about that
+            await Awaitable.NextFrameAsync();
             while (!ct.IsCancellationRequested) {
                 if (!unpausable && Time.timeScale == 0) { continue; }
                 foreach (KeyCode vKey in Enum.GetValues(typeof(KeyCode))) {
