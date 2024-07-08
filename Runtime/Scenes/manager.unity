@@ -166,9 +166,6 @@ MonoBehaviour:
   videoControl: {fileID: 0}
   textDisplayer: {fileID: 0}
   recorder: {fileID: 0}
-  eventReporter: {fileID: 0}
-  inputReporter: {fileID: 0}
-  uiReporter: {fileID: 0}
   highBeep: {fileID: 0}
   lowBeep: {fileID: 0}
   lowerBeep: {fileID: 0}
@@ -556,8 +553,16 @@ PrefabInstance:
       value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 224376631077867538, guid: e6672ad97ff294adba0eb53a61d1502f, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.94
+      objectReference: {fileID: 0}
+    - target: {fileID: 224376631077867538, guid: e6672ad97ff294adba0eb53a61d1502f, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 224376631077867538, guid: e6672ad97ff294adba0eb53a61d1502f, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.06
       objectReference: {fileID: 0}
     - target: {fileID: 224376631077867538, guid: e6672ad97ff294adba0eb53a61d1502f, type: 3}
       propertyPath: m_AnchorMin.y
@@ -573,11 +578,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 224477386948825626, guid: e6672ad97ff294adba0eb53a61d1502f, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.9
+      value: 0.94
       objectReference: {fileID: 0}
     - target: {fileID: 224477386948825626, guid: e6672ad97ff294adba0eb53a61d1502f, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0.1
+      value: 0.06
       objectReference: {fileID: 0}
     - target: {fileID: 224477386948825626, guid: e6672ad97ff294adba0eb53a61d1502f, type: 3}
       propertyPath: m_AnchorMin.y
