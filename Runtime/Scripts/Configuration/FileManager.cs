@@ -81,13 +81,24 @@ namespace UnityEPL {
 
 #nullable enable
         public string? SessionPath() {
-             if (Config.sessionNum == null) {
+            if (Config.sessionNum == null) {
                 // return null and don't use ErrorTS because of EventReporter::DoWrite
                 return null;
             }
 
             string dir = ParticipantPath();
             dir = Path.Combine(dir, "session_" + Config.sessionNum);
+            return dir;
+        }
+
+        public string? PriorSessionPath() {
+            if (Config.sessionNum == null) {
+                // return null and don't use ErrorTS because of EventReporter::DoWrite
+                return null;
+            }
+
+            string dir = ParticipantPath();
+            dir = Path.Combine(dir, "session_" + (Config.sessionNum - 1));
             return dir;
         }
 #nullable disable

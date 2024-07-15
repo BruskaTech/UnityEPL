@@ -31,7 +31,7 @@ namespace UnityEPL {
         /// This is a thread-local random number generator that is seeded once per thread with a function call.
         /// It is useful for generating reproducible random numbers
         /// </summary>
-        public static System.Random StableRnd { get { 
+        public static System.Random StableRnd { get {
             return stableRnd?.Value ?? throw new InvalidOperationException("StableRnd seed not set for this thread. Call SetStableRndSeed() first.");
         } }
 
