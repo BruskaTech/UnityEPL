@@ -365,7 +365,7 @@ namespace UnityEPL {
 
             // Find the max fitting font size
             gameObject.SetActive(true);
-            var size = UnityUtilities.FindMaxFittingFontSize(strings.ToListAndDispose(), textElement);
+            var size = textElement.FindMaxFittingFontSize(strings.ToListAndDispose());
 
             // Put the old state back
             titleElement.text = titleOld;

@@ -18,6 +18,7 @@ using Newtonsoft.Json;
 using System.Linq.Expressions;
 using System.Diagnostics;
 using System.Reflection;
+using TMPro;
 
 namespace UnityEPL {
     public static class IEnumerable {
@@ -362,5 +363,34 @@ namespace UnityEPL {
             BinaryExpression assign = Expression.Assign(Expression.Field(target, stackTraceStringField), stackTraceString);
             return Expression.Lambda<Func<Exception, StackTrace, Exception>>(Expression.Block(assign, target), target, stack).Compile();
         })();
+    }
+
+    public static class TextMeshProUGUIExtensions {
+        public static void Bold(this TextMeshProUGUI textComponent, bool boldOn) {
+            if (boldOn) {
+                textComponent.fontStyle |= FontStyles.Bold;
+            } else {
+                textComponent.fontStyle &= ~FontStyles.Bold;
+            }
+        }
+
+        public static float FindMaxFittingFontSize(this TextMeshProUGUI textComponent, List<string> strings) {
+            string oldText = textComponent.text;
+            bool oldAutosizing = textComponent.enableAutoSizing;
+            textComponent.enableAutoSizing = true;
+            float maxFontSize = 300;
+            foreach (var str in strings) {
+                textComponent.text = str;
+                textComponent.ForceMeshUpdate();
+                if (textComponent.fontSize < maxFontSize) {
+                    maxFontSize = textComponent.fontSize;
+                }
+            }
+            textComponent.enableAutoSizing = oldAutosizing;
+            textComponent.text = oldText;
+            textComponent.ForceMeshUpdate();
+
+            return maxFontSize;
+        }
     }
 }
