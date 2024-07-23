@@ -84,6 +84,7 @@ namespace UnityEPL {
         }
         protected async Task RunHelper() {
             DoTS(ExperimentQuit);
+            DoTS(ExperimentPause);
             await PreTrialStates();
 
             InPracticeTrials = true;
@@ -125,14 +126,28 @@ namespace UnityEPL {
                     // Resume since they don't want to quit (or haven't tried yet)
                     manager.PauseTS(false);
                     // Wait for the quit key
-                    // TODO: JPB: Figure out how to add a Cancellation Token to GetKeyTS
-                    await inputManager.WaitForKey(new List<KeyCode>() { KeyCode.Q });
+                    await inputManager.WaitForKey(new List<KeyCode>() { KeyCode.Q }, unpausable: true, ct: ct);
                     // Pause everything and ask if they want to quit
                     manager.PauseTS(true);
                 }, "experiment quit", LangStrings.ExperimentQuit(), new(), unpausable: true);
                 
                 UnityEngine.Debug.Log("QUITTING!");
                 manager.QuitTS();
+            }
+        }
+
+        // TODO: JPB: (needed) (bug) There is an issue where the experiment hangs if you pause, then quit (but hit no), then unpause again
+        protected virtual async void ExperimentPause() {
+            if (Config.pauseAnytime) {
+                var pauseKeyCodes = new List<KeyCode>() { KeyCode.P };
+                await RepeatForever(async (CancellationToken ct) => {
+                    // Resume since they don't want to quit (or haven't tried yet)
+                    manager.PauseTS(false);
+                    // Wait for the pause key
+                    await inputManager.WaitForKey(pauseKeyCodes, ct: ct);
+                    // Pause everything and ask if they want to quit
+                    manager.PauseTS(true);
+                }, "experiment pause", LangStrings.ExperimentPaused(), pauseKeyCodes, new(), unpausable: true);
             }
         }
 
@@ -177,6 +192,21 @@ namespace UnityEPL {
                 ct.ThrowIfCancellationRequested();
 
                 if (postFunc != null) { await postFunc(repeat, ct); }
+            }
+        }
+        protected async Task RepeatForever(Func<CancellationToken, Task> preFunc, string description, LangString displayText, List<KeyCode> keyCodes, CancellationToken ct, Func<CancellationToken, Task> postFunc = null, bool unpausable = false) {
+            while (!ct.IsCancellationRequested) {
+                await preFunc(ct);
+                ct.ThrowIfCancellationRequested();
+
+                SendRamulatorStateMsg(HostPcStateMsg.WAITING(), true);
+                await textDisplayer.DisplayForTask(description, LangStrings.Blank(), displayText, ct, async (CancellationToken ct) => {
+                    var keyCode = await inputManager.WaitForKey(keyCodes, unpausable: unpausable, ct: ct);
+                });
+                SendRamulatorStateMsg(HostPcStateMsg.WAITING(), false);
+                ct.ThrowIfCancellationRequested();
+
+                if (postFunc != null) { await postFunc(ct); }
             }
         }
 

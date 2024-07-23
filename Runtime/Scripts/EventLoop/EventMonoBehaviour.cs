@@ -82,11 +82,11 @@ namespace UnityEPL {
         /// <param name="enumerator">Iterator function to run</param>
         /// <returns>An enumerator that runs the given enumerator</returns>
         /// /// TODO: JPB: (needed) Implement pausing in MakeEventEnumerator
-        private IEnumerator MakeEventEnumerator(IEnumerator enumerator) {
+        private IEnumerator MakeEventEnumerator(IEnumerator enumerator, bool unpausable = false) {
             object current = null;
             while (true) {
                 try {
-                    if (UnityEngine.Time.timeScale != 0) {
+                    if (UnityEngine.Time.timeScale != 0 || unpausable) {
                         if (enumerator.MoveNext() == false) {
                             break;
                         }
@@ -106,8 +106,8 @@ namespace UnityEPL {
         /// </summary>
         /// <param name="enumerator"></param>
         /// <returns></returns>
-        protected new Coroutine StartCoroutine(IEnumerator enumerator) {
-            return base.StartCoroutine(MakeEventEnumerator(enumerator));
+        protected Coroutine StartCoroutine(IEnumerator enumerator, bool unpausable = false) {
+            return base.StartCoroutine(MakeEventEnumerator(enumerator, unpausable));
         }
 
         // -------------------------------------

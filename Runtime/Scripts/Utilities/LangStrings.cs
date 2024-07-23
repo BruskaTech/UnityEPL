@@ -85,6 +85,9 @@ namespace UnityEPL {
         public static LangString ExperimentQuit() { return new( new() {
             { Language.English, "Do you want to quit\nPress Y to Quit, N to Resume." },
         }); }
+        public static LangString ExperimentPaused() { return new( new() {
+            { Language.English, "<b>Paused</b>\n\nPress P to unpause." },
+        }); }
         public static LangString RepeatIntroductionVideo() { return new( new() {
             { Language.English, "Press Y to continue, \n Press N to replay instructional video." },
         }); }

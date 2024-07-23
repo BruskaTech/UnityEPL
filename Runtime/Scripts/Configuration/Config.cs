@@ -95,6 +95,7 @@ namespace UnityEPL {
         // ExperimentBase.cs
         
         public static bool quitAnytime { get { return GetSetting<bool>("quitAnytime"); } }
+        public static bool pauseAnytime { get { return GetSetting<bool>("pauseAnytime"); } }
 
         // ElememInterface.cs
         public static string stimMode { get { return GetSetting<string>("stimMode"); } }

@@ -67,6 +67,7 @@ namespace UnityEPL {
         //////////
         public ConcurrentBag<EventLoop> eventLoops = new();
         public ConcurrentQueue<IEnumerator> events = new();
+        public ConcurrentQueue<IEnumerator> unpausableEvents = new();
 
         //////////
         // StartTime
@@ -97,6 +98,9 @@ namespace UnityEPL {
         void Update() {
             while (events.TryDequeue(out IEnumerator e)) {
                 StartCoroutine(e);
+            }
+            while (unpausableEvents.TryDequeue(out IEnumerator e)) {
+                StartCoroutine(e, true);
             }
         }
 
@@ -222,9 +226,10 @@ namespace UnityEPL {
 
         // These can be called by anything
         public void PauseTS(bool pause) {
-            DoTS<Bool>(PauseHelper, pause);
+            // This is ONLY done for pause because it is a special case
+            unpausableEvents.Enqueue(PauseHelper(pause));
         }
-        protected void PauseHelper(Bool pause) {
+        protected IEnumerator PauseHelper(Bool pause) {
             // TODO: JPB: (needed) Implement pause functionality correctly
             if (pause) {
                 pausedTimescale = Time.timeScale;
@@ -233,12 +238,13 @@ namespace UnityEPL {
                 Time.timeScale = pausedTimescale;
             }
             if (videoControl != null) { videoControl.PauseVideo(pause); }
+            yield return null;
         }
 
         public void QuitTS() {
             ramulator?.SendExitMsg();
             hostPC?.QuitTS();
-            DoWaitForTS(QuitHelper);
+            _ = DoWaitForTS(QuitHelper);
         }
         protected async Task QuitHelper() {
             foreach (var eventLoop in eventLoops) {

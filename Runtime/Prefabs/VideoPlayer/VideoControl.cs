@@ -124,10 +124,12 @@ namespace UnityEPL {
             DoTS<Bool>(PauseVideoHelper, pause);
         }
         protected void PauseVideoHelper(Bool pause) {
-            if (pause) {
-                videoPlayer.Pause();
-            } else {
-                videoPlayer.Play();
+            if (videoPlayer.isActiveAndEnabled) {
+                if (pause) {
+                    videoPlayer.Pause();
+                } else {
+                    videoPlayer.Play();
+                }
             }
         }
 
