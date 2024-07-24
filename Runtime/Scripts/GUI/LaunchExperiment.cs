@@ -106,10 +106,10 @@ namespace UnityEPL {
 
             // Connect to HostPC
             if (Config.elememOn) {
-                manager.textDisplayer.Display("Elemem connection display", LangStrings.Blank(), LangStrings.ElememConnection());
+                TextDisplayer.Instance.Display("Elemem connection display", LangStrings.Blank(), LangStrings.ElememConnection());
                 manager.hostPC = new ElememInterface();
             } else if (Config.ramulatorOn) {
-                manager.textDisplayer.Display("Ramulator connection display", LangStrings.Blank(), LangStrings.ElememConnection());
+                TextDisplayer.Instance.Display("Ramulator connection display", LangStrings.Blank(), LangStrings.ElememConnection());
                 manager.ramulator = new RamulatorWrapper(manager);
                 yield return manager.ramulator.BeginNewSession();
             }

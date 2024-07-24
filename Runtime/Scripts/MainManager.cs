@@ -49,7 +49,6 @@ namespace UnityEPL {
         public HostPC hostPC;
         public RamulatorWrapper ramulator;
         public VideoControl videoControl;
-        public TextDisplayer textDisplayer;
         public SoundRecorder recorder;
         //public RamulatorInterface ramulator;
         public ISyncBox syncBox;

@@ -83,7 +83,7 @@ namespace UnityEPL {
                 "Press any key to continue to start." },
         }); }
         public static LangString ExperimentQuit() { return new( new() {
-            { Language.English, "Do you want to quit\nPress Y to Quit, N to Resume." },
+            { Language.English, "Do you want to quit?\n\nPress Y to Quit.\nPress N to Resume." },
         }); }
         public static LangString ExperimentPaused() { return new( new() {
             { Language.English, "<b>Paused</b>\n\nPress P to unpause." },
