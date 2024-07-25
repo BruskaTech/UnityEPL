@@ -95,6 +95,8 @@ namespace UnityEPL {
             if (Config.sessionNum == null) {
                 // return null and don't use ErrorTS because of EventReporter::DoWrite
                 return null;
+            } else if (Config.sessionNum == 0) {
+                return null;
             }
 
             string dir = ParticipantPath();
