@@ -45,7 +45,7 @@ namespace UnityEPL {
                     { "message", e.Message },
                     { "stackTrace", e.StackTrace } });
                 await Awaitable.NextFrameAsync();
-                manager.PauseTS(true);
+                manager.Pause(true);
                 await InputManager.Instance.WaitForKey(KeyCode.Q, true);
                 manager.Quit();
             } catch (Exception e) {
@@ -66,17 +66,24 @@ namespace UnityEPL {
                 }
             }
 
-            Instance.DoTS(Instance.WarningHelper, exception.Message.ToNativeText(), exception.StackTrace.ToNativeText());
+            // TODO: JPB: (bug) What will happen to the error in WarningTS if it errors
+            _ = Instance.DoWaitFor(Instance.WarningHelper, exception.Message.ToNativeText(), exception.StackTrace.ToNativeText());
         }
-        protected void WarningHelper(NativeText message, NativeText stackTrace) {
+        // TODO: JPB: (feature) Implement WarningHelper
+        protected async Task WarningHelper(NativeText message, NativeText stackTrace) {
+            manager.Pause(true);
             TextDisplayer.Instance.Display("Warning", LangStrings.Warning().Color("yellow"), LangStrings.GenForCurrLang(message.ToString()));
             Debug.Log($"Warning: {message}\n{stackTrace}");
             EventReporter.Instance.LogTS("Warning", new() {
                 { "message", message.ToString() },
                 { "stackTrace", stackTrace.ToString() } });
-            manager.PauseTS(true);
             message.Dispose();
             stackTrace.Dispose();
+
+            // var keyCode = await InputManager.Instance.WaitForKey(new() {KeyCode.Y, KeyCode.N}, true);
+            // if ()
+
+            manager.Pause(false);
         }
     }
 }

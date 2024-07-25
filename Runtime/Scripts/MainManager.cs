@@ -221,11 +221,19 @@ namespace UnityEPL {
         }
 
         // These can be called by anything
-        public void PauseTS(bool pause) {
-            // This is ONLY done for pause because it is a special case
-            unpausableEvents.Enqueue(PauseHelper(pause));
+        
+        // public void PauseTS(bool pause) {
+        //     // This is ONLY done for pause because it is a special case
+        //     unpausableEvents.Enqueue(PauseHelperEnumerator(pause));
+        // }
+        // protected IEnumerator PauseHelperEnumerator(Bool pause) {
+        //     PauseHelper(pause);
+        //     yield return null;
+        // }
+        public void Pause(bool pause) {
+            Do<Bool>(PauseHelper, pause);
         }
-        protected IEnumerator PauseHelper(Bool pause) {
+        protected void PauseHelper(Bool pause) {
             // TODO: JPB: (needed) Implement pause functionality correctly
             float oldTimeScale = 0;
             if (pause) {
@@ -237,7 +245,6 @@ namespace UnityEPL {
                 }
             }
             if (videoControl != null) { videoControl.PauseVideo(oldTimeScale != 0); }
-            yield return null;
         }
 
         public void QuitTS() {

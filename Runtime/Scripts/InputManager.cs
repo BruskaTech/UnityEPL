@@ -76,15 +76,15 @@ namespace UnityEPL {
             // This first await is needed when WaitForKey is used in a tight loop.
             // If it is, then it will repeatedly be checked over and over on the same frame, causing the program to hang
             // It does add a one frame delay, but if you are using an await in the first place, you are probably not concerned about that
-            await Awaitable.NextFrameAsync();
             while (!ct.IsCancellationRequested) {
-                if (!unpausable && Time.timeScale == 0) { continue; }
-                foreach (KeyCode vKey in Enum.GetValues(typeof(KeyCode))) {
-                    if (Input.GetKeyDown(vKey)) {
-                        return vKey;
-                    };
-                }
                 await Awaitable.NextFrameAsync();
+                if (unpausable || Time.timeScale != 0) {
+                    foreach (KeyCode vKey in Enum.GetValues(typeof(KeyCode))) {
+                        if (Input.GetKeyDown(vKey)) {
+                            return vKey;
+                        };
+                    }
+                }
             }
             return KeyCode.None;
         }
@@ -110,8 +110,7 @@ namespace UnityEPL {
             // This first await is needed when WaitForKey is used in a tight loop.
             // If it is, then it will repeatedly be checked over and over on the same frame, causing the program to hang
             // It does add a one frame delay, but if you are using an await in the first place, you are probably not concerned about that
-            await Awaitable.NextFrameAsync();
-            var retKey = GetKeyDownHelper(keys, unpausable);
+            var retKey = KeyCode.None;
             while (!ct.IsCancellationRequested && retKey == KeyCode.None) {
                 await Awaitable.NextFrameAsync();
                 retKey = GetKeyDownHelper(keys, unpausable);

@@ -124,29 +124,28 @@ namespace UnityEPL {
             if (Config.quitAnytime) {
                 await RepeatUntilYes(async (CancellationToken ct) => {
                     // Resume since they don't want to quit (or haven't tried yet)
-                    manager.PauseTS(false);
+                    manager.Pause(false);
                     // Wait for the quit key
                     await inputManager.WaitForKey(new List<KeyCode>() { KeyCode.Q }, unpausable: true, ct: ct);
                     // Pause everything and ask if they want to quit
-                    manager.PauseTS(true);
+                    manager.Pause(true);
                 }, "experiment quit", LangStrings.ExperimentQuit(), new(), unpausable: true);
                 
-                UnityEngine.Debug.Log("QUITTING!");
+                manager.Pause(false);
                 manager.QuitTS();
             }
         }
 
-        // TODO: JPB: (needed) (bug) There is an issue where the experiment hangs if you pause, then quit (but hit no), then unpause again
         protected virtual async void ExperimentPause() {
             if (Config.pauseAnytime) {
                 var pauseKeyCodes = new List<KeyCode>() { KeyCode.P };
                 await RepeatForever(async (CancellationToken ct) => {
                     // Resume since they don't want to quit (or haven't tried yet)
-                    manager.PauseTS(false);
+                    manager.Pause(false);
                     // Wait for the pause key
                     await inputManager.WaitForKey(pauseKeyCodes, ct: ct);
                     // Pause everything and ask if they want to quit
-                    manager.PauseTS(true);
+                    manager.Pause(true);
                 }, "experiment pause", LangStrings.ExperimentPaused(), pauseKeyCodes, new(), unpausable: true);
             }
         }
