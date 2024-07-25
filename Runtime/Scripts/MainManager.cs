@@ -40,7 +40,7 @@ namespace UnityEPL {
         // ???
         //////////
         public FileManager fileManager;
-        protected float pausedTimescale;
+        protected Stack<float> pauseTimescales = new();
 
         //////////
         // Devices that can be accessed by managed
@@ -114,9 +114,6 @@ namespace UnityEPL {
             try {
                 // Create objects not tied to unity
                 fileManager = new FileManager(this);
-
-                // Setup Pausing
-                pausedTimescale = Time.timeScale;
 
                 // Setup Configs
                 var configs = SetupConfigs();
@@ -230,13 +227,16 @@ namespace UnityEPL {
         }
         protected IEnumerator PauseHelper(Bool pause) {
             // TODO: JPB: (needed) Implement pause functionality correctly
+            float oldTimeScale = 0;
             if (pause) {
-                pausedTimescale = Time.timeScale;
+                pauseTimescales.Push(Time.timeScale);
                 Time.timeScale = 0;
             } else {
-                Time.timeScale = pausedTimescale;
+                if (pauseTimescales.TryPop(out oldTimeScale) ) {
+                    Time.timeScale = oldTimeScale;
+                }
             }
-            if (videoControl != null) { videoControl.PauseVideo(pause); }
+            if (videoControl != null) { videoControl.PauseVideo(oldTimeScale != 0); }
             yield return null;
         }
 
