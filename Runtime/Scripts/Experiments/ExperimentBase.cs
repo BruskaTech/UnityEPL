@@ -42,13 +42,19 @@ namespace UnityEPL {
         }
     }
 
-    public abstract class ExperimentBase<T> : SingletonEventMonoBehaviour<T>
-            where T : ExperimentBase<T> {
+    public abstract class ExperimentBase<T, SessionType, TrialType> : SingletonEventMonoBehaviour<T>
+        where T : ExperimentBase<T, SessionType, TrialType>
+        where SessionType : ExperimentSession<TrialType>
+    {
 
         protected InputManager inputManager;
         protected TextDisplayer textDisplayer;
         protected ErrorNotifier errorNotifier;
         protected EventReporter eventReporter;
+
+        protected SessionType session;
+        protected SessionType practiceSession;
+        protected SessionType normalSession;
 
         protected new void Awake() {
             base.Awake();
@@ -67,16 +73,13 @@ namespace UnityEPL {
             ExperimentActive.SetActive(false);
         }
 
-        protected uint TrialNum { get; private set; } = 0;
-        protected bool InPracticeTrials { get; private set; } = false;
-
         protected abstract Task PreTrialStates();
         protected abstract Task PracticeTrialStates();
         protected abstract Task TrialStates();
         protected abstract Task PostTrialStates();
 
-        protected void EndCurrentTrials() {
-            throw new EndTrialsException();
+        protected void EndCurrentSession() {
+            throw new EndSessionException();
         }
 
         protected void Run() {
@@ -87,22 +90,27 @@ namespace UnityEPL {
             DoTS(ExperimentPause);
             await PreTrialStates();
 
-            InPracticeTrials = true;
+            if (practiceSession == null) {
+                throw new Exception("The Experiment did not set any practice sessions.");
+            } else if (normalSession == null) {
+                throw new Exception("The Experiment did not set any normal session.");
+            }
+
+            session = practiceSession;
             try {
                 while (true) {
-                    TrialNum++;
+                    session.TrialNum++;
                     await PracticeTrialStates();
                 }
-            } catch (EndTrialsException) {} // do nothing
+            } catch (EndSessionException) {} // do nothing
 
-            TrialNum = 0;
-            InPracticeTrials = false;
+            session = normalSession;
             try {
                 while (true) {
-                    TrialNum++;
+                    session.TrialNum++;
                     await TrialStates();
                 }
-            } catch (EndTrialsException) {} // do nothing
+            } catch (EndSessionException) {} // do nothing
 
             await PostTrialStates();
             manager.QuitTS();

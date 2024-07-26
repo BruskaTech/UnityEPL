@@ -19,13 +19,13 @@ namespace UnityEPL {
     //            This can be done by the user by adding a try catch into the TrialStates
     //            This may be a bad idea for state management reasons
     [Serializable]
-    public class EndTrialsException : Exception {
-        public EndTrialsException() 
+    public class EndSessionException : Exception {
+        public EndSessionException() 
             : base() { }
-        public EndTrialsException(string message) 
+        public EndSessionException(string message) 
             : base(message) { }
 
-        protected EndTrialsException(SerializationInfo info, StreamingContext context) 
+        protected EndSessionException(SerializationInfo info, StreamingContext context) 
             : base (info, context) { }
     }
 

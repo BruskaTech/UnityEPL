@@ -15,7 +15,7 @@ namespace UnityEPL {
 
     [Serializable]
     public class Timeline<T> : IList<T> {
-        protected List<T> items = new List<T>();
+        public List<T> items {get; protected set;} = new List<T>();
         protected bool reset_on_load;
         public virtual bool IsReadOnly { get { return false; } }
         public int index;
