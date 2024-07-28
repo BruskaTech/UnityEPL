@@ -164,7 +164,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   videoControl: {fileID: 0}
-  textDisplayer: {fileID: 0}
   recorder: {fileID: 0}
   highBeep: {fileID: 0}
   lowBeep: {fileID: 0}
@@ -853,7 +852,7 @@ MonoBehaviour:
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 4
-  m_fontSizeMax: 100
+  m_fontSizeMax: 130
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
