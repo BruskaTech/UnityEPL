@@ -113,7 +113,7 @@ namespace UnityEPL {
             } catch (EndSessionException) {} // do nothing
 
             await PostTrialStates();
-            manager.QuitTS();
+            await manager.QuitTS();
         }
 
         protected virtual void LogExperimentInfo() {
@@ -140,7 +140,7 @@ namespace UnityEPL {
                 }, "experiment quit", LangStrings.ExperimentQuit(), new(), unpausable: true);
                 
                 manager.Pause(false);
-                manager.QuitTS();
+                await manager.QuitTS();
             }
         }
 
@@ -260,7 +260,7 @@ namespace UnityEPL {
             SendRamulatorStateMsg(HostPcStateMsg.WAITING(), false);
 
             if (keyCode == KeyCode.N) {
-                manager.QuitTS();
+                await manager.QuitTS();
             }
         }
         protected virtual async Task ConfirmStart() {

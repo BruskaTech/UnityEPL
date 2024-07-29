@@ -13,6 +13,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -82,7 +83,7 @@ namespace UnityEPL {
         /// <param name="enumerator">Iterator function to run</param>
         /// <returns>An enumerator that runs the given enumerator</returns>
         /// /// TODO: JPB: (needed) Implement pausing in MakeEventEnumerator
-        private IEnumerator MakeEventEnumerator(IEnumerator enumerator, bool unpausable = false) {
+        private IEnumerator MakeEventEnumerator(IEnumerator enumerator, StackTrace stackTrace = null, bool unpausable = false) {
             object current = null;
             while (true) {
                 try {
@@ -93,8 +94,10 @@ namespace UnityEPL {
                         current = enumerator.Current;
                     }
                 } catch (Exception e) {
-                    Debug.Log(e);
-                    ErrorNotifier.ErrorTS(e);
+                    var e2 = new Exception(e.Message, e);
+                    if (stackTrace != null) { e2.SetStackTrace(stackTrace); }
+                    UnityEngine.Debug.Log(e2);
+                    ErrorNotifier.ErrorTS(e2);
                     yield break;
                 }
                 yield return current;
@@ -107,7 +110,8 @@ namespace UnityEPL {
         /// <param name="enumerator"></param>
         /// <returns></returns>
         protected Coroutine StartCoroutine(IEnumerator enumerator, bool unpausable = false) {
-            return base.StartCoroutine(MakeEventEnumerator(enumerator, unpausable));
+            StackTrace stackTrace = Config.debugEventLoopExtendedStackTrace ? new(true) : null;
+            return base.StartCoroutine(MakeEventEnumerator(enumerator, stackTrace, unpausable));
         }
 
         // -------------------------------------
@@ -200,7 +204,8 @@ namespace UnityEPL {
         // -------------------------------------
         // TODO: JPB: (feature) Add support for cancellation tokens in EventMonoBehavior Do functions
         private void DoHelper(IEnumerator enumerator) {
-            manager.events.Enqueue(MakeEventEnumerator(enumerator));
+            StackTrace stackTrace = Config.debugEventLoopExtendedStackTrace ? new(true) : null;
+            manager.events.Enqueue(MakeEventEnumerator(enumerator, stackTrace));
         }
 
         protected void DoTS(Func<IEnumerator> func) {

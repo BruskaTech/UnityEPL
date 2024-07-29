@@ -129,6 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2036838}
   - component: {fileID: 2036839}
+  - component: {fileID: 2036840}
   m_Layer: 0
   m_Name: InterfaceManager
   m_TagString: Untagged
@@ -169,6 +170,19 @@ MonoBehaviour:
   lowBeep: {fileID: 0}
   lowerBeep: {fileID: 0}
   playback: {fileID: 0}
+--- !u!114 &2036840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2036836}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a83a426b86d6b4187a175c3f97e85ffc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  assetBundle: {fileID: 0}
 --- !u!1 &63690047
 GameObject:
   m_ObjectHideFlags: 0

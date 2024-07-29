@@ -90,8 +90,8 @@ namespace UnityEPL {
         // Setup
         //////////
 
-        protected void OnDestroy() {
-            QuitTS();
+        protected async void OnDestroy() {
+            await QuitTS();
         }
 
         void Update() {
@@ -247,10 +247,10 @@ namespace UnityEPL {
             if (videoControl != null) { videoControl.PauseVideo(oldTimeScale != 0); }
         }
 
-        public void QuitTS() {
+        public async Task QuitTS() {
             ramulator?.SendExitMsg();
             hostPC?.QuitTS();
-            _ = DoWaitForTS(QuitHelper);
+            await DoWaitForTS(QuitHelper);
         }
         protected async Task QuitHelper() {
             foreach (var eventLoop in eventLoops) {
