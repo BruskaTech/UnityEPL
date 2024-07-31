@@ -35,7 +35,7 @@ These are general questions often asked.
         }
         ```
 
-    - Or you need to make sure that there is a configs folder defined on your Desktop (when running from the Unity Editor). Just copy the [configs folder](../configs/) from the UnityEPL repo to your Desktop and anywhere that the executable is located.
+    - Or you need to make sure that there is a configs folder defined on your Desktop (when running from the Unity Editor). Just copy the [configs folder](https://github.com/BruskaTech/UnityEPL/tree/main/configs) from the UnityEPL repo to your Desktop and anywhere that the executable is located.
 
 1. ### Microphone class is used but Microphone Usage Description is empty in Player Settings
 

@@ -93,7 +93,7 @@ namespace UnityEPL {
             float[] saveData = GetLastSamples(outputLength);
 
             croppedClip.SetData(saveData, 0);
-            SavWav.Save(nextOutputPath, croppedClip);
+            SaveWave.Save(nextOutputPath, croppedClip);
             return croppedClip;
         }
 

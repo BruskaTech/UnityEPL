@@ -11,8 +11,10 @@ using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
 
-public static class UnityUtilities {
-    public static bool IsMacOS() {
-        return Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer;
+namespace UnityEPL {
+    public static class UnityUtilities {
+        public static bool IsMacOS() {
+            return Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer;
+        }
     }
 }
