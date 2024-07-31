@@ -13,12 +13,15 @@ For more information than what is in this document, please see the [Documentatio
 Here is how to start making a basic experiment.
 
 ### Basic Instructions
+
 REDO THIS!!!! How to do asmref. How to add submodule (add it as package)
 
 1. Add UnityEPL as a submodule to your project
+
     ```sh
     git submodule add git@github.com:pennmem/UnityEPL.git Assets/
     ```
+
 1. Inherit `ExperimentBase` on your main experiment class.
 1. Implement the abstract methods `PreTrials`, `TrialStates`, `PracticeTrialStates`, and `PostTrials`.
 
@@ -38,6 +41,7 @@ REDO THIS!!!! How to do asmref. How to add submodule (add it as package)
 There are many types of experiments, but here are a few common ones and the useful components for them. There is also a list of generally useful components.
 
 #### General Components
+
 - Config
 - Logging
 - ErrorNotifier
@@ -47,15 +51,18 @@ There are many types of experiments, but here are a few common ones and the usef
 - Random values that are consistent per participant
 
 #### Word List Experiments
+
 - TextDisplay
 - SoundRecorder
 - VideoPlayer
 
 #### Spatial (3D) Experiments
+
 - SpawnItems
 - PickupItems
 
 #### Closed-Loop Experiments
+
 - EventLoop
 - ElememInterface
 

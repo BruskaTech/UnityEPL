@@ -2,7 +2,7 @@
 
 This is the architecture document for the UnityEPL.
 
-It also provides the best coding practices when using UnityEPL. 
+It also provides the best coding practices when using UnityEPL.
 
 There are certain coding practices that should always be applied when coding in the UnityEPL.
 Some are recommendations and some are requirements (code will break if you do not follow them).
@@ -39,7 +39,7 @@ Events are async functions that run on an EventLoop or EventMonoBehavior thread.
 The *EventLoop* is the default base class for classes that want to run events.
 They set up a thread that, when any Do is called, runs the specified function on that thread.
 
-Each thread only runs one event at a time in the order that they are initiated. 
+Each thread only runs one event at a time in the order that they are initiated.
 In other words, it time-multiplexes.
 This is important because it guarantees events will not have any race conditions on accessed variables in the class.
 
@@ -51,7 +51,7 @@ There are 3 main types of events:
 2. *DoWaitFor*
 3. *DoGet*
 
-A *Do* event creates an async function running on the receiving class' EventLoop and immediately continues in the current context. 
+A *Do* event creates an async function running on the receiving class' EventLoop and immediately continues in the current context.
 A *DoWaitFor* event creates an async function running on the receiving class' EventLoop and then you can perform an async await for it to be done in the current context.
 A *DoGet* event is just like DoWaitFor, but it also returns a value.
 
@@ -89,7 +89,7 @@ Here are some coding practices that should be followed when writing event code:
 #### Thread Safety
 
 These tasks only allow up to 4 blittable types to be passed into them. Blittable types are stack-based types that are contiguous in memory. More importantly, they can't contain references.
-This is important because if you access the value of a reference across threads, it will cause race conditions. 
+This is important because if you access the value of a reference across threads, it will cause race conditions.
 That is, unless it is a thread-safe concurrent datatype. If you know this is the case, and you are REALLY sure you know what you're doing, and there is no other way to architect it, then you can use a lambda to grab that value as a reference and pass the lambda into your Event.
 
 #### Notes
@@ -102,6 +102,7 @@ Some small things that are good to at least read once:
 ## Important Coding Practices
 
 These are the important practices that are critical for all coders to understand and follow.
+
 - Do NOT use *Task.Delay()*. Instead, use *Timing.Delay()*. They act exactly the same, but Timing.Delay knows how to handle the single-threaded nature of WebGL.
 
 ## Acronyms and Terms
