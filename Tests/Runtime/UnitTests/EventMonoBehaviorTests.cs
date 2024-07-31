@@ -51,7 +51,7 @@ namespace UnityEPLTests {
             if (!isSetup) {
                 isSetup = true;
                 SceneManager.LoadScene("manager");
-                yield return null; // Wait for InterfaceManager Awake call
+                yield return null; // Wait for MainManager Awake call
             }
 
             if (emb == null) emb = new GameObject().AddComponent<EMB>();
@@ -309,13 +309,13 @@ namespace UnityEPLTests {
 
             Assert.AreEqual(i + 1, emb.GetIMB());
 
-            yield return Timing.DelayE(900);
+            yield return MainManager.Instance.DelayE(900);
             Assert.AreEqual(i + 1, emb.GetIMB());
 
-            yield return Timing.DelayE(200);
+            yield return MainManager.Instance.DelayE(200);
             Assert.AreEqual(i + 2, emb.GetIMB());
 
-            yield return Timing.DelayE(1000);
+            yield return MainManager.Instance.DelayE(1000);
             Assert.AreEqual(i + 3, emb.GetIMB());
         }
 
@@ -325,16 +325,16 @@ namespace UnityEPLTests {
 
             yield return emb.IncThreeTimesEnumMB(500, 1000, 3);
 
-            yield return Timing.DelayE(400);
+            yield return MainManager.Instance.DelayE(400);
             Assert.AreEqual(i, emb.GetIMB());
 
-            yield return Timing.DelayE(200);
+            yield return MainManager.Instance.DelayE(200);
             Assert.AreEqual(i + 1, emb.GetIMB());
 
-            yield return Timing.DelayE(1000);
+            yield return MainManager.Instance.DelayE(1000);
             Assert.AreEqual(i + 2, emb.GetIMB());
 
-            yield return Timing.DelayE(1000);
+            yield return MainManager.Instance.DelayE(1000);
             Assert.AreEqual(i + 3, emb.GetIMB());
         }
 
@@ -368,13 +368,13 @@ namespace UnityEPLTests {
 
             Assert.AreEqual(i + 1, emb.GetIMB());
 
-            yield return Timing.DelayE(900);
+            yield return MainManager.Instance.DelayE(900);
             Assert.AreEqual(i + 1, emb.GetIMB());
 
-            yield return Timing.DelayE(200);
+            yield return MainManager.Instance.DelayE(200);
             Assert.AreEqual(i + 2, emb.GetIMB());
 
-            yield return Timing.DelayE(1000);
+            yield return MainManager.Instance.DelayE(1000);
             Assert.AreEqual(i + 3, emb.GetIMB());
         }
 
@@ -384,16 +384,16 @@ namespace UnityEPLTests {
 
             emb.IncThreeTimesActMB(500, 1000, 3);
 
-            yield return Timing.DelayE(400);
+            yield return MainManager.Instance.DelayE(400);
             Assert.AreEqual(i, emb.GetIMB());
 
-            yield return Timing.DelayE(200);
+            yield return MainManager.Instance.DelayE(200);
             Assert.AreEqual(i + 1, emb.GetIMB());
 
-            yield return Timing.DelayE(1000);
+            yield return MainManager.Instance.DelayE(1000);
             Assert.AreEqual(i + 2, emb.GetIMB());
 
-            yield return Timing.DelayE(1000);
+            yield return MainManager.Instance.DelayE(1000);
             Assert.AreEqual(i + 3, emb.GetIMB());
         }
 
@@ -525,12 +525,12 @@ namespace UnityEPLTests {
 
             emb.DelayedIncEnum(1000);
 
-            yield return Timing.DelayE(900);
+            yield return MainManager.Instance.DelayE(900);
             task = emb.GetI();
             yield return task.ToEnumerator();
             Assert.AreEqual(i, task.Result);
 
-            yield return Timing.DelayE(200);
+            yield return MainManager.Instance.DelayE(200);
             task = emb.GetI();
             yield return task.ToEnumerator();
             Assert.AreEqual(i+1, task.Result);
@@ -544,12 +544,12 @@ namespace UnityEPLTests {
 
             emb.DelayedIncAct(1000);
 
-            yield return Timing.DelayE(900);
+            yield return MainManager.Instance.DelayE(900);
             task = emb.GetI();
             yield return task.ToEnumerator();
             Assert.AreEqual(i, task.Result);
 
-            yield return Timing.DelayE(200);
+            yield return MainManager.Instance.DelayE(200);
             task = emb.GetI();
             yield return task.ToEnumerator();
             Assert.AreEqual(i + 1, task.Result);
@@ -567,17 +567,17 @@ namespace UnityEPLTests {
             yield return task.ToEnumerator();
             Assert.AreEqual(i + 1, task.Result);
 
-            yield return Timing.DelayE(900);
+            yield return MainManager.Instance.DelayE(900);
             task = emb.GetI();
             yield return task.ToEnumerator();
             Assert.AreEqual(i + 1, task.Result);
 
-            yield return Timing.DelayE(200);
+            yield return MainManager.Instance.DelayE(200);
             task = emb.GetI();
             yield return task.ToEnumerator();
             Assert.AreEqual(i + 2, task.Result);
 
-            yield return Timing.DelayE(1000);
+            yield return MainManager.Instance.DelayE(1000);
             task = emb.GetI();
             yield return task.ToEnumerator();
             Assert.AreEqual(i + 3, task.Result);
@@ -591,22 +591,22 @@ namespace UnityEPLTests {
 
             emb.IncThreeTimesEnum(500, 1000, 3);
 
-            yield return Timing.DelayE(400);
+            yield return MainManager.Instance.DelayE(400);
             task = emb.GetI();
             yield return task.ToEnumerator();
             Assert.AreEqual(i, task.Result);
 
-            yield return Timing.DelayE(200);
+            yield return MainManager.Instance.DelayE(200);
             task = emb.GetI();
             yield return task.ToEnumerator();
             Assert.AreEqual(i + 1, task.Result);
 
-            yield return Timing.DelayE(1000);
+            yield return MainManager.Instance.DelayE(1000);
             task = emb.GetI();
             yield return task.ToEnumerator();
             Assert.AreEqual(i + 2, task.Result);
 
-            yield return Timing.DelayE(1000);
+            yield return MainManager.Instance.DelayE(1000);
             task = emb.GetI();
             yield return task.ToEnumerator();
             Assert.AreEqual(i + 3, task.Result);
@@ -624,17 +624,17 @@ namespace UnityEPLTests {
             yield return task.ToEnumerator();
             Assert.AreEqual(i + 1, task.Result);
 
-            yield return Timing.DelayE(900);
+            yield return MainManager.Instance.DelayE(900);
             task = emb.GetI();
             yield return task.ToEnumerator();
             Assert.AreEqual(i + 1, task.Result);
 
-            yield return Timing.DelayE(200);
+            yield return MainManager.Instance.DelayE(200);
             task = emb.GetI();
             yield return task.ToEnumerator();
             Assert.AreEqual(i + 2, task.Result);
 
-            yield return Timing.DelayE(1000);
+            yield return MainManager.Instance.DelayE(1000);
             task = emb.GetI();
             yield return task.ToEnumerator();
             Assert.AreEqual(i + 3, task.Result);
@@ -648,22 +648,22 @@ namespace UnityEPLTests {
 
             emb.IncThreeTimesAct(500, 1000, 3);
 
-            yield return Timing.DelayE(400);
+            yield return MainManager.Instance.DelayE(400);
             task = emb.GetI();
             yield return task.ToEnumerator();
             Assert.AreEqual(i, task.Result);
 
-            yield return Timing.DelayE(200);
+            yield return MainManager.Instance.DelayE(200);
             task = emb.GetI();
             yield return task.ToEnumerator();
             Assert.AreEqual(i + 1, task.Result);
 
-            yield return Timing.DelayE(1000);
+            yield return MainManager.Instance.DelayE(1000);
             task = emb.GetI();
             yield return task.ToEnumerator();
             Assert.AreEqual(i + 2, task.Result);
 
-            yield return Timing.DelayE(1000);
+            yield return MainManager.Instance.DelayE(1000);
             task = emb.GetI();
             yield return task.ToEnumerator();
             Assert.AreEqual(i + 3, task.Result);
@@ -817,7 +817,7 @@ namespace UnityEPLTests {
                 return await DoGet<int>(GetMutexValTaskMBHelper);
             }
             protected async Task<int> GetMutexValTaskMBHelper() {
-                await Timing.Delay(1);
+                await MainManager.Instance.Delay(1);
                 return mutex.Get();
             }
 #endif // EVENTMONOBEHAVIOR_TASK_OPERATORS
@@ -841,7 +841,7 @@ namespace UnityEPLTests {
                 return await DoGetTS<int>(GetMutexValTaskHelper);
             }
             protected async Task<int> GetMutexValTaskHelper() {
-                await Timing.Delay(1);
+                await MainManager.Instance.Delay(1);
                 return mutex.Get();
             }
 #endif // EVENTMONOBEHAVIOR_TASK_OPERATORS
@@ -911,7 +911,7 @@ namespace UnityEPLTests {
                 yield return DoWaitFor(DelayedIncAndWaitEnumMBHelper, millisecondsDelay);
             }
             protected IEnumerator DelayedIncAndWaitEnumMBHelper(int millisecondsDelay) {
-                yield return Timing.DelayE(1000);
+                yield return MainManager.Instance.DelayE(1000);
                 i += 1;
             }
 
@@ -920,7 +920,7 @@ namespace UnityEPLTests {
                 await DoWaitFor(DelayedIncAndWaitTaskMBHelper, millisecondsDelay);
             }
             protected async Task DelayedIncAndWaitTaskMBHelper(int millisecondsDelay) {
-                await Timing.Delay(1000);
+                await MainManager.Instance.Delay(1000);
                 i += 1;
             }
 #endif // EVENTMONOBEHAVIOR_TASK_OPERATORS
@@ -985,7 +985,7 @@ namespace UnityEPLTests {
                 await DoWaitForTS(DelayedIncAndWaitEnumHelper, millisecondsDelay);
             }
             protected IEnumerator DelayedIncAndWaitEnumHelper(int millisecondsDelay) {
-                yield return Timing.DelayE(1000);
+                yield return MainManager.Instance.DelayE(1000);
                 i += 1;
             }
 
@@ -1003,7 +1003,7 @@ namespace UnityEPLTests {
                 await DoWaitForTS(DelayedIncAndWaitTaskHelper, millisecondsDelay);
             }
             protected async Task DelayedIncAndWaitTaskHelper(int millisecondsDelay) {
-                await Timing.Delay(1000);
+                await MainManager.Instance.Delay(1000);
                 i += 1;
             }
 #endif // EVENTMONOBEHAVIOR_TASK_OPERATORS
@@ -1014,7 +1014,7 @@ namespace UnityEPLTests {
                 await DoWaitForManualTriggerTS(DelayedIncAndWaitManualTriggerEnumHelper, millisecondsDelay);
             }
             protected IEnumerator DelayedIncAndWaitManualTriggerEnumHelper(TaskCompletionSource<bool> tcs, int millisecondsDelay) {
-                yield return Timing.DelayE(1000);
+                yield return MainManager.Instance.DelayE(1000);
                 i += 1;
                 tcs.SetResult(true);
             }
@@ -1034,7 +1034,7 @@ namespace UnityEPLTests {
                 await DoWaitForManualTriggerTS(DelayedIncAndWaitManualTriggerTaskHelper, millisecondsDelay);
             }
             protected async Task DelayedIncAndWaitManualTriggerTaskHelper(TaskCompletionSource<bool> tcs, int millisecondsDelay) {
-                await Timing.Delay(1000);
+                await MainManager.Instance.Delay(1000);
                 i += 1;
                 tcs.SetResult(true);
             }

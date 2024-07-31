@@ -28,8 +28,6 @@ namespace UnityEPLTests {
         bool isSetup = false;
 
         const double ONE_FRAME_MS = 1000.0 / 120.0;
-        const double DELAY_JITTER_MS = 9;
-        // TODO: JPB: (bug) The acceptable jitter for Timing.Delay() should be less than 9ms
 
         // -------------------------------------
         // Setup
@@ -54,22 +52,20 @@ namespace UnityEPLTests {
         }
 
         // Async Delay has 9ms leniency (because it's bad)
-        [Test]
-        public void Delay() {
-            Task.Run(async () => {
-                var start = Clock.UtcNow;
-                await Timing.Delay(1000);
-                var diff = (Clock.UtcNow - start).TotalMilliseconds;
-                Assert.GreaterOrEqual(diff, 1000);
-                Assert.LessOrEqual(diff, 1000 + DELAY_JITTER_MS);
-            }).Wait();
+        [UnityTest]
+        public IEnumerator Delay() {
+            var start = Clock.UtcNow;
+            yield return MainManager.Instance.Delay(1000).ToEnumerator();
+            var diff = (Clock.UtcNow - start).TotalMilliseconds;
+            Assert.GreaterOrEqual(diff, 1000);
+            Assert.LessOrEqual(diff, 1000 + ONE_FRAME_MS);
         }
 
         // Enumerator Delay has 9ms leniency (due to frame linking at 120fps)
         [UnityTest]
         public IEnumerator DelayE() {
             var start = Clock.UtcNow;
-            yield return Timing.DelayE(1000);
+            yield return MainManager.Instance.DelayE(1000);
             var diff = (Clock.UtcNow - start).TotalMilliseconds;
             Assert.GreaterOrEqual(diff, 1000);
             Assert.LessOrEqual(diff, 1000 + ONE_FRAME_MS);
@@ -79,10 +75,10 @@ namespace UnityEPLTests {
         [UnityTest]
         public IEnumerator IEnumeratorDelay() {
             var start = Clock.UtcNow;
-            yield return Timing.Delay(1000).ToEnumerator();
+            yield return MainManager.Instance.Delay(1000).ToEnumerator();
             var diff = (Clock.UtcNow - start).TotalMilliseconds;
             Assert.GreaterOrEqual(diff, 1000);
-            Assert.LessOrEqual(diff, 1003);
+            Assert.LessOrEqual(diff, 1000 + ONE_FRAME_MS);
         }
 
         

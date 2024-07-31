@@ -40,7 +40,7 @@ namespace UnityEPL {
         // ???
         //////////
         public FileManager fileManager;
-        protected Stack<float> pauseTimescales = new();
+        protected ConcurrentStack<float> pauseTimescales = new();
 
         //////////
         // Devices that can be accessed by managed
@@ -246,6 +246,15 @@ namespace UnityEPL {
             }
             if (videoControl != null) { videoControl.PauseVideo(oldTimeScale != 0); }
         }
+        public bool IsPausedTS() {
+            return IsPausedHelper();
+        }
+        public bool IsPaused() {
+            return DoGet(IsPausedHelper);
+        }
+        protected bool IsPausedHelper() {
+            return pauseTimescales.Count > 0;
+        }
 
         public async Task QuitTS() {
             ramulator?.SendExitMsg();
@@ -253,13 +262,13 @@ namespace UnityEPL {
             await DoWaitForTS(QuitHelper);
         }
         protected async Task QuitHelper() {
+            // TODO: JPB: (feature) Make EventLoops stop gracefully by awaiting the stop with a timeout that gets logged if triggered
             foreach (var eventLoop in eventLoops) {
-                //eventLoop.Stop();
-                eventLoop.Abort();
+                _ = eventLoop.Abort();
             }
 
             EventReporter.Instance.LogTS("experiment quitted");
-            await Timing.Delay(500);
+            await Delay(500);
             this.Quit();
         }
 
@@ -275,6 +284,51 @@ namespace UnityEPL {
             UnityEngine.Cursor.lockState = isLocked;
             UnityEngine.Cursor.visible = isLocked == CursorLockMode.None;
         }
+
+        // Timing Functions
+        public async Task DelayTS(int millisecondsDelay) {
+            await DoWaitForTS(DelayEHelper, millisecondsDelay);
+        }
+        public async Task Delay(int millisecondsDelay) {
+            await ToCoroutineTask(DelayE(millisecondsDelay));
+        }
+        public IEnumerator DelayE(int millisecondsDelay) {
+            return DoWaitFor(DelayEHelper, millisecondsDelay);
+        }
+        public IEnumerator DelayEHelper(int millisecondsDelay) {
+            if (millisecondsDelay < 0) {
+                throw new ArgumentOutOfRangeException($"millisecondsDelay <= 0 ({millisecondsDelay})");
+            } else if (millisecondsDelay == 0) {
+                yield break;
+            }
+
+            yield return new Delay(millisecondsDelay);
+        }
     }
 
+    class Delay : CustomYieldInstruction {
+        private double seconds;
+        private DateTime lastTime;
+
+        public Delay(double seconds) {
+            this.seconds = seconds;
+            lastTime = Clock.UtcNow;
+        }
+
+        public Delay(int millisecondsDelay) {
+            seconds = millisecondsDelay / 1000f;
+            lastTime = Clock.UtcNow;
+        }
+
+        public override bool keepWaiting {
+            get {
+                if (MainManager.Instance.IsPaused()) { return true; }
+                var time = Clock.UtcNow;
+                var diff = (time - lastTime).TotalSeconds;
+                seconds -= diff;
+                lastTime = time;
+                return seconds > 0;
+            }
+        }
+    }
 }

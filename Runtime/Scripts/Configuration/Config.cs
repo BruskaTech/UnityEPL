@@ -290,7 +290,7 @@ namespace UnityEPL {
             string systemConfigPath = Path.Combine(Application.streamingAssetsPath, "config.json");
 
 #if !UNITY_WEBGL
-            yield return new WaitForSeconds(1f);
+            yield return MainManager.Instance.DelayE(1);
             onlineSystemConfigText = File.ReadAllText(systemConfigPath);
 #else
             UnityWebRequest systemWWW = UnityWebRequest.Get(systemConfigPath);
@@ -325,7 +325,7 @@ namespace UnityEPL {
                 Debug.Log(Config.onlineExperimentConfigText);
             }
 #else
-            yield return new WaitForSeconds(1f);
+            yield return MainManager.Instance.DelayE(1);
             onlineExperimentConfigText = File.ReadAllText(experimentConfigPath);
 #endif
 

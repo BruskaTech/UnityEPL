@@ -235,18 +235,18 @@ namespace UnityEPL {
 
                 manager.lowBeep.Play();
                 await DoWaitWhile(() => manager.lowBeep.isPlaying);
-                await Timing.Delay(100); // This is needed so you don't hear the end of the beep in the recording
+                await manager.Delay(100); // This is needed so you don't hear the end of the beep in the recording
 
                 manager.recorder.StartRecording(wavPath);
                 var coloredTestRec = LangStrings.MicrophoneTestRecording().Color("red");
                 textDisplayer.DisplayText("microphone test recording", coloredTestRec);
-                await Timing.Delay(Config.micTestDurationMs);
+                await manager.Delay(Config.micTestDurationMs);
                 var clip = manager.recorder.StopRecording();
 
                 var coloredTestPlay = LangStrings.MicrophoneTestPlaying().Color("green");
                 textDisplayer.DisplayText("microphone test playing", coloredTestPlay);
                 manager.playback.Play(clip);
-                await Timing.Delay(Config.micTestDurationMs);
+                await manager.Delay(Config.micTestDurationMs);
             }, "repeat mic test", LangStrings.RepeatMicTest(), new());
         }
         protected virtual async Task QuitPrompt() {

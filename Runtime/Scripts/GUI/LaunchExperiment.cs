@@ -53,7 +53,7 @@ namespace UnityEPL {
 
                 // TODO: JPB: (need) Fix Syncbox test
                 manager.syncBox.StartPulse();
-                await Timing.Delay(Config.syncBoxTestDurationMs);
+                await manager.Delay(Config.syncBoxTestDurationMs);
                 manager.syncBox.StopPulse();
 
                 syncButton.GetComponent<Button>().interactable = true;
