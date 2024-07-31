@@ -112,7 +112,7 @@ namespace UnityEPL {
 
             string prefix;
             try {
-                prefix = Config.prefix;
+                prefix = Config.participantIdPrefix;
             } catch (MissingFieldException) {
                 return false;
             }
