@@ -10,7 +10,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace UnityEPL {
+namespace UnityEPL.Utilities {
     // This allows you to call coroutines from a normal function (it blocks)
     // This can only be used on the main thread (due to Unity restrictions)
     // If you need to get around this, then add a UnityCoroutineRunner to InterfaceManager.

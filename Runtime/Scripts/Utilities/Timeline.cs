@@ -11,7 +11,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace UnityEPL {
+namespace UnityEPL.Utilities {
 
     [Serializable]
     public class Timeline<T> : IList<T> {

@@ -12,7 +12,7 @@ using System.IO;
 using System.Reflection;
 
 
-namespace UnityEPL {
+namespace UnityEPL.Utilities {
 
     /// <summary>
     /// Get the date and time of the build.

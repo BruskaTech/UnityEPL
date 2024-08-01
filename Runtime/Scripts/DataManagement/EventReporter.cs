@@ -14,6 +14,9 @@ using System.Collections.Generic;
 using System.IO;
 using Unity.Collections;
 using UnityEngine;
+
+using UnityEPL.Utilities;
+
 namespace UnityEPL {
 
     [AddComponentMenu("UnityEPL/Singleton Reporters/Event Reporter")]

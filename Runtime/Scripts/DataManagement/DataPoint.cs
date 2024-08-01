@@ -15,6 +15,8 @@ using UnityEngine;
 using Unity.Collections;
 using Newtonsoft.Json;
 
+using UnityEPL.Utilities;
+
 namespace UnityEPL {
     
     //These datapoints represent behavioral events

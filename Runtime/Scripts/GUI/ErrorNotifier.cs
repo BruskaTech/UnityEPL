@@ -15,6 +15,8 @@ using System.Threading.Tasks;
 using Unity.Collections;
 using UnityEngine;
 
+using UnityEPL.Utilities;
+
 namespace UnityEPL {
 
     public class ErrorNotifier : SingletonEventMonoBehaviour<ErrorNotifier> {

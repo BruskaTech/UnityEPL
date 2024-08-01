@@ -15,6 +15,8 @@ using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 using static UnityEPL.Blittability;
 
+using UnityEPL.Utilities;
+
 namespace UnityEPL {
 
     // TODO: JPB: (bug) There may be a bug in the WebGL side because it just calls the function instead of putting it into a queue

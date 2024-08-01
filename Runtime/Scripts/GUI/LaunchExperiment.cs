@@ -15,6 +15,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+using UnityEPL.Utilities;
+
 namespace UnityEPL {
 
     /// <summary>
@@ -89,7 +91,7 @@ namespace UnityEPL {
             launchButton.SetActive(false);
             loadingButton.SetActive(true);
 
-            Random.SetStableRndSeed(Config.subject.GetHashCode());
+            Utilities.Random.SetStableRndSeed(Config.subject.GetHashCode());
 
             Cursor.visible = false;
             Application.runInBackground = true;

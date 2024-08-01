@@ -11,7 +11,7 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 
-namespace UnityEPL {
+namespace UnityEPL.Utilities {
 
     // This is a high accuracy and precision timer based on a design by Nima Ara
     // It is thread safe since all times are threadlocal

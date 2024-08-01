@@ -10,7 +10,7 @@
 
 using System;
 
-namespace UnityEPL {
+namespace UnityEPL.Utilities {
 
     // If "i" goes past "limit", an exception is thrown with the stored message.
     public class BoundedInt {

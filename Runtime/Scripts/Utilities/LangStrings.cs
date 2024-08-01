@@ -11,7 +11,7 @@ using System;
 using System.Collections.Generic;
 using Unity.Collections;
 
-namespace UnityEPL {
+namespace UnityEPL.Utilities {
 
     // TODO: JPB: (needed) Figure out partial enum for Language so it is extensible to the user.
     public enum Language {

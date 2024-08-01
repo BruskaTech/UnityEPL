@@ -10,7 +10,7 @@
 using System;
 using System.Threading;
 
-namespace UnityEPL {
+namespace UnityEPL.Utilities {
 
     public class Mutex<T> {
         private T val;

@@ -23,6 +23,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
 using UnityEPL;
+using UnityEPL.Utilities;
 
 namespace UnityEPLTests {
 

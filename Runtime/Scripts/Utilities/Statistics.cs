@@ -11,7 +11,7 @@
 using System;
 using System.Numerics;
 
-namespace UnityEPL {
+namespace UnityEPL.Utilities {
 
     public class Statistics {
         // https://stackoverflow.com/a/51740258

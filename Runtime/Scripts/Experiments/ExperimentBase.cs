@@ -16,6 +16,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
+using UnityEPL.Utilities;
+
 namespace UnityEPL {
 
     public static class ExperimentActive {

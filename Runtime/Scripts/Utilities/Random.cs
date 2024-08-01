@@ -10,7 +10,7 @@
 using System;
 using System.Threading;
 
-namespace UnityEPL {
+namespace UnityEPL.Utilities {
 
     /// <summary>
     /// Static class for random number generation.

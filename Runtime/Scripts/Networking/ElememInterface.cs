@@ -15,6 +15,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using UnityEPL.Utilities;
+
 namespace UnityEPL {
 
     public class ElememInterface : HostPC {

@@ -18,6 +18,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
+using UnityEPL.Utilities;
+
 using static UnityEPL.Blittability;
 
 // TODO: JPB: (refactor) Clean up EventMonoBehaviour with UniTask

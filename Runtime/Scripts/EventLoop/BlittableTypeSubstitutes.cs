@@ -20,6 +20,8 @@ using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.VisualScripting;
 
+using UnityEPL.Utilities;
+
 namespace UnityEPL {
 
     // Information on blittability

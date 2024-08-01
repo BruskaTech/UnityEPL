@@ -9,7 +9,7 @@
 
 using System;
 
-namespace UnityEPL {
+namespace UnityEPL.Utilities {
     public struct Timer {
         DateTime startTime;
         DateTime stopTime;

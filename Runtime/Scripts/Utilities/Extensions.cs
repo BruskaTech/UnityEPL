@@ -20,7 +20,7 @@ using System.Diagnostics;
 using System.Reflection;
 using TMPro;
 
-namespace UnityEPL {
+namespace UnityEPL.Utilities {
     public static class IEnumerable {
         // https://stackoverflow.com/a/30758270
         public static int GetSequenceHashCode<T>(this IEnumerable<T> sequence) {

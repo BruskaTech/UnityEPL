@@ -19,6 +19,8 @@ using UnityEngine.UI;
 using TMPro;
 using System.Linq;
 
+using UnityEPL.Utilities;
+
 namespace UnityEPL {
 
     [AddComponentMenu("UnityEPL/Internal/TextDisplayer")]

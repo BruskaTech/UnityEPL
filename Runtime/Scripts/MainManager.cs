@@ -19,6 +19,8 @@ using Unity.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+using UnityEPL.Utilities;
+
 namespace UnityEPL {
 
     [DefaultExecutionOrder(-10)]
