@@ -20,8 +20,6 @@ using System.Diagnostics;
 using System.Reflection;
 using TMPro;
 
-using UnityEPL.Utilities;
-
 namespace UnityEPL {
     public static class IEnumerable {
         // https://stackoverflow.com/a/30758270

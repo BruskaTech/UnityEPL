@@ -10,16 +10,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Text;
 using UnityEngine;
 using NetMQ;
-using Newtonsoft.Json.Linq;
-using System.Threading.Tasks;
-using System.Threading;
-using static UnityEPL.HostPC;
 
-namespace UnityEPL { 
+namespace UnityEPL.Networking { 
 
     // This is just so you can use "?." syntax
     public class RamulatorWrapper {

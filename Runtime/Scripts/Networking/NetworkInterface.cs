@@ -10,7 +10,6 @@
 //#define NETWORKINTERFACE_DEBUG_MESSAGES
 
 using Newtonsoft.Json.Linq;
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,7 +22,7 @@ using Unity.Collections;
 
 using UnityEPL.Utilities;
 
-namespace UnityEPL {
+namespace UnityEPL.Networking {
     public abstract class NetworkInterface : EventLoop {
         private TcpClient tcpClient;
         private NetworkStream stream;

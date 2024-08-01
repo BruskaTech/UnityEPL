@@ -8,8 +8,6 @@
 //You should have received a copy of the GNU General Public License along with UnityEPL. If not, see <https://www.gnu.org/licenses/>. 
 
 using UnityEngine;
-using TMPro;
-using System.Collections.Generic;
 
 namespace UnityEPL.Utilities {
     public static class UnityUtilities {

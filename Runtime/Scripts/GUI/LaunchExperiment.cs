@@ -16,6 +16,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 using UnityEPL.Utilities;
+using UnityEPL.Networking;
 
 namespace UnityEPL {
 

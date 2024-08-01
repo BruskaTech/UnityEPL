@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 using UnityEPL.Utilities;
+using UnityEPL.Networking;
 
 namespace UnityEPL {
 

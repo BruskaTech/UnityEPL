@@ -20,6 +20,7 @@ using TMPro;
 using System.Linq;
 
 using UnityEPL.Utilities;
+using UnityEPL.Networking;
 
 namespace UnityEPL {
 
