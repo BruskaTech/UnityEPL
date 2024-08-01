@@ -8,12 +8,11 @@
 //You should have received a copy of the GNU General Public License along with UnityEPL. If not, see <https://www.gnu.org/licenses/>. 
 
 using System.IO;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UnityEPL {
+namespace UnityEPL.GUI {
 
     /// <summary>
     /// This is attached to the participant selection dropdown.  It is responsible for loading the information about the selected participant.

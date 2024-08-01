@@ -15,7 +15,7 @@ using Unity.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UnityEPL {
+namespace UnityEPL.GUI {
 
     public class FileSelector : EventMonoBehaviour {
         protected override void AwakeOverride() { }

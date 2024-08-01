@@ -18,7 +18,7 @@ using UnityEngine.UI;
 using UnityEPL.Utilities;
 using UnityEPL.Networking;
 
-namespace UnityEPL {
+namespace UnityEPL.GUI {
 
     /// <summary>
     /// This handles the button which launches the experiment.

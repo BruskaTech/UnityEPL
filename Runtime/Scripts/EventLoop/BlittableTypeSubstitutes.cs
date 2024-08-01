@@ -8,17 +8,11 @@
 //You should have received a copy of the GNU General Public License along with UnityEPL. If not, see <https://www.gnu.org/licenses/>. 
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
-using Unity.VisualScripting;
 
 using UnityEPL.Utilities;
 
