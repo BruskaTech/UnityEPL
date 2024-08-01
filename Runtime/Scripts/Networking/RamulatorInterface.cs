@@ -13,6 +13,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using NetMQ;
 
+using UnityEPL.DataManagement;
+
 namespace UnityEPL.Networking { 
 
     // This is just so you can use "?." syntax

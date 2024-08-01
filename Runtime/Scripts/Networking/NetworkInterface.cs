@@ -9,7 +9,6 @@
 
 //#define NETWORKINTERFACE_DEBUG_MESSAGES
 
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,7 +19,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Unity.Collections;
 
+using Newtonsoft.Json.Linq;
+
 using UnityEPL.Utilities;
+using UnityEPL.DataManagement;
 
 namespace UnityEPL.Networking {
     public abstract class NetworkInterface : EventLoop {

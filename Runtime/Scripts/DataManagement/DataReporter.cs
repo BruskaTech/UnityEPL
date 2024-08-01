@@ -9,10 +9,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using UnityEngine;
 
-namespace UnityEPL {
+namespace UnityEPL.DataManagement {
 
     //this superclass implements an interface for retrieving behavioral events from a queue
     public abstract class DataReporter<T> : SingletonEventMonoBehaviour<T>

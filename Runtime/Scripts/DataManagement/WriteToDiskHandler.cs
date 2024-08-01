@@ -7,13 +7,12 @@
 //UnityEPL is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 //You should have received a copy of the GNU General Public License along with UnityEPL. If not, see <https://www.gnu.org/licenses/>. 
 
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace UnityEPL {
+namespace UnityEPL.DataManagement {
 
     [AddComponentMenu("UnityEPL/Handlers/Write to Disk Handler")]
     public class WriteToDiskHandler<T> : DataHandler<T>
