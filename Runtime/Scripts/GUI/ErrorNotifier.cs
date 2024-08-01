@@ -72,7 +72,7 @@ namespace UnityEPL {
             _ = Instance.DoWaitFor(Instance.WarningHelper, exception.Message.ToNativeText(), exception.StackTrace.ToNativeText());
         }
         // TODO: JPB: (feature) Implement WarningHelper
-        protected async Task WarningHelper(NativeText message, NativeText stackTrace) {
+        protected Task WarningHelper(NativeText message, NativeText stackTrace) {
             manager.Pause(true);
             TextDisplayer.Instance.Display("Warning", LangStrings.Warning().Color("yellow"), LangStrings.GenForCurrLang(message.ToString()));
             Debug.Log($"Warning: {message}\n{stackTrace}");
@@ -86,6 +86,7 @@ namespace UnityEPL {
             // if ()
 
             manager.Pause(false);
+            return Task.CompletedTask;
         }
     }
 }

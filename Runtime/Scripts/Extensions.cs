@@ -20,7 +20,9 @@ using System.Diagnostics;
 using System.Reflection;
 using TMPro;
 
-namespace UnityEPL.Utilities {
+using UnityEPL.Utilities;
+
+namespace UnityEPL {
     public static class IEnumerable {
         // https://stackoverflow.com/a/30758270
         public static int GetSequenceHashCode<T>(this IEnumerable<T> sequence) {
@@ -53,7 +55,7 @@ namespace UnityEPL.Utilities {
             return shuf;
         }
         public static IList<T> Shuffle<T>(this IList<T> list) {
-            return list.Shuffle(Random.Rnd);
+            return list.Shuffle(Utilities.Random.Rnd);
         }
 
         /// <summary>
@@ -74,7 +76,7 @@ namespace UnityEPL.Utilities {
             return shuf;
         }
         public static List<T> Shuffle<T>(this List<T> list) {
-            return list.Shuffle(Random.Rnd);
+            return list.Shuffle(Utilities.Random.Rnd);
         }
 
         /// <summary>
@@ -93,7 +95,7 @@ namespace UnityEPL.Utilities {
             return list;
         }
         public static IList<T> ShuffleInPlace<T>(this IList<T> list) {
-            return list.ShuffleInPlace(Random.Rnd);
+            return list.ShuffleInPlace(Utilities.Random.Rnd);
         }
 
         /// <summary>
@@ -112,7 +114,7 @@ namespace UnityEPL.Utilities {
             return list;
         }
         public static List<T> ShuffleInPlace<T>(this List<T> list) {
-            return list.ShuffleInPlace(Random.Rnd);
+            return list.ShuffleInPlace(Utilities.Random.Rnd);
         }
 
         // https://stackoverflow.com/a/30758270
@@ -145,7 +147,7 @@ namespace UnityEPL.Utilities {
             return array;
         }
         public static T[] ShuffleInPlace<T>(this T[] array) {
-            return array.ShuffleInPlace(Random.Rnd);
+            return array.ShuffleInPlace(Utilities.Random.Rnd);
         }
 
         // https://stackoverflow.com/a/30758270
