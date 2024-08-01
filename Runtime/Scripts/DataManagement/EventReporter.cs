@@ -62,7 +62,7 @@ namespace UnityEPL {
 
         protected override void AwakeOverride() { }
         protected void Start() {
-            string directory = manager.fileManager.DataPath();
+            string directory = FileManager.DataPath();
             switch (outputFormat) {
                 case FORMAT.JSON_LINES:
                     filePath = Path.Combine(directory, extensionlessFileName + ".jsonl");
@@ -74,7 +74,7 @@ namespace UnityEPL {
 
         protected void DoWrite(DataPoint dataPoint) {
             if (filePath == defaultFilePath) {
-                var sessionPath = manager.fileManager.SessionPath();
+                var sessionPath = FileManager.SessionPath();
                 if (sessionPath != null) {
                     switch (outputFormat) {
                         case FORMAT.JSON_LINES:

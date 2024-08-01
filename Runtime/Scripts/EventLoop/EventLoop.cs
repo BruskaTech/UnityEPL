@@ -11,13 +11,13 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
-using static UnityEPL.Blittability;
 
 using UnityEPL.Utilities;
 
 namespace UnityEPL {
+
+    using static Blittability;
 
     // TODO: JPB: (bug) There may be a bug in the WebGL side because it just calls the function instead of putting it into a queue
     //            I don't think this is an issue because everything should be running in a single thread,

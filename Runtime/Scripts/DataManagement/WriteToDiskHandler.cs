@@ -102,7 +102,7 @@ namespace UnityEPL.DataManagement {
         /// </summary>
         protected void DoWrite() {
             while (waitingPoints.Count > 0) {
-                string directory = manager.fileManager.SessionPath();
+                string directory = FileManager.SessionPath();
                 if (directory == null) {
                     return;
                 }

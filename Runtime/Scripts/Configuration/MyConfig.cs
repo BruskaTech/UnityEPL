@@ -62,21 +62,34 @@ namespace UnityEPL {
         // FileManager.cs
 #nullable enable
         /// <summary>
+        /// DO NOT USE THIS VARIABLE DIRECTLY. Use FileManager.DataPath() instead.
         /// The path to the data folder.
-        /// If not set, defaults to the desktop.
+        /// If not set, defaults to the location of the application (or desktop for development).
         /// </summary>
         public static string? dataPath { get { return GetOptionalClassSetting<string>("dataPath"); } }
-#nullable disable
         /// <summary>
         /// The path to the wordpool file.
         /// </summary>
         public static string wordpool { get { return GetSetting<string>("wordpool"); } }
+        /// <summary>
+        /// The path to the practice wordpool file.
+        /// </summary>
         public static string practiceWordpool { get { return GetSetting<string>("practiceWordpool"); } }
         /// <summary>
-        /// The prefix for participant IDs.
-        /// If set to "any", any participant ID is valid.
+        /// The regex for participant IDs.
+        /// If set to "", any participant ID is valid.
         /// </summary>
-        public static string participantIdPrefix { get { return GetSetting<string>("participantIdPrefix"); } }
+        public static string? participantIdRegex { get { return GetOptionalClassSetting<string>("participantIdRegex"); } }
+        /// <summary>
+        /// The prefix for participant IDs.
+        /// If set to "", there is no expected prefix.
+        /// </summary>
+        public static string? participantIdPrefixRegex { get { return GetOptionalClassSetting<string>("participantIdPrefixRegex"); } }
+        /// <summary>
+        /// If set to "", there is no expected postfix.
+        /// </summary>
+        public static string? participantIdPostfixRegex { get { return GetOptionalClassSetting<string>("participantIdPostfixRegex"); } }
+#nullable disable
 
         // ExperimentBase.cs
         

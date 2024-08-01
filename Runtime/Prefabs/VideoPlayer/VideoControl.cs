@@ -93,8 +93,8 @@ namespace UnityEPL {
             if (absolutePath) {
                 this.videoPlayer.url = "file://" + this.videoPath;
             } else {
-                this.videoPlayer.url = "file://" + Path.Combine(manager.fileManager.ExperimentRoot(), this.videoPath);
-            } 
+                this.videoPlayer.url = "file://" + Path.Combine(FileManager.BasePath(), this.videoPath);
+            }
             this.skippable = skippable;
             videoPath.Dispose();
         }

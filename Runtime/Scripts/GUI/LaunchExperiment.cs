@@ -102,10 +102,10 @@ namespace UnityEPL.GUI {
             Application.targetFrameRate = Config.frameRate;
 
             // Create path for current participant/session
-            manager.fileManager.CreateSession();
+            FileManager.CreateSession();
 
             // Save Configs
-            Config.SaveConfigs(manager.fileManager.SessionPath());
+            Config.SaveConfigs(FileManager.SessionPath());
 
             // Connect to HostPC
             if (Config.elememOn) {
@@ -145,7 +145,7 @@ namespace UnityEPL.GUI {
         }
 
         private bool isValidParticipant(string name) {
-            return manager.fileManager.isValidParticipant(name);
+            return FileManager.isValidParticipant(name);
         }
     }
 }

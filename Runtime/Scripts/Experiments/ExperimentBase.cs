@@ -234,7 +234,7 @@ namespace UnityEPL {
             await RepeatUntilYes(async (CancellationToken ct) => {
                 await textDisplayer.PressAnyKey("microphone test prompt", LangStrings.MicrophoneTestTitle(), LangStrings.MicrophoneTest());
 
-                string wavPath = System.IO.Path.Combine(manager.fileManager.SessionPath(), "microphone_test_"
+                string wavPath = System.IO.Path.Combine(FileManager.SessionPath(), "microphone_test_"
                         + Clock.UtcNow.ToString("yyyy-MM-dd_HH_mm_ss") + ".wav");
 
                 manager.lowBeep.Play();

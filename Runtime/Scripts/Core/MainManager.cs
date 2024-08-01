@@ -39,7 +39,6 @@ namespace UnityEPL {
         //////////
         // ???
         //////////
-        public FileManager fileManager;
         protected ConcurrentStack<float> pauseTimescales = new();
 
         //////////
@@ -113,12 +112,12 @@ namespace UnityEPL {
 
             try {
                 // Create objects not tied to unity
-                fileManager = new FileManager(this);
+                // Nothing for now
 
                 // Setup Configs
                 var configs = SetupConfigs();
                 GetExperiments(configs);
-                fileManager.CreateDataFolder();
+                FileManager.CreateDataFolder();
 
                 // Setup Syncbox Interface
                 if (!Config.isTest && Config.syncboxOn) {
@@ -134,13 +133,13 @@ namespace UnityEPL {
 
         protected string[] SetupConfigs() {
 #if !UNITY_WEBGL // System.IO
-            Config.SetupSystemConfig(fileManager.ConfigPath());
+            Config.SetupSystemConfig(FileManager.ConfigPath());
 #else // !UNITY_WEBGL
             Config.SetupSystemConfig(Application.streamingAssetsPath);
 #endif // !UNITY_WEBGL
 
             // Get all configuration files
-            string configPath = fileManager.ConfigPath();
+            string configPath = FileManager.ConfigPath();
             string[] configs = Directory.GetFiles(configPath, "*.json");
             if (configs.Length < 2) {
                 ErrorNotifier.ErrorTS(new Exception("Configuration File Error. Missing system or experiment configuration file in configs folder"));

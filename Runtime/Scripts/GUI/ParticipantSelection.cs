@@ -86,13 +86,13 @@ namespace UnityEPL.GUI {
             dropdown.ClearOptions();
             dropdown.AddOptions(new List<string>() { "Select participant", "New Participant" });
 
-            string participantDirectory = manager.fileManager.ExperimentPath();
+            string participantDirectory = FileManager.ExperimentPath();
             if (Directory.Exists(participantDirectory)) {
                 string[] filepaths = Directory.GetDirectories(participantDirectory);
                 List<string> filenames = new List<string>();
 
                 for (int i = 0; i < filepaths.Length; i++)
-                    if (manager.fileManager.isValidParticipant(Path.GetFileName(filepaths[i])))
+                    if (FileManager.isValidParticipant(Path.GetFileName(filepaths[i])))
                         filenames.Add(Path.GetFileName(filepaths[i]));
 
                 dropdown.AddOptions(filenames);
@@ -108,19 +108,19 @@ namespace UnityEPL.GUI {
             Dropdown dropdown = GetComponent<Dropdown>();
             string selectedParticipant = dropdown.captionText.text;
 
-            if (!Directory.Exists(manager.fileManager.ParticipantPath(selectedParticipant)))
+            if (!Directory.Exists(FileManager.ParticipantPath(selectedParticipant)))
                 throw new UnityException("You tried to load a participant that doesn't exist.");
 
             participantNameInput.text = selectedParticipant;
 
-            nextSessionNumber = manager.fileManager.CurrentSession(selectedParticipant);
+            nextSessionNumber = FileManager.CurrentSession(selectedParticipant);
 
             UpdateTexts();
         }
         protected void LoadSession() {
             Dropdown dropdown = GetComponent<Dropdown>();
             string selectedParticipant = dropdown.captionText.text;
-            string sessionFilePath = manager.fileManager.SessionPath(selectedParticipant, nextSessionNumber);
+            string sessionFilePath = FileManager.SessionPath(selectedParticipant, nextSessionNumber);
             UpdateTexts();
         }
         protected void UpdateTexts() {

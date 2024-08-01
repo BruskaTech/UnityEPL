@@ -10,8 +10,6 @@
 
 using System;
 using System.IO;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
@@ -22,15 +20,9 @@ namespace UnityEPL {
     // which experiment data is stored
     /////////
     // TODO: JPB: (needed) (refactor) Decide if FileManager should be an EventLoop
-    public class FileManager {
+    public static class FileManager {
 
-        MainManager manager;
-
-        public FileManager(MainManager _manager) {
-            manager = _manager;
-        }
-
-        public virtual string ExperimentRoot() {
+        public static string BasePath() {
 
 #if UNITY_EDITOR
             return Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
@@ -39,11 +31,11 @@ namespace UnityEPL {
 #endif
         }
 
-        public string DataPath() {
-            return Config.dataPath ?? Path.Combine(ExperimentRoot(), "data");
+        public static string DataPath() {
+            return Config.dataPath ?? Path.Combine(BasePath(), "data");
         }
 
-        public string ExperimentPath() {
+        public static string ExperimentPath() {
             string experiment;
 
             try {
@@ -56,13 +48,13 @@ namespace UnityEPL {
             return Path.Combine(DataPath(), experiment);
         }
 
-        public string ParticipantPath(string participant) {
+        public static string ParticipantPath(string participant) {
             string dir = ExperimentPath();
             dir = Path.Combine(dir, participant);
             return dir;
         }
 
-        public string ParticipantPath() {
+        public static string ParticipantPath() {
             string dir = ExperimentPath();
 
             if (Config.subject == null) {
@@ -73,14 +65,14 @@ namespace UnityEPL {
             return dir;
         }
 
-        public string SessionPath(string participant, int session) {
+        public static string SessionPath(string participant, int session) {
             string dir = ParticipantPath(participant);
             dir = Path.Combine(dir, "session_" + session.ToString());
             return dir;
         }
 
 #nullable enable
-        public string? SessionPath() {
+        public static string? SessionPath() {
             if (Config.sessionNum == null) {
                 // return null and don't use ErrorTS because of EventReporter::DoWrite
                 return null;
@@ -91,7 +83,7 @@ namespace UnityEPL {
             return dir;
         }
 
-        public string? PriorSessionPath() {
+        public static string? PriorSessionPath() {
             if (Config.sessionNum == null) {
                 // return null and don't use ErrorTS because of EventReporter::DoWrite
                 return null;
@@ -105,37 +97,31 @@ namespace UnityEPL {
         }
 #nullable disable
 
-        public bool isValidParticipant(string code) {
+        public static bool isValidParticipant(string code) {
             if (Config.isTest) {
                 return true;
             }
 
-            string prefix;
-            try {
-                prefix = Config.participantIdPrefix;
-            } catch (MissingFieldException) {
-                return false;
-            }
-
-            if (prefix == "any") {
-                return true;
-            }
-
-            Regex rx = new Regex(@"^" + prefix + @"\d{1,4}[A-Z]?$");
+            string id = Config.participantIdRegex ?? ".*";
+            if (id == "") { id = ".*"; }
+            string prefix = Config.participantIdPrefixRegex ?? "";
+            string postfix = Config.participantIdPostfixRegex ?? "";
+            
+            Regex rx = new Regex(@"^" + prefix + id + postfix + @"$");
 
             return rx.IsMatch(code);
         }
 
-        public string GetWordList() {
-            string root = ExperimentRoot();
+        public static string GetWordList() {
+            string root = BasePath();
             return Path.Combine(root, Config.wordpool);
         }
-        public string GetPracticeWordList() {
-            string root = ExperimentRoot();
+        public static string GetPracticeWordList() {
+            string root = BasePath();
             return Path.Combine(root, Config.practiceWordpool);
         }
 
-        public void CreateSession() {
+        public static void CreateSession() {
             var dir = SessionPath();
             if (dir == null) {
                 throw new Exception("No session selected");
@@ -143,22 +129,22 @@ namespace UnityEPL {
             Directory.CreateDirectory(SessionPath());
         }
 
-        public void CreateParticipant() {
+        public static void CreateParticipant() {
             Directory.CreateDirectory(ParticipantPath());
         }
-        public void CreateExperiment() {
+        public static void CreateExperiment() {
             Directory.CreateDirectory(ExperimentPath());
         }
-        public void CreateDataFolder() {
+        public static void CreateDataFolder() {
             Directory.CreateDirectory(DataPath());
         }
 
-        public string ConfigPath() {
-            string root = ExperimentRoot();
+        public static string ConfigPath() {
+            string root = BasePath();
             return Path.Combine(root, "configs");
         }
 
-        public int CurrentSession(string participant) {
+        public static int CurrentSession(string participant) {
             int nextSessionNumber = 0;
             Debug.Log(SessionPath(participant, nextSessionNumber));
             while (Directory.Exists(SessionPath(participant, nextSessionNumber))) {

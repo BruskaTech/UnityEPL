@@ -12,9 +12,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using Unity.Collections;
-using Unity.Collections.LowLevel.Unsafe;
-
-using UnityEPL.Utilities;
 
 namespace UnityEPL {
 
@@ -158,82 +155,6 @@ namespace UnityEPL {
                 memStream.Seek(0, SeekOrigin.Begin);
                 var obj = binForm.Deserialize(memStream);
                 return obj;
-            }
-        }
-    }
-
-    public static class Blittability {
-        // AssertBlittable
-
-        public static bool IsPassable(Type t) {
-            Type genericTypeDefinition = null;
-            try {
-                genericTypeDefinition = t.GetGenericTypeDefinition();
-            } catch (InvalidOperationException) { }
-            return UnsafeUtility.IsBlittable(t)
-                | typeof(Mutex<>) == genericTypeDefinition;
-        }
-
-        // TODO: JPB: (feature) Maybe use IComponentData from com.unity.entities when it releases
-        //            This will also allow for bool and char to be included in the structs
-        //            https://docs.unity3d.com/Packages/com.unity.entities@0.17/api/Unity.Entities.IComponentData.html
-        public static void AssertBlittable<T>()
-                where T : struct {
-            if (!IsPassable(typeof(T))) {
-                throw new ArgumentException($"The first argument is not a blittable type ({typeof(T)}).");
-            }
-        }
-        public static void AssertBlittable<T, U>()
-                where T : struct
-                where U : struct {
-            if (!IsPassable(typeof(T))) {
-                throw new ArgumentException($"The first argument is not a blittable type ({typeof(T)}).");
-            } else if (!IsPassable(typeof(U))) {
-                throw new ArgumentException($"The second argument is not a blittable type ({typeof(U)}).");
-            }
-        }
-        public static void AssertBlittable<T, U, V>()
-                where T : struct
-                where U : struct
-                where V : struct {
-            if (!IsPassable(typeof(T))) {
-                throw new ArgumentException($"The first argument is not a blittable type ({typeof(T)}).");
-            } else if (!IsPassable(typeof(U))) {
-                throw new ArgumentException($"The second argument is not a blittable type ({typeof(U)}).");
-            } else if (!IsPassable(typeof(V))) {
-                throw new ArgumentException($"The third argument is not a blittable type ({typeof(V)}).");
-            }
-        }
-        public static void AssertBlittable<T, U, V, W>()
-                where T : struct
-                where U : struct
-                where V : struct
-                where W : struct {
-            if (!IsPassable(typeof(T))) {
-                throw new ArgumentException($"The first argument is not a blittable type ({typeof(T)}).");
-            } else if (!IsPassable(typeof(U))) {
-                throw new ArgumentException($"The second argument is not a blittable type ({typeof(U)}).");
-            } else if (!IsPassable(typeof(V))) {
-                throw new ArgumentException($"The third argument is not a blittable type ({typeof(V)}).");
-            } else if (!IsPassable(typeof(W))) {
-                throw new ArgumentException($"The fourth argument is not a blittable type ({typeof(W)}).");
-            }
-        }
-        public static void AssertBlittable<T, U, V, W, Z>()
-                where T : struct
-                where U : struct
-                where V : struct
-                where W : struct {
-            if (!IsPassable(typeof(T))) {
-                throw new ArgumentException($"The first argument is not a blittable type ({typeof(T)}).");
-            } else if (!IsPassable(typeof(U))) {
-                throw new ArgumentException($"The second argument is not a blittable type ({typeof(U)}).");
-            } else if (!IsPassable(typeof(V))) {
-                throw new ArgumentException($"The third argument is not a blittable type ({typeof(V)}).");
-            } else if (!IsPassable(typeof(W))) {
-                throw new ArgumentException($"The fourth argument is not a blittable type ({typeof(W)}).");
-            } else if (!IsPassable(typeof(Z))) {
-                throw new ArgumentException($"The fifth argument is not a blittable type ({typeof(Z)}).");
             }
         }
     }
