@@ -21,8 +21,10 @@ using System.Linq;
 
 using UnityEPL.Utilities;
 using UnityEPL.Networking;
+using UnityEPL.Threading;
+using UnityEPL.Extensions;
 
-namespace UnityEPL {
+namespace UnityEPL.GUI {
 
     [AddComponentMenu("UnityEPL/Internal/TextDisplayer")]
     public class TextDisplayer : SingletonEventMonoBehaviour<TextDisplayer> {

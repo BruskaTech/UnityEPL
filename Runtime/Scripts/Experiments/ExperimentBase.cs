@@ -18,7 +18,8 @@ using UnityEngine;
 
 using UnityEPL.Utilities;
 using UnityEPL.Networking;
-using UnityEPL.DataManagement;
+using UnityEPL.GUI;
+using UnityEPL.Extensions;
 
 namespace UnityEPL {
 

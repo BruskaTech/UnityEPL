@@ -23,6 +23,8 @@ using Newtonsoft.Json.Linq;
 
 using UnityEPL.Utilities;
 using UnityEPL.DataManagement;
+using UnityEPL.Threading;
+using UnityEPL.Extensions;
 
 namespace UnityEPL.Networking {
     public abstract class NetworkInterface : EventLoop {

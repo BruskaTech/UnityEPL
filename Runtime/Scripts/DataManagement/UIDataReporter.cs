@@ -10,6 +10,8 @@
 using Unity.Collections;
 using UnityEngine;
 
+using UnityEPL.Threading;
+
 namespace UnityEPL.DataManagement {
 
     [AddComponentMenu("UnityEPL/Reporters/UI Data Reporter")]

@@ -17,6 +17,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
 using UnityEPL;
+using UnityEPL.Threading;
 using UnityEPL.Utilities;
 
 namespace UnityEPLTests {

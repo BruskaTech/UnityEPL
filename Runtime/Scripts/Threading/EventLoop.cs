@@ -14,8 +14,9 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 using UnityEPL.Utilities;
+using UnityEPL.Extensions;
 
-namespace UnityEPL {
+namespace UnityEPL.Threading {
 
     using static Blittability;
 

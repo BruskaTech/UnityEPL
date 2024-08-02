@@ -40,7 +40,7 @@ using System.IO;
 using UnityEngine;
 using System.Collections.Generic;
 
-namespace UnityEPL {
+namespace UnityEPL.Utilities {
     public static class SaveWave {
 
         const int HEADER_SIZE = 44;

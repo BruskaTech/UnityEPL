@@ -15,7 +15,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace UnityEPL {
+namespace UnityEPL.Threading {
 
     // Origin: https://stackoverflow.com/a/30726903
     // If something more complex is needed in the future, look at the following links

@@ -16,7 +16,9 @@ using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Video;
 
-namespace UnityEPL {
+using UnityEPL.Threading;
+
+namespace UnityEPL.GUI {
 
     public class VideoControl : EventMonoBehaviour {
         protected override void AwakeOverride() { }

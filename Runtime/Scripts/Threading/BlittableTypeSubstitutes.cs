@@ -13,7 +13,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using Unity.Collections;
 
-namespace UnityEPL {
+namespace UnityEPL.Threading {
 
     // Information on blittability
     // https://learn.microsoft.com/en-us/dotnet/framework/interop/blittable-and-non-blittable-types

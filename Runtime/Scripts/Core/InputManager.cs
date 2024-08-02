@@ -13,6 +13,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
+using UnityEPL.Threading;
+
 namespace UnityEPL {
 
     // TODO: JPB: (refactor) Use new unity input system for key input

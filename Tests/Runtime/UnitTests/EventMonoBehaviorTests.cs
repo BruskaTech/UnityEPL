@@ -13,7 +13,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,6 +22,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
 using UnityEPL;
+using UnityEPL.Extensions;
 using UnityEPL.Utilities;
 
 namespace UnityEPLTests {

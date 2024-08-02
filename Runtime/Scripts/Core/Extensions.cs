@@ -20,8 +20,8 @@ using UnityEngine;
 using Newtonsoft.Json;
 using TMPro;
 
-namespace UnityEPL {
-    public static class IEnumerable {
+namespace UnityEPL.Extensions {
+    public static class IEnumerableExtensions {
         // https://stackoverflow.com/a/30758270
         public static int GetSequenceHashCode<T>(this IEnumerable<T> sequence) {
             const int seed = 487;
@@ -349,7 +349,6 @@ namespace UnityEPL {
             return random.NextFloat() * (max - min) + min;
         }
     }
-
 
     /// <summary>
     /// https://stackoverflow.com/a/63685720

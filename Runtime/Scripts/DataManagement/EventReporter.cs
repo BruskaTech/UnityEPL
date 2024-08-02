@@ -16,6 +16,7 @@ using UnityEngine;
 
 using UnityEPL.Utilities;
 using UnityEPL.DataManagement;
+using UnityEPL.Threading;
 
 namespace UnityEPL {
 
@@ -52,52 +53,4 @@ namespace UnityEPL {
         }
     }
 
-    public class DataReporter2<T> : SingletonEventMonoBehaviour<T> where T : DataReporter2<T> {
-        public enum FORMAT { JSON_LINES };
-
-        protected FORMAT outputFormat = FORMAT.JSON_LINES;
-        protected string defaultFilePath = "";
-        protected string filePath = "";
-        string extensionlessFileName = "session";
-
-        protected override void AwakeOverride() { }
-        protected void Start() {
-            string directory = FileManager.DataPath();
-            switch (outputFormat) {
-                case FORMAT.JSON_LINES:
-                    filePath = Path.Combine(directory, extensionlessFileName + ".jsonl");
-                    break;
-            }
-            defaultFilePath = filePath;
-            File.Create(defaultFilePath);
-        }
-
-        protected void DoWrite(DataPoint dataPoint) {
-            if (filePath == defaultFilePath) {
-                var sessionPath = FileManager.SessionPath();
-                if (sessionPath != null) {
-                    switch (outputFormat) {
-                        case FORMAT.JSON_LINES:
-                            filePath = Path.Combine(sessionPath, extensionlessFileName + ".jsonl");
-                            break;
-                    }
-                }
-            }
-
-            // This was an idea for stopping the hanging loop that happens when there is no configs folder
-            // TODO: JPB: (bug) If there is no configs folder with configs.json inside it, the program hangs
-            // if (!File.Exists(filePath)) {
-            //     return;
-            // }
-
-            string lineOutput = "Unrecognized DataReporter FORMAT";
-            switch (outputFormat) {
-                case FORMAT.JSON_LINES:
-                    lineOutput = dataPoint.ToJSON();
-                    break;
-            }
-
-            File.AppendAllText(filePath, lineOutput + Environment.NewLine);
-        }
-    }
 }

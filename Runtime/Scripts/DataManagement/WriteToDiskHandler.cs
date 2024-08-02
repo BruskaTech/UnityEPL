@@ -12,6 +12,8 @@ using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
 
+using UnityEPL.Threading;
+
 namespace UnityEPL.DataManagement {
 
     [AddComponentMenu("UnityEPL/Handlers/Write to Disk Handler")]

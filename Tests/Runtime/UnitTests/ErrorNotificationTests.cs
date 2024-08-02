@@ -12,13 +12,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 using UnityEngine.UI;
+using NUnit.Framework;
 
 using UnityEPL;
+using UnityEPL.GUI;
 
 namespace UnityEPLTests {
 

@@ -14,7 +14,9 @@ using UnityEngine;
 using Unity.Collections;
 using System.Threading.Tasks;
 
-namespace UnityEPL {
+using UnityEPL.Threading;
+
+namespace UnityEPL.Utilities {
 
 #if !UNITY_WEBGL // Microphone
     public class SoundRecorder : EventMonoBehaviour {

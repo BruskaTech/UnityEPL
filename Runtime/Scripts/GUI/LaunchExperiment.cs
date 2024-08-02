@@ -17,6 +17,7 @@ using UnityEngine.UI;
 
 using UnityEPL.Utilities;
 using UnityEPL.Networking;
+using UnityEPL.Extensions;
 
 namespace UnityEPL.GUI {
 

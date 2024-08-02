@@ -13,6 +13,9 @@ using System.Threading.Tasks;
 using Unity.Collections;
 using UnityEngine;
 
+using UnityEPL.Extensions;
+using UnityEPL.GUI;
+using UnityEPL.Threading;
 using UnityEPL.Utilities;
 
 namespace UnityEPL {

@@ -11,7 +11,7 @@ using Unity.Collections.LowLevel.Unsafe;
 
 using UnityEPL.Utilities;
 
-namespace UnityEPL {
+namespace UnityEPL.Threading {
     public static class Blittability {
         // AssertBlittable
 
