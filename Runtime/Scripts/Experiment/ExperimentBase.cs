@@ -21,9 +21,9 @@ using UnityEPL.Networking;
 using UnityEPL.GUI;
 using UnityEPL.Extensions;
 
-namespace UnityEPL {
+namespace UnityEPL.Experiment {
 
-    public static class ExperimentActive {
+    static class ExperimentActive {
         private static bool active = false;
         public static bool isActive() { return active; }
         public static void SetActive(bool val) {

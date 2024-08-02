@@ -15,6 +15,8 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
+using UnityEPL.Utilities;
+
 namespace UnityEPL {
 
     // This class is thread safe (except for setup)

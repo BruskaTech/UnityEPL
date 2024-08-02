@@ -22,7 +22,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Converters;
 
-namespace UnityEPL {
+namespace UnityEPL.Utilities {
     public static class FlexibleConfig {
         public static IDictionary<string, object> LoadFromText(string json) {
             JObject cfg = JObject.Parse(json);

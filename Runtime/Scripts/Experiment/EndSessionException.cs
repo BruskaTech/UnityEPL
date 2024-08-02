@@ -10,7 +10,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace UnityEPL {
+namespace UnityEPL.Experiment {
 
     // Using exceptions for ending trials is better because
     // 1) You may want to end a practice or the real trials at any time
