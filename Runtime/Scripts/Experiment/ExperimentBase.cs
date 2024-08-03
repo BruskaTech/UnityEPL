@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 using UnityEPL.Utilities;
-using UnityEPL.Networking;
+using UnityEPL.ExternalDevices;
 using UnityEPL.GUI;
 using UnityEPL.Extensions;
 

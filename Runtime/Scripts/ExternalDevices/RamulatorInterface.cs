@@ -15,7 +15,7 @@ using NetMQ;
 
 using UnityEPL.DataManagement;
 
-namespace UnityEPL.Networking { 
+namespace UnityEPL.ExternalDevices { 
 
     // This is just so you can use "?." syntax
     public class RamulatorWrapper {
@@ -55,7 +55,7 @@ namespace UnityEPL.Networking {
         }
     }
 
-    public class RamulatorInterface : EventMonoBehaviour {
+    class RamulatorInterface : EventMonoBehaviour {
         protected override void AwakeOverride() { }
 
         //how long to wait for ramulator to connect

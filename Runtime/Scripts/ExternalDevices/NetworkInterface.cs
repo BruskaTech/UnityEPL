@@ -21,12 +21,11 @@ using Unity.Collections;
 
 using Newtonsoft.Json.Linq;
 
-using UnityEPL.Utilities;
 using UnityEPL.DataManagement;
 using UnityEPL.Threading;
 using UnityEPL.Extensions;
 
-namespace UnityEPL.Networking {
+namespace UnityEPL.Utilities {
     public abstract class NetworkInterface : EventLoop {
         private TcpClient tcpClient;
         private NetworkStream stream;

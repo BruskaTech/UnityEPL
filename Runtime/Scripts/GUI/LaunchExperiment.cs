@@ -16,7 +16,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 using UnityEPL.Utilities;
-using UnityEPL.Networking;
+using UnityEPL.ExternalDevices;
 using UnityEPL.Extensions;
 
 namespace UnityEPL.GUI {

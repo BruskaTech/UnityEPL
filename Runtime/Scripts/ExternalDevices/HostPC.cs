@@ -12,7 +12,9 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace UnityEPL.Networking {
+using UnityEPL.Utilities;
+
+namespace UnityEPL.ExternalDevices {
 
     // Host PC State Message
     public partial class HostPcStateMsg {

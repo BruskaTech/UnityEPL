@@ -22,6 +22,6 @@ Here is the API documentation for UnityEPL.
 
 [Data Management](UnityEPL.DataManagement.yml): Other data reporting tools
 
-[Networking](UnityEPL.Networking.yml): Networking utilities
+[ExternalDevices](UnityEPL.ExternalDevices.yml): External Devices (ex: Elemem and networked syncbox)
 
 [Threading](UnityEPL.Threading.yml): Tools to make threading simple

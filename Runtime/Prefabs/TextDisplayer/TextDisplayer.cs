@@ -20,7 +20,7 @@ using TMPro;
 using System.Linq;
 
 using UnityEPL.Utilities;
-using UnityEPL.Networking;
+using UnityEPL.ExternalDevices;
 using UnityEPL.Threading;
 using UnityEPL.Extensions;
 

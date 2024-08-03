@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 using UnityEPL.Utilities;
 
-namespace UnityEPL.Networking {
+namespace UnityEPL.ExternalDevices {
 
     public class ElememInterface : HostPC {
         public ElememInterface() { }
