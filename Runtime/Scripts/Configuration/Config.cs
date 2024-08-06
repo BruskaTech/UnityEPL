@@ -33,6 +33,10 @@ namespace UnityEPL {
         private static string onlineExperimentConfigText = null;
 
         // Public Internal Variables
+
+        /// <summary>
+        /// The name of the experiment config file.
+        /// </summary>
         public static string experimentConfigName = null;
 
         // Functions

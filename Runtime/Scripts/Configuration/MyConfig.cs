@@ -19,7 +19,7 @@ namespace UnityEPL {
         public static bool logNetworkMessages { get { return GetSetting<bool>("logNetworkMessages"); } }
         /// <summary>
         /// This will cause all EventLoop errors to have full stack traces that include where it came from.
-        /// This is not turned on by default because it is very slow (since has to create a backtrace for every Do function).
+        /// <br/>This is not turned on by default because it is very slow (since has to create a backtrace for every Do function).
         /// </summary>
         public static bool debugEventLoopExtendedStackTrace { get { return GetSetting<bool>("debugEventLoopExtendedStackTrace"); } }
         /// <summary>
@@ -47,7 +47,7 @@ namespace UnityEPL {
 
         /// <summary>
         /// This will cause the experiment to use the sync box.
-        /// NOT IMPLEMENTED YET
+        /// <br/>NOT IMPLEMENTED YET
         /// </summary>
         public static bool syncboxOn { get { throw new NotImplementedException(); } } //return GetSetting<bool>("syncboxOn"); } }
         /// <summary>
@@ -56,7 +56,7 @@ namespace UnityEPL {
         public static int syncBoxTestDurationMs { get { return GetSetting<int>("syncBoxTestDurationMs"); } }
         /// <summary>
         /// This will allow the expeiment to use a PS4 controller.
-        /// NOT IMPLEMENTED YET
+        /// <br/>NOT IMPLEMENTED YET
         /// </summary>
         public static bool ps4Controller { get { throw new NotImplementedException(); } } //return GetSetting<bool>("ps4Contoller"); } }
 
@@ -64,12 +64,12 @@ namespace UnityEPL {
 
         /// <summary>
         /// This will show the FPS on the screen at all times.
-        /// NOT IMPLEMENTED YET
+        /// <br/>NOT IMPLEMENTED YET
         /// </summary>
         public static bool showFps { get { throw new NotImplementedException(); } } //return GetSetting<bool>("showFps"); } }
         /// <summary>
         /// This is a flag to determine if the application is in test mode.
-        /// The default should be: false
+        /// <br/>The default should be: false
         /// </summary>
         public static bool isTest { get { return GetSetting<bool>("isTest"); } }
 
@@ -88,7 +88,7 @@ namespace UnityEPL {
 #nullable enable
         /// <summary>
         /// The subject ID.
-        /// DO NOT INCLUDE IN CONFIG FILE (it will be set automatically by the experiment launcher)
+        /// <br/>DO NOT INCLUDE IN CONFIG FILE (it will be set automatically by the experiment launcher)
         /// </summary>
         public static string? subject {
             get { return GetOptionalClassSetting<string>("subject"); }
@@ -97,7 +97,7 @@ namespace UnityEPL {
 #nullable disable
         /// <summary>
         /// The session number.
-        /// DO NOT INCLUDE IN CONFIG FILE (it will be set automatically by the experiment launcher)
+        /// <br/>DO NOT INCLUDE IN CONFIG FILE (it will be set automatically by the experiment launcher)
         /// </summary>
         public static int? sessionNum {
             get { return GetOptionalSetting<int>("session"); }
@@ -105,7 +105,7 @@ namespace UnityEPL {
         }
         /// <summary>
         /// The list of available experiments.
-        /// DO NOT INCLUDE IN CONFIG FILE (it will be set automatically by the MainManager)
+        /// <br/>DO NOT INCLUDE IN CONFIG FILE (it will be set automatically by the MainManager)
         /// </summary>
         public static string[] availableExperiments {
             get { return GetSetting<string[]>("availableExperiments"); }
@@ -116,23 +116,23 @@ namespace UnityEPL {
 
         /// <summary>
         /// This adjusts the vSync count of the application (what multiple of the screen frame rate the game should run at).
-        /// The default should be: 1
-        /// For more information: https://docs.unity3d.com/ScriptReference/QualitySettings-vSyncCount.html
+        /// <br/>The default should be: 1
+        /// <br/>For more information: https://docs.unity3d.com/ScriptReference/QualitySettings-vSyncCount.html
         /// </summary>
         public static int vSync { get { return GetSetting<int>("vSync"); } }
         /// <summary>
         /// This adjusts the target frame rate of the application.
-        /// The default should be: -1
-        /// This should really only be used on mobile applications.
-        /// Also, beware that setting this value to something that is not a multiple of the screen refresh rate can cause issues about when you assume something ACTUALLY shows up on the screen...
-        /// For more information: https://docs.unity3d.com/ScriptReference/Application-targetFrameRate.html
+        /// <br/>The default should be: -1
+        /// <br/>This should really only be used on mobile applications.
+        /// <br/>Also, beware that setting this value to something that is not a multiple of the screen refresh rate can cause issues about when you assume something ACTUALLY shows up on the screen...
+        /// <br/>For more information: https://docs.unity3d.com/ScriptReference/Application-targetFrameRate.html
         /// </summary>
         public static int frameRate { get { return GetSetting<int>("frameRate"); } }
 
         public static string experimentScene { get { return GetSetting<string>("experimentScene"); } }
         /// <summary>
         /// The experiment class to use.
-        /// This class should always inherit from ExperimentBase (or something else that does).
+        /// <br/>This class should always inherit from ExperimentBase (or something else that does).
         /// </summary>
         public static string experimentClass { get { return GetSetting<string>("experimentClass"); } }
         /// <summary>
@@ -141,7 +141,7 @@ namespace UnityEPL {
         public static string experimentName { get { return GetSetting<string>("experimentName"); } }
         /// <summary>
         /// The name of the launcher scene.
-        /// The default should be: "Startup"
+        /// <br/>The default should be: "Startup"
         /// </summary>
         public static string launcherScene { get { return GetSetting<string>("launcherScene"); } }
 
@@ -149,9 +149,9 @@ namespace UnityEPL {
 
 #nullable enable
         /// <summary>
-        /// DO NOT USE THIS VARIABLE DIRECTLY. Use FileManager.DataPath() instead.
         /// The path to the data folder.
-        /// If not set, defaults to the location of the application (or desktop for development).
+        /// <br/>DO NOT USE THIS VARIABLE DIRECTLY. Use FileManager.DataPath() instead.
+        /// <br/>If not set, defaults to the location of the application (or desktop for development).
         /// </summary>
         public static string? dataPath { get { return GetOptionalClassSetting<string>("dataPath"); } }
         /// <summary>
@@ -164,15 +164,16 @@ namespace UnityEPL {
         public static string practiceWordpool { get { return GetSetting<string>("practiceWordpool"); } }
         /// <summary>
         /// The regex for participant IDs.
-        /// If set to "", any participant ID is valid.
+        /// <br/>If set to "", any participant ID is valid.
         /// </summary>
         public static string? participantIdRegex { get { return GetOptionalClassSetting<string>("participantIdRegex"); } }
         /// <summary>
-        /// The prefix for participant IDs.
-        /// If set to "", there is no expected prefix.
+        /// The regex for the prefix for participant IDs.
+        /// <br/>If set to "", there is no expected prefix.
         /// </summary>
         public static string? participantIdPrefixRegex { get { return GetOptionalClassSetting<string>("participantIdPrefixRegex"); } }
         /// <summary>
+        /// The regex for the postfix for participant IDs.
         /// If set to "", there is no expected postfix.
         /// </summary>
         public static string? participantIdPostfixRegex { get { return GetOptionalClassSetting<string>("participantIdPostfixRegex"); } }
@@ -193,7 +194,7 @@ namespace UnityEPL {
 
         /// <summary>
         /// The type of stimulation to use in this experiment.
-        /// The options are: ReadOnly, OpenLoop, and ClosedLoop
+        /// <br/>The options are: ReadOnly, OpenLoop, and ClosedLoop
         /// </summary>
         public static string stimMode { get { return GetSetting<string>("stimMode"); } }
     }
