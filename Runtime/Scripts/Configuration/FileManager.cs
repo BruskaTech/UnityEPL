@@ -121,7 +121,7 @@ namespace UnityEPL {
             return Path.Combine(root, Config.practiceWordpool);
         }
 
-        public static void CreateSession() {
+        internal static void CreateSession() {
             var dir = SessionPath();
             if (dir == null) {
                 throw new Exception("No session selected");
@@ -129,13 +129,13 @@ namespace UnityEPL {
             Directory.CreateDirectory(SessionPath());
         }
 
-        public static void CreateParticipant() {
+        internal static void CreateParticipant() {
             Directory.CreateDirectory(ParticipantPath());
         }
-        public static void CreateExperiment() {
+        internal static void CreateExperiment() {
             Directory.CreateDirectory(ExperimentPath());
         }
-        public static void CreateDataFolder() {
+        internal static void CreateDataFolder() {
             Directory.CreateDirectory(DataPath());
         }
 

@@ -29,8 +29,8 @@ namespace UnityEPL {
         private static ConcurrentDictionary<string, object> experimentConfig = null;
         private static string configPath = "CONFIG_PATH_NOT_SET";
 
-        public static string onlineSystemConfigText = null;
-        public static string onlineExperimentConfigText = null;
+        private static string onlineSystemConfigText = null;
+        private static string onlineExperimentConfigText = null;
 
         // Public Internal Variables
         public static string experimentConfigName = null;
@@ -57,7 +57,7 @@ namespace UnityEPL {
         }
 
         // This has to be called before SetupExperimentConfig
-        public static void SetupSystemConfig(string configPath) {
+        internal static void SetupSystemConfig(string configPath) {
             systemConfig = null;
             Config.configPath = configPath;
 

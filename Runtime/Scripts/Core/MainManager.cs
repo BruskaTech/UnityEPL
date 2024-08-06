@@ -73,19 +73,16 @@ namespace UnityEPL {
         //////////
         // StartTime
         //////////
-        public DateTime StartTimeTS { 
-            get {
-                return new();
-            } 
-            protected set { } 
-        }
+        
+        /// <summary>
+        /// The time the game was started
+        /// </summary>
+        public readonly DateTime StartTimeTS = Clock.UtcNow;
+        /// <summary>
+        /// The time since the game was started
+        /// </summary>
         public TimeSpan TimeSinceStartupTS {
             get { return Clock.UtcNow - StartTimeTS; }
-            protected set { }
-        }
-        public DateTime TimeStampTS {
-            get { return StartTimeTS.Add(TimeSinceStartupTS); }
-            private set { }
         }
 
         //////////
@@ -105,9 +102,7 @@ namespace UnityEPL {
             }
         }
 
-        protected override void AwakeOverride() {
-            StartTimeTS = Clock.UtcNow;
-        }
+        protected override void AwakeOverride() { }
 
         protected void Start() {
             // Unity internal event handling

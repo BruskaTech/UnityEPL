@@ -26,6 +26,8 @@ namespace UnityEPL.Utilities {
     public static class FlexibleConfig {
         public static IDictionary<string, object> LoadFromText(string json) {
             JObject cfg = JObject.Parse(json);
+            cfg.TryGetValue("data", out JToken data);
+            
             return CastToStatic(cfg);
         }
 
@@ -38,7 +40,14 @@ namespace UnityEPL.Utilities {
             }
         }
 
-        public static IDictionary<string, object> CastToStatic(JObject cfg) {
+        /// <summary>
+        /// Casts a JObject consisting of simple types (int, bool, string, float, and single dimensional arrays) to a C# expando object.
+        /// This obviates the need for casts to work in C# native types.
+        /// </summary>
+        /// <param name="cfg"></param>
+        /// <returns>The </returns>
+        /// <exception cref="Exception"></exception>
+        private static IDictionary<string, object> CastToStatic(JObject cfg) {
             // casts a JObject consisting of simple types (int, bool, string,
             // float, and single dimensional arrays) to a C# expando object, obviating
             // the need for casts to work in C# native types
