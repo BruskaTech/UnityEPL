@@ -14,7 +14,7 @@ namespace UnityEPL.Utilities {
     /// <summary>
     /// This allows you to call coroutines from a normal function (it blocks)
     /// This can only be used on the main thread (due to Unity restrictions)
-    /// If you need to get around this, then add a UnityCoroutineRunner to InterfaceManager.
+    /// If you need to get around this, then add a UnityCoroutineRunner to MainManager.
     /// This would need to be made thread safe though.
     /// </summary>
     public class UnityCoroutineRunner : MonoBehaviour {

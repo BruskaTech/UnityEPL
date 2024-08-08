@@ -35,7 +35,7 @@ public class TestExperiment : ExperimentBase<TestExperiment, TestSession, TestTr
 
     protected override async Task TrialStates() {
         //await manager.textDisplayer.AwaitableUpdateText("AwaitableUpdateText");
-        //await InterfaceManager2.Delay(1000);
+        //await MainManager2.Delay(1000);
         //manager.textDisplayer.UpdateText("DONE");
         //var a = await manager.textDisplayer.ReturnableUpdateText("ReturnableUpdateText");
         //UnityEngine.Debug.Log("DoGet: " + a);
@@ -54,7 +54,7 @@ public class TestExperiment : ExperimentBase<TestExperiment, TestSession, TestTr
         //KeyMsg keyMsg = await WaitOnKey(default);
         //UnityEngine.Debug.Log("MainStates - WaitOnKey: " + keyMsg.key);
         //manager.textDisplayer.UpdateText("UpdateText");
-        //await InterfaceManager2.Delay(1000);
+        //await MainManager2.Delay(1000);
         //await DelayedGet();
     }
 }

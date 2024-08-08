@@ -17,17 +17,40 @@ This is opposite from what you usually see with Unity ('IEnumerator' and 'yield 
 Both IEnumerators (in Unity) and async/await act similarly in Unity. Each has its pros and cons.
 Below I will explain what each is and why the foundation of UnityEPL uses async/await.
 
-### IEnumerators
+### What are IEnumerators
 
-TODO
+These are the basis for how Unity used to work. Essentially, every function that had to run across multiple frames used an ```IEnumerator```. When you wanted to wait for one frame you would ```yield return null``` in your function. These functions could stact too. For example, you could ```yield return new WaitForSeconds(1)``` to wait for 1 second. Altogether, it would look like this.
 
-### Coroutines
+```csharp
+    IEnumerator Foo() {
+        yield return null; // Wait for 1 frame
+        yield return new WaitForSeconds(1); // Wait for 1 second
+    }
+```
 
-TODO
+### What is Async/Await
 
-### Async/Await
+So now this new thing comes along, async/await. You mark an function ```async``` any time it is going to wait for something to happen. You mark a function call ```await``` when you are waiting for another async function. The equivalent function of above would be this:
 
-TODO
+```csharp
+    async void Foo() {
+        await Awaitable.NextFrameAsync(); // Wait for 1 frame
+        await Task.Delay(1000); // Wait for 1 second
+
+        // Note, when using the UnityEPLm it should be the following:
+        // await MaineManager.Instance.Delay(1000); // Wait for 1 second
+
+        // Or if in an UnityEPL Experiment method:
+        // await manager.Delay(1000); // Wait for 1 second
+    }
+```
+
+You can see that they are pretty similar. So what's the difference?
+
+### Pros of IEnumerator
+
+1. It is what was used in the past, which means there is lots of documentation.
+1. It compiles down to a single state machine, which means it is very optimized.
 
 ### Pros of Async/Await
 
@@ -174,7 +197,7 @@ TODO
 
     async Task<int> FrameLogger() {
         UnityEngine.Debug.Log("Frame 1");
-        await InterfaceManager.Instance.Delay(1000);
+        await MainManager.Instance.Delay(1000);
         // 'await manager.Delay(1000);' inside of an experiment method
         UnityEngine.Debug.Log("Frame 2");
         return 2; // number of frames logged   
@@ -306,13 +329,15 @@ TODO
 
     </details>
 
-### Pros of IEnumerator
-
-TODO
+1. It is easier to use other outside C# code (such as network code)since using IEnumerators in this fashion is specific to Unity.
 
 ### Why we chose async/await
 
-TODO
+If you look at the pros of IEnumerator, it isn't very strong. Sticking to something just because it was the way it was done is not very good. And the amount of optimization for IEnumerators usually will not play a role overall slowness.
+
+Unity is also increasing compatibility with async/await more and more with every release. They realize how important this language feature is and the benefits that it brings.
+
+Now, just because the main experiments are written with async/await as the lead, doesn't mean you can't use IEnumerators. IEnumerators are used all over UnityEPL internally. In addition, many tools are provided for IEnumerators (ex: EnumeratorExtensions::TryCatch) and for the switching between IEnumerators and Tasks (TaskExtensions::ToEnumerator and EventMonoBehaviour::ToCoroutineTask)
 
 ## Common Unity Errors
 
@@ -322,11 +347,11 @@ These are general questions often asked.
 
     - Make sure you close the unity editor and re-open it. I'm not sure why this is needed, but it is.
 
-1. ### InterfaceManager accessed before Awake was called
+1. ### MainManager accessed before Awake was called
 
     1. Click *Edit > Project Settings*.
     1. Go to *Script Execution Order*.
-    1. Click the *+* to add a script and select UnityEPL.InterfaceManager.
+    1. Click the *+* to add a script and select UnityEPL.MainManager.
     1. Set the value of this new item to *-10* (or anything less than 0).
 
 1. ### You start the experiment, but all you see is the empty background (looks like the sky)

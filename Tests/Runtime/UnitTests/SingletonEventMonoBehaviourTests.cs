@@ -37,7 +37,7 @@ namespace UnityEPLTests {
             if (!isSetup) {
                 isSetup = true;
                 SceneManager.LoadScene("manager");
-                yield return null; // Wait for InterfaceManager Awake call
+                yield return null; // Wait for MainManager Awake call
             }
         }
 

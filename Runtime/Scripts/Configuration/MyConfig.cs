@@ -112,7 +112,7 @@ namespace UnityEPL {
             internal set { SetSetting("availableExperiments", value); }
         }
 
-        // InterfaceManager.cs
+        // MainManager.cs
 
         /// <summary>
         /// This adjusts the vSync count of the application (what multiple of the screen frame rate the game should run at).

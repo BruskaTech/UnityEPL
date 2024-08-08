@@ -30,7 +30,7 @@ namespace UnityEPL {
             get {
                 var instance = SingletonEventMonoBehaviour<MainManager>.Instance;
                 if (instance == null) {
-                    throw new InvalidOperationException("InterfaceManager not initialized. The starting scene of the game MUST be the manager scene.");
+                    throw new InvalidOperationException("MainManager not initialized. The starting scene of the game MUST be the manager scene.");
                 }
                 return instance;
             }
