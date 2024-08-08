@@ -194,10 +194,35 @@ namespace UnityEPL.Extensions {
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="enumerator"></param>
-        /// <returns></returns>
+        /// <returns>The IEnumerable</returns>
         public static IEnumerable<T> ToEnumerable<T>(this IEnumerator<T> enumerator) {
             while (enumerator.MoveNext())
                 yield return enumerator.Current;
+        }
+
+        /// <summary>
+        /// Try catch for exceptions in an IEnumerator
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="enumerator"></param>
+        /// <param name="onError"></param>
+        /// <returns>The new IEnumerator</returns>
+        public static IEnumerator TryCatch<T>(this IEnumerator enumerator, Action<T> onError)
+            where T : Exception
+        {
+            object current;
+            while (true) {
+                try {
+                    if (enumerator.MoveNext() == false) {
+                        break;
+                    }
+                    current = enumerator.Current;
+                } catch (T e) {
+                    onError(e);
+                    yield break;
+                }
+                yield return current;
+            }
         }
     }
 
