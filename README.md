@@ -8,39 +8,11 @@ The experimental designs required to explore and understand neural mechanisms ar
 
 For more information than what is in this document, please see the [Documentation Site](https://bruskatech.github.io/UnityEPL).
 
-## Making an Experiment
-
-Here is how to start making a basic experiment.
-
-### Basic Instructions
-
-REDO THIS!!!! How to do asmref. How to add submodule (add it as package)
-
-1. Add UnityEPL as a submodule to your project
-
-    ```sh
-    git submodule add git@github.com:pennmem/UnityEPL.git Assets/
-    ```
-
-1. Inherit `ExperimentBase` on your main experiment class.
-1. Implement the abstract methods `PreTrials`, `TrialStates`, `PracticeTrialStates`, and `PostTrials`.
-
-### Adding Config Variables
-
-1. Make a folder called UnityEPLExtensions in the Script folder.
-1. Add asmref for UnityEPL in Scripts.
-1. Create a partial class named `Config`.
-1. Implement each item in your config, so that it looks like this:
-
-    ```csharp
-    public static bool elememOn { get { return Config.GetSetting<bool>("elememOn"); } }
-    ```
-
-### Types of Experiments and Components Available
+## Types of Experiments and Components Available
 
 There are many types of experiments, but here are a few common ones and the useful components for them. There is also a list of generally useful components.
 
-#### General Components
+### General Components
 
 - Config
 - Logging
@@ -50,18 +22,18 @@ There are many types of experiments, but here are a few common ones and the usef
 - List/Array shuffling (including ones that are consistent per participant)
 - Random values that are consistent per participant
 
-#### Word List Experiments
+### Word List Experiments
 
 - TextDisplay
 - SoundRecorder
 - VideoPlayer
 
-#### Spatial (3D) Experiments
+### Spatial (3D) Experiments
 
 - SpawnItems
 - PickupItems
 
-#### Closed-Loop Experiments
+### Closed-Loop Experiments
 
 - EventLoop
 - ElememInterface
@@ -72,4 +44,4 @@ See the [FAQ](https://bruskatech.github.io/UnityEPL/articles/FAQ.html).
 
 ## Original Authors
 
-James Bruska, Connor Keane, Ryan Colyer
+James Bruska, Ryan Colyer

@@ -49,7 +49,7 @@ namespace UnityEPL {
         /// This will cause the experiment to use the sync box.
         /// <br/>NOT IMPLEMENTED YET
         /// </summary>
-        public static bool syncboxOn { get { throw new NotImplementedException(); } } //return GetSetting<bool>("syncboxOn"); } }
+        public static bool syncboxOn { get { return GetSetting<bool>("syncboxOn"); } }
         /// <summary>
         /// The duration of the sync box test in milliseconds.
         /// </summary>
