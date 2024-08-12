@@ -14,7 +14,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using UnityEngine;
 
-using UnityEPL;
+using UnityEPL.Experiment;
 
 public class TestExperiment : ExperimentBase<TestExperiment, TestSession, TestTrial> {
     protected override void AwakeOverride() {  }
