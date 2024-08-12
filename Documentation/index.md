@@ -58,10 +58,10 @@ To see a basic example, check the [Examples folder](https://github.com/BruskaTec
         ```
 
 1. Add multi-language strings
-1. Create a file named *MyLangStrings.cs* and add a static partial class named ```LangStrings``` inside the UnityEPL namespace.
+1. Create a file named *MyLangStrings.cs* and add a static partial class named ```LangStrings``` inside the UnityEPL.Utilities namespace.
 
     ```csharp
-    namespace UnityEPL {
+    namespace UnityEPL.Utilities {
         public static partial class LangStrings {
             // multi-language strings go here
         }
