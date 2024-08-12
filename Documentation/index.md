@@ -14,8 +14,6 @@ Here is how to start making a basic experiment.
 
 ### Basic Instructions
 
-REDO THIS!!!! How to do asmref.
-
 1. Add UnityEPL as a submodule to your project
     1. Open the Unity Package Manager (Top Menu Bar: Window > Package Manager)
     1. Click the plus in the top left corner and select "Install package from git URL"
