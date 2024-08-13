@@ -40,6 +40,12 @@ namespace UnityEPL.Experiment {
         public readonly LangString title;
         public readonly LangString text;
 
+        public TextSlide(string description, LangString text) {
+            this.description = description;
+            this.title = LangStrings.Blank();
+            this.text = text;
+        }
+
         public TextSlide(string description, LangString title, LangString text) {
             this.description = description;
             this.title = title;
