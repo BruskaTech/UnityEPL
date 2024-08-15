@@ -54,7 +54,7 @@ To see a basic example, check the [Examples folder](https://github.com/BruskaTec
     1. Implement each config item in your ```Config``` class like this:
 
         ```csharp
-        public static string videoPath { get { return Config.GetSetting<string>("videoPath"); } }
+        public static string videoPath { get { return GetSetting<string>("videoPath"); } }
         ```
 
 1. Add multi-language strings

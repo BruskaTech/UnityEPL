@@ -283,6 +283,12 @@ namespace UnityEPL {
         }
 
         // Timing Functions
+        public async Task DelayWithAction(int millisecondsDelay, Action<TimeSpan> action) {
+            await ToCoroutineTask(DelayWithActionE(millisecondsDelay, action));
+        }
+        public IEnumerator DelayWithActionE(int millisecondsDelay, Action<TimeSpan> action) {
+            return DoWaitFor(DelayEHelper, millisecondsDelay, action);
+        }
         public async Task DelayTS(int millisecondsDelay) {
             await DoWaitForTS(DelayEHelper, millisecondsDelay);
         }
@@ -293,27 +299,33 @@ namespace UnityEPL {
             return DoWaitFor(DelayEHelper, millisecondsDelay);
         }
         public IEnumerator DelayEHelper(int millisecondsDelay) {
+            return DelayEHelper(millisecondsDelay, null);
+        }
+        public IEnumerator DelayEHelper(int millisecondsDelay, Action<TimeSpan> action) {
             if (millisecondsDelay < 0) {
                 throw new ArgumentOutOfRangeException($"millisecondsDelay <= 0 ({millisecondsDelay})");
             } else if (millisecondsDelay == 0) {
                 yield break;
             }
 
-            yield return new Delay(millisecondsDelay);
+            yield return new Delay(millisecondsDelay, action);
         }
     }
 
     class Delay : CustomYieldInstruction {
-        private double seconds;
+        private TimeSpan timeRemaining;
+        private Action<TimeSpan> action;
         private DateTime lastTime;
 
-        public Delay(double seconds) {
-            this.seconds = seconds;
+        public Delay(double seconds, Action<TimeSpan> action = null) {
+            timeRemaining = TimeSpan.FromSeconds(seconds);
+            this.action = action;
             lastTime = Clock.UtcNow;
         }
 
-        public Delay(int millisecondsDelay) {
-            seconds = millisecondsDelay / 1000f;
+        public Delay(int millisecondsDelay, Action<TimeSpan> action = null) {
+            timeRemaining = TimeSpan.FromMilliseconds(millisecondsDelay);
+            this.action = action;
             lastTime = Clock.UtcNow;
         }
 
@@ -321,10 +333,11 @@ namespace UnityEPL {
             get {
                 if (MainManager.Instance.IsPaused()) { return true; }
                 var time = Clock.UtcNow;
-                var diff = (time - lastTime).TotalSeconds;
-                seconds -= diff;
+                var diff = time - lastTime;
+                timeRemaining -= diff;
                 lastTime = time;
-                return seconds > 0;
+                action?.Invoke(timeRemaining > TimeSpan.Zero ? timeRemaining : TimeSpan.Zero);
+                return timeRemaining > TimeSpan.Zero;
             }
         }
     }

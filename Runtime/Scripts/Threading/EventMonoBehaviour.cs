@@ -34,12 +34,14 @@ namespace UnityEPL {
 
     public abstract class EventMonoBehaviour : MonoBehaviour {
         protected MainManager manager;
+        protected EventReporter eventReporter;
         protected int threadID;
         protected bool awakeCompleted = false;
 
         protected abstract void AwakeOverride();
         protected void Awake() {
             manager = MainManager.Instance;
+            eventReporter = EventReporter.Instance;
             threadID = Thread.CurrentThread.ManagedThreadId;
             AwakeOverride();
             awakeCompleted = true;

@@ -60,8 +60,6 @@ namespace UnityEPL.Experiment {
 
         protected InputManager inputManager;
         protected TextDisplayer textDisplayer;
-        protected ErrorNotifier errorNotifier;
-        protected EventReporter eventReporter;
 
         protected SessionType session;
         protected SessionType practiceSession;
@@ -71,8 +69,6 @@ namespace UnityEPL.Experiment {
             base.Awake();
             inputManager = InputManager.Instance;
             textDisplayer = TextDisplayer.Instance;
-            errorNotifier = ErrorNotifier.Instance;
-            eventReporter = EventReporter.Instance;
             LogExperimentInfo();
         }
 
