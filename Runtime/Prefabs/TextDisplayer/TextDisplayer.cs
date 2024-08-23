@@ -41,11 +41,6 @@ namespace UnityEPL.GUI {
         public static TextDisplayed OnText;
 
         /// <summary>
-        /// Drag a scripted event reporter here to have this monobehavior automatically report when text is displayed or cleared.
-        /// </summary>
-        public EventReporter eventReporter = null;
-
-        /// <summary>
         /// These text elements will all be updated when this monobehaviors public methods are used.
         /// </summary>
         public TextMeshProUGUI textElement;
@@ -99,8 +94,7 @@ namespace UnityEPL.GUI {
         protected void OriginalColorHelper() {
             textElement.color = originalColors[0];
             titleElement.color = originalColors[1];
-            if (eventReporter != null)
-                eventReporter.LogTS("restore original text color", new());
+            eventReporter.LogTS("restore original text color", new());
         }
 
 
@@ -136,8 +130,7 @@ namespace UnityEPL.GUI {
                 { "displayed text", displayedText },
             };
             gameObject.SetActive(true);
-            if (eventReporter != null)
-                eventReporter.LogTS(description.ToString(), dataDict);
+            eventReporter.LogTS(description.ToString(), dataDict);
 
             description.Dispose();
             text.Dispose();
@@ -163,8 +156,7 @@ namespace UnityEPL.GUI {
                 { "displayed title", displayedTitle },
             };
             gameObject.SetActive(true);
-            if (eventReporter != null)
-                eventReporter.LogTS(description.ToString(), dataDict);
+            eventReporter.LogTS(description.ToString(), dataDict);
 
             description.Dispose();
             title.Dispose();
@@ -200,8 +192,7 @@ namespace UnityEPL.GUI {
                 { "displayed text", displayedText },
             };
             gameObject.SetActive(true);
-            if (eventReporter != null)
-                eventReporter.LogTS(description.ToString(), dataDict);
+            eventReporter.LogTS(description.ToString(), dataDict);
 
             description.Dispose();
             title.Dispose();
@@ -243,8 +234,7 @@ namespace UnityEPL.GUI {
         protected void ClearTextHelper() {
             textElement.text = "";
             textElement.enableAutoSizing = true;
-            if (eventReporter != null)
-                eventReporter.LogTS("text display cleared", new());
+            eventReporter.LogTS("text display cleared", new());
         }
        
         public void ClearTitle() {
@@ -255,8 +245,7 @@ namespace UnityEPL.GUI {
         }
         protected void ClearTitleHelper() {
             titleElement.text = "";
-            if (eventReporter != null)
-                eventReporter.LogTS("title display cleared", new());
+            eventReporter.LogTS("title display cleared", new());
         }
 
         public void ClearOnly() {
@@ -269,8 +258,7 @@ namespace UnityEPL.GUI {
             titleElement.text = "";
             textElement.text = "";
             textElement.enableAutoSizing = true;
-            if (eventReporter != null)
-                eventReporter.LogTS("title display cleared", new());
+            eventReporter.LogTS("title display cleared", new());
         }
 
         public void Clear() {
@@ -296,10 +284,10 @@ namespace UnityEPL.GUI {
         }
         protected void ChangeColorHelper(Color newColor) {
             textElement.color = newColor;
-            Dictionary<string, object> dataDict = new();
-            dataDict.Add("new color", newColor.ToString());
-            if (eventReporter != null)
-                eventReporter.LogTS("text color changed", dataDict);
+            Dictionary<string, object> dataDict = new() {
+                { "new color", newColor.ToString() }
+            };
+            eventReporter.LogTS("text color changed", dataDict);
         }
 
         /// <summary>

@@ -27,9 +27,7 @@ namespace UnityEPL {
         }
 
         protected SingletonEventMonoBehaviour() {
-            if (typeof(T) == typeof(MainManager)) {
-                _Instance = (T)this;
-            }
+            _Instance = (T)this;
         }
 
         protected new void Awake() {
@@ -37,7 +35,6 @@ namespace UnityEPL {
                 ErrorNotifier.ErrorTS(new InvalidOperationException($"Cannot create multiple {typeof(T).Name} Objects"));
             }
             IsInstatiated = true;
-            _Instance = (T)this;
             DontDestroyOnLoad(this.gameObject);
 
             base.Awake();

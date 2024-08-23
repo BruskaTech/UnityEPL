@@ -20,6 +20,7 @@ using UnityEPL.Threading;
 
 namespace UnityEPL {
 
+    [DefaultExecutionOrder(-9)]
     [AddComponentMenu("UnityEPL/Singleton Reporters/Event Reporter")]
     public class EventReporter : DataReporter2<EventReporter> {
         public void LogTS(string type, Dictionary<string, object> data = null) {
