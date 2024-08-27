@@ -132,6 +132,8 @@ namespace UnityEPL.Experiment {
                 { "logfile version", "1.0.0" },
                 { "participant", Config.subject },
                 { "session", Config.sessionNum },
+                { "rndSeed", Utilities.Random.RndSeed },
+                { "stableRndSeed", Utilities.Random.StableRndSeed },
             });
         }
 

@@ -93,7 +93,7 @@ namespace UnityEPL.GUI {
             launchButton.SetActive(false);
             loadingButton.SetActive(true);
 
-            Utilities.Random.SetStableRndSeed(Config.subject.GetHashCode());
+            Utilities.Random.StableRndSeed = Config.subject.GetHashCode();
 
             Cursor.visible = false;
             Application.runInBackground = true;
