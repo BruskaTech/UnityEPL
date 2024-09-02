@@ -132,7 +132,6 @@ namespace UnityEPL {
         /// </summary>
         /// <param name="enumerator">The enumerator to be turned to a task</param>
         /// <returns>The task to await</returns>
-        ///
         protected async Task ToCoroutineTask(IEnumerator enumerator) {
             var tcs = new TaskCompletionSource<bool>();
             StartCoroutine(TaskTrigger(tcs, enumerator));
@@ -145,7 +144,10 @@ namespace UnityEPL {
         /// <param name="conditional">The condition to wait while it's true</param>
         /// <returns>The task to await</returns>
         protected async Task DoWaitWhile(Func<bool> conditional) {
-            await ToCoroutineTask(new WaitWhile(conditional));
+            while (conditional()) {
+                await Awaitable.NextFrameAsync();
+            }
+            // await ToCoroutineTask(new WaitWhile(conditional)); // This is bad because it uses another Task in TaskCompletionSource
         }
 
         /// <summary>
@@ -154,7 +156,10 @@ namespace UnityEPL {
         /// <param name="conditional">The condition to wait until it's true</param>
         /// <returns>The task to await</returns>
         protected async Task DoWaitUntil(Func<bool> conditional) {
-            await ToCoroutineTask(new WaitUntil(conditional));
+            while (!conditional()) {
+                await Awaitable.NextFrameAsync();
+            }
+            // await ToCoroutineTask(new WaitUntil(conditional)); // This is bad because it uses another Task in TaskCompletionSource
         }
 
 

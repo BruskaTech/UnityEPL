@@ -121,12 +121,12 @@ namespace UnityEPL {
             return Path.Combine(root, Config.practiceWordpool);
         }
 
-        internal static void CreateSession() {
-            var dir = SessionPath();
+        internal static void CreateSession(string participant, int session) {
+            var dir = SessionPath(participant, session);
             if (dir == null) {
                 throw new Exception("No session selected");
             }
-            Directory.CreateDirectory(SessionPath());
+            Directory.CreateDirectory(dir);
         }
 
         internal static void CreateParticipant() {

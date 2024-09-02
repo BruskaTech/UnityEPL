@@ -27,9 +27,9 @@ namespace UnityEPL.Utilities {
             { Language.English, "Press any key to record a sound after the beep." },
         }); }
         public static LangString ConfirmStart() { return new( new() {
-            { Language.English, "Please let the experimenter know if you have any questions about the task.\n\n" +
-                "If you think you understand, please explain the task to the experimenter in your own words.\n\n" +
-                "Press any key to continue to start." },
+            { Language.English, "Please let the experimenter know if you have any questions about the task."
+                + "\n\nIf you think you understand, please explain the task to the experimenter in your own words."
+                + "\n\nPress any key to continue to start." },
         }); }
         public static LangString ExperimentQuit() { return new( new() {
             { Language.English, "Do you want to quit?\n\nPress Y to Quit.\nPress N to Resume." },
@@ -64,6 +64,12 @@ namespace UnityEPL.Utilities {
         }); }
         public static LangString RamulatorConnection() { return new( new() {
             { Language.English, "Waiting for Ramulator connection..." },
+        }); }
+        public static LangString IncompatibleTargetFrameRate(int targetFps, uint screenFps) { return new( new() {
+            { Language.English, $"Config variable targetFrameRate ({targetFps}) should be a factor of the screen refresh rate ({screenFps})."
+                + "\n\nIf you are using a new device or monitor, consider changing the targetFrameRate. Also consider what this means for your experiment."
+                + "\n\nIf changing the frame rate is not possible for your experiment, then you can continue on with the old frame rate. Please note that this will mean the frames of the game do not necessarily align with the frames of the screen (impacting timing analyses)."
+                + "\n\nPress Y to continue with the old frame rate.\nPress N to quit." },
         }); }
     }
 }
