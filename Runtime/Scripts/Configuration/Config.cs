@@ -14,6 +14,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.Networking;
 
 using UnityEPL.Utilities;
 
@@ -248,7 +249,10 @@ namespace UnityEPL {
 
             string experimentConfigPath = Path.Combine(Application.streamingAssetsPath, "CourierOnline.json");
 
-#if !UNITY_EDITOR
+#if !UNITY_WEBGL
+            yield return MainManager.Instance.DelayE(1);
+            onlineExperimentConfigText = File.ReadAllText(experimentConfigPath);
+#else
             UnityWebRequest experimentWWW = UnityWebRequest.Get(experimentConfigPath);
             yield return experimentWWW.SendWebRequest();
 
@@ -261,10 +265,7 @@ namespace UnityEPL {
                 onlineExperimentConfigText = experimentWWW.downloadHandler.text;
                 Debug.Log("Online Experiment Config fetched!!");
                 Debug.Log(Config.onlineExperimentConfigText);
-            }
-#else
-            yield return MainManager.Instance.DelayE(1);
-            onlineExperimentConfigText = File.ReadAllText(experimentConfigPath);
+            }            
 #endif
 
         }
