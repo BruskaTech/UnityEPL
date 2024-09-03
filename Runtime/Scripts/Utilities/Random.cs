@@ -45,6 +45,7 @@ namespace UnityEPL.Utilities {
                     throw new InvalidOperationException("StableRnd seed already set for this thread.");
                 }
                 stableRndSeed = new(() => value);
+                stableRnd = new(() => new(value));
             }    
         }
 
