@@ -13,6 +13,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 using UnityEngine.InputSystem.LowLevel;
+using UnityEPL.Utilities;
 
 namespace UnityEPL.DataManagement {
 
@@ -50,6 +51,7 @@ namespace UnityEPL.DataManagement {
             // ));
 
             var eventTime = MainManager.Instance.StartTimeTS + TimeSpan.FromSeconds(eventPtr.time);
+            var timeOffsetFromLoggingMs = (Clock.UtcNow - eventTime).TotalMilliseconds;
 
             var changedControls = eventPtr.EnumerateChangedControls(device);
             foreach (var control in changedControls) {
@@ -62,6 +64,7 @@ namespace UnityEPL.DataManagement {
                         { "key display name", control.displayName },
                         { "value", keyControl.ReadValueFromEvent(eventPtr) },
                         { "control", control.ToString() },
+                        { "time offset from logging ms", timeOffsetFromLoggingMs},
                     });
                 }
 
@@ -75,6 +78,7 @@ namespace UnityEPL.DataManagement {
                         { "button display name", control.displayName },
                         { "position", mousePosition },
                         { "control", control.ToString() },
+                        { "time offset from logging ms", timeOffsetFromLoggingMs},
                     });
                 }
 
@@ -93,6 +97,7 @@ namespace UnityEPL.DataManagement {
                         { "value", mousePosition },
                         { "position display name", control.displayName },
                         { "control", control.ToString() },
+                        { "time offset from logging ms", timeOffsetFromLoggingMs},
                     });
                 }
             }
@@ -112,6 +117,7 @@ namespace UnityEPL.DataManagement {
                     { "value2", mousePosition },
                     { "position display name", control.displayName },
                     { "control", control.ToString() },
+                    { "time offset from logging ms", 0.0},
                 });
             }
         }
