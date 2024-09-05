@@ -51,7 +51,7 @@ namespace UnityEPL.DataManagement {
             // ));
 
             var eventTime = MainManager.Instance.StartTimeTS + TimeSpan.FromSeconds(eventPtr.time);
-            var timeOffsetFromLoggingMs = (Clock.UtcNow - eventTime).TotalMilliseconds;
+            var timeOffsetFromLoggingMs = Math.Round((Clock.UtcNow - eventTime).TotalMilliseconds, 4);
 
             var changedControls = eventPtr.EnumerateChangedControls(device);
             foreach (var control in changedControls) {
