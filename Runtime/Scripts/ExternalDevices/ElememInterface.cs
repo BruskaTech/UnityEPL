@@ -14,7 +14,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-
+using UnityEPL.Extensions;
 using UnityEPL.Utilities;
 
 namespace UnityEPL.ExternalDevices {
@@ -232,13 +232,13 @@ namespace UnityEPL.ExternalDevices {
         }
 
         public override async Task SendLogMsgTS(string type, DateTime time, Dictionary<string, object> data = null) {
-            data.Add("unity time", time);
+            data.Add("unity time", time.ConvertToMillisecondsSinceEpoch());
             await SendTS(type, data);
         }
 
         public override async Task SendUncheckedLogMsgTS(string type, DateTime time, Dictionary<string, object> data = null) {
             if (IsConnectedUnchecked()) {
-                data.Add("unity time", time);
+                data.Add("unity time", time.ConvertToMillisecondsSinceEpoch());
                 await SendTS(type, data);
             }
         }

@@ -67,7 +67,7 @@ namespace UnityEPL.DataManagement {
         /// </summary>
         /// <returns>The json.</returns>
         private string GenJSON(Dictionary<string, object> data) {
-            double unixTimestamp = ConvertToMillisecondsSinceEpoch(time);
+            double unixTimestamp = time.ConvertToMillisecondsSinceEpoch();
 
             Dictionary<string, object> dataPointjson = new() {
                 { "type", type },
@@ -75,12 +75,6 @@ namespace UnityEPL.DataManagement {
                 { "data", data }
             };
             return dataPointjson.ToJSON();
-        }
-
-        private static double ConvertToMillisecondsSinceEpoch(DateTime convertMe) {
-            double milliseconds = (double)(convertMe.ToUniversalTime()
-                .Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc))).TotalMilliseconds;
-            return milliseconds;
         }
     }
 

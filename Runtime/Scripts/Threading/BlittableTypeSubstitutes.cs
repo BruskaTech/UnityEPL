@@ -12,6 +12,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using Unity.Collections;
+using Unity.VisualScripting.YamlDotNet.Core.Tokens;
+using UnityEPL.Extensions;
 
 namespace UnityEPL.Threading {
 
@@ -121,6 +123,10 @@ namespace UnityEPL.Threading {
         }
         public static implicit operator DateTime(BlitDateTime bdt) {
             return bdt.Value;
+        }
+
+        public double ConvertToMillisecondsSinceEpoch() {
+            return Value.ConvertToMillisecondsSinceEpoch();
         }
 
         public override string ToString() {
