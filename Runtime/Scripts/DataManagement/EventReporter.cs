@@ -20,7 +20,7 @@ using UnityEPL.Threading;
 
 namespace UnityEPL {
 
-    [DefaultExecutionOrder(-9)]
+    [DefaultExecutionOrder(-998)]
     [AddComponentMenu("UnityEPL/Singleton Reporters/Event Reporter")]
     public class EventReporter : DataReporter2<EventReporter> {
         public void LogTS(string type, Dictionary<string, object> data = null) {
@@ -29,7 +29,7 @@ namespace UnityEPL {
             LogLocalTS(type, time, data);
         }
         public void LogTS(string type, DateTime time, Dictionary<string, object> data = null) {
-            manager?.hostPC.SendUncheckedLogMsgTS(type, data ?? new());
+            manager?.hostPC?.SendUncheckedLogMsgTS(type, data ?? new());
             LogLocalTS(type, time, data);
         }
 

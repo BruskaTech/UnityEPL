@@ -200,8 +200,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   reportKeyStrokes: 1
-  reportMouseClicks: 0
+  reportMouseClicks: 1
   reportMousePosition: 0
+  reportMousePositionOnFrame: 0
   framesPerMousePositionReport: 60
 --- !u!4 &63690051
 Transform:

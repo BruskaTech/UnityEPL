@@ -10,60 +10,110 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
+using UnityEngine.InputSystem.LowLevel;
 
 namespace UnityEPL.DataManagement {
 
-    [AddComponentMenu("UnityEPL/Singleton Reporters/Input Reporter")]
     public class InputReporter : SingletonEventMonoBehaviour<InputReporter> {
-        protected override void AwakeOverride() { }
-
         public bool reportKeyStrokes = true;
         public bool reportMouseClicks = false;
         public bool reportMousePosition = false;
-        public int framesPerMousePositionReport = 60;
-        private Dictionary<int, bool> keyDownStates = new();
-        private Dictionary<int, bool> mouseDownStates = new();
+        public bool reportMousePositionOnFrame = false;
 
-        private int lastMousePositionReportFrame;
+        public int framesPerMousePositionReport = 1;
 
-        void Update() {
-            if (reportKeyStrokes)
-                CollectKeyEvents();
-            if (reportMousePosition && Time.frameCount - lastMousePositionReportFrame > framesPerMousePositionReport)
-                CollectMousePosition();
+        private List<float> mousePosition = new() {0f, 0f};
+        private int framesSinceLastMousePositionReport = 0;
+
+        protected override void AwakeOverride() {
+            InputSystem.pollingFrequency = 500;
+            InputSystem.onEvent += Event;
         }
 
-        /// <summary>
-        /// Collects the key events.  This includes mouse events, which are part of Unity's KeyCode enum.
-        /// </summary>
+        void OnDestroy() {
+            InputSystem.onEvent -= Event;
+        }
 
-        private void CollectKeyEvents() {
-            foreach (KeyCode keyCode in Enum.GetValues(typeof(KeyCode))) {
-                if (Input.GetKeyDown(keyCode)) {
-                    ReportKey((int)keyCode, true);
+        private void Event(InputEventPtr eventPtr, InputDevice device) {
+            // Ignore anything that isn't a state event.
+            if (!eventPtr.IsA<StateEvent>() && !eventPtr.IsA<DeltaStateEvent>()) { return; }
+
+            // This is just for implementing new input recording parts
+            // UnityEngine.Debug.Log(string.Join("\n",
+            //     eventPtr
+            //         // .EnumerateChangedControls(device)
+            //         .EnumerateControls(InputControlExtensions.Enumerate.IncludeNonLeafControls)
+            //         .Where(control => control.device == device)
+            //         .Select(control => $"{control.GetType().Name} {control.name} {device.name}")
+            // ));
+
+            var eventTime = MainManager.Instance.StartTimeTS + TimeSpan.FromSeconds(eventPtr.time);
+
+            var changedControls = eventPtr.EnumerateChangedControls(device);
+            foreach (var control in changedControls) {
+                // Handle keyboard input
+                if (reportKeyStrokes && device is Keyboard && control is KeyControl keyControl) {
+                    eventReporter.LogTS("input event", eventTime, new Dictionary<string, object> {
+                        { "device", control.device.name },
+                        { "input type", control.layout },
+                        { "key name", control.name },
+                        { "key display name", control.displayName },
+                        { "value", keyControl.ReadValueFromEvent(eventPtr) },
+                        { "control", control.ToString() },
+                    });
                 }
-                if (Input.GetKeyUp(keyCode)) {
-                    ReportKey((int)keyCode, false);
+
+                // Handle mouse button input
+                if (reportMouseClicks && device is Mouse && control is ButtonControl buttonControl) {
+                    eventReporter.LogTS("input event", eventTime, new Dictionary<string, object> {
+                        { "device", control.device.name },
+                        { "input type", control.layout },
+                        { "button name", control.name },
+                        { "value", buttonControl.ReadValueFromEvent(eventPtr) },
+                        { "button display name", control.displayName },
+                        { "position", mousePosition },
+                        { "control", control.ToString() },
+                    });
+                }
+
+                // Handle mouse position input
+                // This may need to be updated to handle Vector2Control in the future
+                if (reportMousePosition && !reportMousePositionOnFrame && device is Mouse && control is AxisControl axisControl && axisControl.parent.name == "position") { //
+                    if (axisControl.name == "x") {
+                        mousePosition[0] = axisControl.ReadValueFromEvent(eventPtr);
+                    } else if (axisControl.name == "y") {
+                        mousePosition[1] = axisControl.ReadValueFromEvent(eventPtr);
+                    }
+                    eventReporter.LogTS("input event", eventTime, new Dictionary<string, object> {
+                        { "device", control.device.name },
+                        { "input type", control.layout },
+                        { "position name", control.name },
+                        { "value", mousePosition },
+                        { "position display name", control.displayName },
+                        { "control", control.ToString() },
+                    });
                 }
             }
         }
 
-        private void ReportKey(int keyCode, bool pressed) {
-            var key = (Enum.GetName(typeof(KeyCode), keyCode) ?? "none").ToLower();
-            Dictionary<string, object> dataDict = new() {
-                { "key code", key },
-                { "is pressed", pressed },
-            };
-            var label = "key/mouse press/release";
-            EventReporter.Instance.LogTS(label, dataDict);
-        }
-
-        private void CollectMousePosition() {
-            Dictionary<string, object> dataDict = new() {
-                { "position", Input.mousePosition },
-            };
-            EventReporter.Instance.LogTS("mouse position", dataDict);
-            lastMousePositionReportFrame = Time.frameCount;
+        void Update() {
+            if (reportMousePosition && reportMousePositionOnFrame && ++framesSinceLastMousePositionReport >= framesPerMousePositionReport) {
+                framesSinceLastMousePositionReport = 0;
+                var mouse = Mouse.current;
+                var control = mouse.position;
+                var position = control.ReadValue();
+                eventReporter.LogTS("input event", new Dictionary<string, object> {
+                    { "device", mouse.name },
+                    { "input type", control.layout },
+                    { "position name", control.name },
+                    { "value", new float[2] {position.x, position.y} },
+                    { "value2", mousePosition },
+                    { "position display name", control.displayName },
+                    { "control", control.ToString() },
+                });
+            }
         }
     }
 

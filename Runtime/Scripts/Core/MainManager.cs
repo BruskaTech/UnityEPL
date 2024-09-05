@@ -24,7 +24,7 @@ using UnityEPL.GUI;
 
 namespace UnityEPL {
 
-    [DefaultExecutionOrder(-10)]
+    [DefaultExecutionOrder(-999)]
     public class MainManager : SingletonEventMonoBehaviour<MainManager> {
         public static new MainManager Instance {
             get {
@@ -77,7 +77,7 @@ namespace UnityEPL {
         /// <summary>
         /// The time the game was started
         /// </summary>
-        public readonly DateTime StartTimeTS = Clock.UtcNow;
+        public DateTime StartTimeTS { get; private set; }
         /// <summary>
         /// The time since the game was started
         /// </summary>
@@ -102,7 +102,10 @@ namespace UnityEPL {
             }
         }
 
-        protected override void AwakeOverride() { }
+        protected override void AwakeOverride() {
+            // Make the MainManager StartTimeTS match the unity start time
+            StartTimeTS = Clock.UtcNow - TimeSpan.FromSeconds(Time.realtimeSinceStartup);
+        }
 
         protected void Start() {
             // Unity internal event handling

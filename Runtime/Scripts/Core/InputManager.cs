@@ -19,6 +19,7 @@ namespace UnityEPL {
 
     // TODO: JPB: (refactor) Use new unity input system for key input
     //            Keyboard.current.anyKey.wasPressedThisFrame
+    [DefaultExecutionOrder(-99)] // This is because UnityEngine.InputSystem.InputSystem.onEvent is -100
     public class InputManager : SingletonEventMonoBehaviour<InputManager> {
         protected override void AwakeOverride() { }
 
