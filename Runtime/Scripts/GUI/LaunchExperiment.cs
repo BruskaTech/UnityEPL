@@ -106,19 +106,10 @@ namespace UnityEPL.GUI {
             Cursor.visible = false;
             Application.runInBackground = true;
 
-            // Set the game frame rate
-            yield return SetFrameRate().ToEnumerator();
-
-            // QualitySettings.vSyncCount = Config.vSync;
-            // Application.targetFrameRate = Config.frameRate;
-
-            // Save Configs
-            Config.SaveConfigs(FileManager.SessionPath());
-
             // Connect to HostPC
             if (Config.elememOn) {
                 TextDisplayer.Instance.Display("Elemem connection display", LangStrings.Blank(), LangStrings.ElememConnection());
-                manager.hostPC = new ElememInterface();
+                manager.hostPC = new ElememInterface(sessionNumber);
             } else if (Config.ramulatorOn) {
                 TextDisplayer.Instance.Display("Ramulator connection display", LangStrings.Blank(), LangStrings.ElememConnection());
                 manager.ramulator = new RamulatorWrapper(manager);
@@ -126,6 +117,12 @@ namespace UnityEPL.GUI {
             }
             yield return manager.hostPC?.ConnectTS().ToEnumerator();
             yield return manager.hostPC?.ConfigureTS().ToEnumerator();
+
+            // Set the game frame rate
+            yield return SetFrameRate().ToEnumerator();
+
+            // Save Configs
+            Config.SaveConfigs(FileManager.SessionPath());
 
             SceneManager.sceneLoaded += onExperimentSceneLoaded;
             SceneManager.LoadScene(Config.experimentScene);

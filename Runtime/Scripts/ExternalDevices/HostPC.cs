@@ -106,8 +106,8 @@ namespace UnityEPL.ExternalDevices {
         public abstract Task SendTrialMsgTS(int trial, bool stim);
         public abstract Task SendWordMsgTS(string word, int serialPos, bool stim, Dictionary<string, object> extraData = null);
         public abstract Task SendExitMsgTS();
-        public abstract Task SendLogMsgTS(string type, Dictionary<string, object> data = null);
-        public abstract Task SendUncheckedLogMsgTS(string type, Dictionary<string, object> data = null);
+        public abstract Task SendLogMsgTS(string type, DateTime time, Dictionary<string, object> data = null);
+        public abstract Task SendUncheckedLogMsgTS(string type, DateTime time, Dictionary<string, object> data = null);
     }
 
 }

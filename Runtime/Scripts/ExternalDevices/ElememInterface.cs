@@ -20,7 +20,11 @@ using UnityEPL.Utilities;
 namespace UnityEPL.ExternalDevices {
 
     public class ElememInterface : HostPC {
-        public ElememInterface() { }
+        private readonly int sessionNum;
+
+        public ElememInterface(int sessionNum) {
+            this.sessionNum = sessionNum;
+        }
 
         public override async Task ConnectTS() {
             await ConnectTS(Config.hostServerIP, Config.hostServerPort);
@@ -53,6 +57,10 @@ namespace UnityEPL.ExternalDevices {
 
             // Start Heartbeats
             DoHeartbeatsForeverTS();
+
+            await SendTS("SESSION", new() {
+                { "session", sessionNum },
+            });
 
             // Start Elemem
             await SendTS("READY");
@@ -223,12 +231,14 @@ namespace UnityEPL.ExternalDevices {
             await SendTS("EXIT");
         }
 
-        public override async Task SendLogMsgTS(string type, Dictionary<string, object> data = null) {
+        public override async Task SendLogMsgTS(string type, DateTime time, Dictionary<string, object> data = null) {
+            data.Add("unity time", time);
             await SendTS(type, data);
         }
 
-        public override async Task SendUncheckedLogMsgTS(string type, Dictionary<string, object> data = null) {
+        public override async Task SendUncheckedLogMsgTS(string type, DateTime time, Dictionary<string, object> data = null) {
             if (IsConnectedUnchecked()) {
+                data.Add("unity time", time);
                 await SendTS(type, data);
             }
         }
