@@ -42,6 +42,16 @@ There are many types of experiments, but here are a few common ones and the usef
 
 See the [FAQ](https://bruskatech.github.io/UnityEPL/articles/FAQ.html).
 
-## Original Authors
+## Authors
 
-James Bruska, Ryan Colyer
+### Current (UnityEPL 3.0) Authors
+
+James Bruska
+
+### UnityEPL 2.0 Authors
+
+James Bruska, Connor Keane, Ryan Colyer
+
+### UnityEPL 1.0 Authors
+
+Henry Solberg, Jesse Pazdera
