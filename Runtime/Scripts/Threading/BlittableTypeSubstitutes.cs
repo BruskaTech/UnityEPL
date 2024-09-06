@@ -12,7 +12,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using Unity.Collections;
-using Unity.VisualScripting.YamlDotNet.Core.Tokens;
 using UnityEPL.Extensions;
 
 namespace UnityEPL.Threading {
