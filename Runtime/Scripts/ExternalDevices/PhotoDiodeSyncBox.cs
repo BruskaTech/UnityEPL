@@ -55,22 +55,22 @@ namespace UnityEPL.ExternalDevices {
             imageObject.GetComponent<CanvasRenderer>().cullTransparentMesh = false; // Don't cull transparent mesh
         }
 
-        public override void Init() {
+        public override Task Init() {
             InitImage();
 
             // Set the image size
-            if (Config.photoDiodeImageHeightInch <= 0) {
-                ErrorNotifier.ErrorTS(new Exception($"Config variable photoDiodeImageHeightInch ({Config.photoDiodeImageHeightInch}) must be greater than 0"));
-            } else if (Config.photoDiodeImageWidthInch <= 0) {
-                ErrorNotifier.ErrorTS(new Exception($"Config variable photoDiodeImageWidthInch ({Config.photoDiodeImageWidthInch}) must be greater than 0"));
+            if (Config.photoDiodeSyncBoxImageHeightInch <= 0) {
+                ErrorNotifier.ErrorTS(new Exception($"Config variable photoDiodeImageHeightInch ({Config.photoDiodeSyncBoxImageHeightInch}) must be greater than 0"));
+            } else if (Config.photoDiodeSyncBoxImageWidthInch <= 0) {
+                ErrorNotifier.ErrorTS(new Exception($"Config variable photoDiodeImageWidthInch ({Config.photoDiodeSyncBoxImageWidthInch}) must be greater than 0"));
             }
             float dpi = Screen.dpi;
             if (dpi == 0) { dpi = 96; }
-            imageRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, dpi * Config.photoDiodeImageWidthInch);
-            imageRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, dpi * Config.photoDiodeImageHeightInch);
+            imageRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, dpi * Config.photoDiodeSyncBoxImageWidthInch);
+            imageRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, dpi * Config.photoDiodeSyncBoxImageHeightInch);
 
             // Set the image position
-            var imagePosition = Config.photoDiodeImagePosition;
+            var imagePosition = Config.photoDiodeSyncBoxImagePosition;
             if (imagePosition.Length != 2) {
                 ErrorNotifier.ErrorTS(new Exception("Config variable photoDiodeImagePosition must have exactly 2 elements"));
             } else if (imagePosition[0] > 1 || imagePosition[1] > 1) {
@@ -83,17 +83,13 @@ namespace UnityEPL.ExternalDevices {
             imageRect.anchoredPosition = Vector2.zero;
 
             // Set the image colors
-            if (!ColorUtility.TryParseHtmlString(Config.photoDiodeImageOffColor, out offColor)) {
-                ErrorNotifier.ErrorTS(new Exception($"Config variable photoDiodeImageOffColor ({Config.photoDiodeImageOffColor}) is not a valid color"));
-            } else if (!ColorUtility.TryParseHtmlString(Config.photoDiodeImageOnColor, out onColor)) {
-                ErrorNotifier.ErrorTS(new Exception($"Config variable photoDiodeImageOnColor ({Config.photoDiodeImageOnColor}) is not a valid color"));
+            if (!ColorUtility.TryParseHtmlString(Config.photoDiodeSyncBoxImageOffColor, out offColor)) {
+                ErrorNotifier.ErrorTS(new Exception($"Config variable photoDiodeImageOffColor ({Config.photoDiodeSyncBoxImageOffColor}) is not a valid color"));
+            } else if (!ColorUtility.TryParseHtmlString(Config.photoDiodeSyncBoxImageOnColor, out onColor)) {
+                ErrorNotifier.ErrorTS(new Exception($"Config variable photoDiodeImageOnColor ({Config.photoDiodeSyncBoxImageOnColor}) is not a valid color"));
             }
 
-            DoTS(async () => {
-                StartContinuousPulsing();
-                await Task.Delay(5000);
-                StopContinuousPulsing();
-            });
+            return Task.CompletedTask;
         }
 
         public override async Task Pulse() {
@@ -102,7 +98,11 @@ namespace UnityEPL.ExternalDevices {
             image.color = offColor;
             await Task.Delay(1000);
         }
+
+        public override Task TearDown() {
+            return Task.CompletedTask;
+        }
     }
-    
+
 }
 

@@ -109,7 +109,7 @@ namespace UnityEPL {
             StartTimeTS = Clock.UtcNow - TimeSpan.FromSeconds(Time.realtimeSinceStartup);
         }
 
-        protected void Start() {
+        protected async void Start() {
             // Unity internal event handling
             SceneManager.sceneLoaded += onSceneLoaded;
 
@@ -133,7 +133,7 @@ namespace UnityEPL {
                         throw new Exception($"Syncbox class {Config.syncBoxClass} could not be created", e);
                     }
 
-                    syncBox.Init();
+                    await syncBox.Init();
                 }
 
                 // Launch Startup Scene
@@ -281,6 +281,7 @@ namespace UnityEPL {
         }
         protected async Task QuitHelper() {
             manager.syncBox?.StopContinuousPulsing();
+            manager.syncBox?.TearDown();
 
             // TODO: JPB: (feature) Make EventLoops stop gracefully by awaiting the stop with a timeout that gets logged if triggered
             foreach (var eventLoop in eventLoops) {

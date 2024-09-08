@@ -61,3 +61,76 @@ Add a static partial class named ```Config``` inside the UnityEPL namespace.
         { Language.Spanish, $"Presione cualquier tecla para iniciar la Prueba {trialNum}."}
     }); }
     ```
+
+## Adding a New Syncbox
+
+We will create a fake sync box named TestSyncBox to demonstrate how to do it.
+
+1. Make sure you have already created the UnityEPLExtensions folder, [as explained here](#adding-the-unityepl-assembly-definition-reference-unityeplextensions-folder).
+1. Create a file named *TestSyncBox.cs* in the UnityEPLExtensions folder.
+1. Create the class in the ```UnityEPL.ExternalDevices``` namespace that inherits from ```SyncBox```
+
+    ```csharp
+    using System.Threading.Tasks;
+
+    namespace UnityEPL.ExternalDevices {
+        public class TestSyncBox : SyncBox {
+
+        }
+    }
+    ```
+
+1. Next implement the ```Init()``` function. This should be where all initialization takes place.
+
+    ```csharp
+    public override Task Init() {
+        UnityEngine.Debug.Log("Init SyncBox");
+        return Task.CompletedTask;
+    }
+    ```
+
+1. Implement the ```TearDown()``` function. This will be called automatically when the experiment is quit.
+
+    ```csharp
+    public override Task TearDown() {
+        UnityEngine.Debug.Log("TearDown SyncBox");
+        return Task.CompletedTask;
+    }
+    ```
+
+1. Finally, implement the ```Pulse()``` function. This should always have a delay. It also can't run more than once per frame (otherwise it throws an exception).
+
+    ```csharp
+    public override async Task Pulse() {
+        UnityEngine.Debug.Log("Pulse SyncBox");
+        await Task.Delay(1000);
+    }
+    ```
+
+<details>
+<summary>Altogether it looks like this.</summary>
+
+```csharp
+using System.Threading.Tasks;
+
+namespace UnityEPL.ExternalDevices {
+    public class TestSyncBox : SyncBox {
+        public override Task Init() {
+            UnityEngine.Debug.Log("Init SyncBox");
+            return Task.CompletedTask;
+        }
+
+        public override async Task Pulse() {
+            UnityEngine.Debug.Log("Pulse SyncBox");
+            await Task.Delay(1000);
+        }
+
+        public override Task TearDown() {
+            UnityEngine.Debug.Log("TearDown SyncBox");
+            return Task.CompletedTask;
+        }
+    }
+}
+```
+
+</details>

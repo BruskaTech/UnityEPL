@@ -43,7 +43,7 @@ namespace UnityEPL {
         /// </summary>
         public static int elememHeartbeatInterval { get { return GetSetting<int>("elememHeartbeatInterval"); } }
 
-        // Hardware
+        // Syncbox
 
         /// <summary>
         /// This will cause the experiment to use the sync box.
@@ -64,11 +64,39 @@ namespace UnityEPL {
         /// The duration of the sync box test in milliseconds.
         /// </summary>
         public static int syncBoxTestDurationMs { get { return GetSetting<int>("syncBoxTestDurationMs"); } }
+        
+        /// <summary>
+        /// The width of the photo diode image in inches
+        /// </summary>
+        public static float photoDiodeSyncBoxImageWidthInch { get { return GetSetting<float>("photoDiodeSyncBoxImageWidthInch"); } }
+        /// <summary>
+        /// The height of the photo diode image in inches
+        /// </summary>
+        public static float photoDiodeSyncBoxImageHeightInch { get { return GetSetting<float>("photoDiodeSyncBoxImageHeightInch"); } }
+        /// <summary>
+        /// Which corner of the screen of the photo diode image is in
+        /// <br/>The first element is the horizontal position (0 = left, 1 = right)
+        /// <br/>The second element is the vertical position (0 = bottom, 1 = top)
+        /// </summary>
+        public static uint[] photoDiodeSyncBoxImagePosition { get { return GetSetting<uint[]>("photoDiodeSyncBoxImagePosition"); } }
+        /// <summary>
+        /// The color of the photo diode image when it is off
+        /// <br/>This is done as an HTML color string. In other words, it can be a hex code or a color name.
+        /// </summary>
+        public static string photoDiodeSyncBoxImageOffColor { get { return GetSetting<string>("photoDiodeSyncBoxImageOffColor"); } }
+        /// <summary>
+        /// The color of the photo diode image when it is on
+        /// <br/>This is done as an HTML color string. In other words, it can be a hex code or a color name.
+        /// </summary>
+        public static string photoDiodeSyncBoxImageOnColor { get { return GetSetting<string>("photoDiodeSyncBoxImageOnColor"); } }
+
+        // Hardware
+
         /// <summary>
         /// This will allow the expeiment to use a PS4 controller.
-        /// <br/>NOT IMPLEMENTED YET
         /// </summary>
         public static bool ps4Controller { get { throw new NotImplementedException(); } } //return GetSetting<bool>("ps4Contoller"); } }
+
 
         // Programmer Conveniences
 

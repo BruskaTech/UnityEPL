@@ -15,12 +15,14 @@ namespace UnityEPL.ExternalDevices {
         private bool continuousPulsing = false;
         private int lastFrameCount = -1;
 
-        public abstract void Init();
+        public abstract Task Init();
         public abstract Task Pulse();
+        public abstract Task TearDown();
 
         protected override void AwakeOverride() { }
         protected void OnDestroy() {
             StopContinuousPulsing();
+            TearDown();
         }
 
         public void StartContinuousPulsing() {
