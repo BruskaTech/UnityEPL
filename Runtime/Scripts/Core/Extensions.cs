@@ -432,4 +432,28 @@ namespace UnityEPL.Extensions {
                 .TotalMilliseconds;
         }
     }
+
+    public static class GameObjectExtensions {
+
+        /// <summary>
+        /// Add a component to a GameObject by name as a string
+        /// All strings must be the full namespace of the component (ex: "UnityEngine.UI.Image")
+        /// If the component is in another assembly (such as UnityEPL), you must include that as well (ex: "UnityEPL.ExternalDevices.PhotoDiodeSyncbox, UnityEPL")
+        /// Sometimes you also have to provide the assembly name for your Unity game (ex: "MySyncBox, Assembly-CSharp")
+        /// </summary>
+        /// <param name="gameObject"></param>
+        /// <param name="componentName"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public static Component AddComponentByName(this GameObject gameObject, string componentName) {
+            if (string.IsNullOrEmpty(componentName)) { throw new ArgumentException("The component name cannot be null or empty"); }
+
+            Type type = Type.GetType(componentName);
+
+            if (type == null) { throw new ArgumentException($"Could not find class {componentName}"); }
+            if (!type.IsSubclassOf(typeof(MonoBehaviour))) { throw new ArgumentException($"The class {componentName} is not a MonoBehaviour"); }
+
+            return gameObject.AddComponent(type);
+        } 
+    }
 }

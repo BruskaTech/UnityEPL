@@ -20,7 +20,10 @@ public class FpsDisplayer : MonoBehaviour {
     DateTime guiStartTime = DateTime.Now;
     int guiFrames = 0;
 
+    bool showFPS = false;
+
     void Update() {
+        if (!showFPS) { return; }
         updateFrames++;
         var timeDiffSecs = (DateTime.Now - updateStartTime).TotalSeconds;
         if (timeDiffSecs >= 1) {
@@ -32,6 +35,7 @@ public class FpsDisplayer : MonoBehaviour {
     }
 
     void FixedUpdate() {
+        if (!showFPS) { return; }
         fixedFrames++;
         var timeDiffSecs = (DateTime.Now - fixedStartTime).TotalSeconds;
         if (timeDiffSecs >= 1) {
@@ -43,6 +47,7 @@ public class FpsDisplayer : MonoBehaviour {
     }
 
     void LateUpdate() {
+        if (!showFPS) { return; }
         lateFrames++;
         var timeDiffSecs = (DateTime.Now - lateStartTime).TotalSeconds;
         if (timeDiffSecs >= 1) {
@@ -54,6 +59,7 @@ public class FpsDisplayer : MonoBehaviour {
     }
 
     void OnGUI() {
+        if (!showFPS) { return; }
         guiFrames++;
         var timeDiffSecs = (DateTime.Now - guiStartTime).TotalSeconds;
         if (timeDiffSecs >= 1) {

@@ -21,7 +21,6 @@ using UnityEPL.Threading;
 namespace UnityEPL {
 
     [DefaultExecutionOrder(-998)]
-    [AddComponentMenu("UnityEPL/Singleton Reporters/Event Reporter")]
     public class EventReporter : DataReporter2<EventReporter> {
         public void LogTS(string type, Dictionary<string, object> data = null) {
             var time = Clock.UtcNow;

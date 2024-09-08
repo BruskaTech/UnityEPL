@@ -47,9 +47,19 @@ namespace UnityEPL {
 
         /// <summary>
         /// This will cause the experiment to use the sync box.
-        /// <br/>NOT IMPLEMENTED YET
         /// </summary>
-        public static bool syncboxOn { get { return GetSetting<bool>("syncboxOn"); } }
+        public static bool syncBoxOn { get { return GetSetting<bool>("syncBoxOn"); } }
+        /// <summary>
+        /// This will cause the experiment to use the sync box for continuous pulsing.
+        /// <br/>The other option is to call the Pulse() function manually in your experiment.
+        /// <br/> This should likely be put in the experiment config file.
+        /// </summary>
+        public static bool syncBoxContinuousPulsing { get { return GetSetting<bool>("syncBoxContinuousPulsing"); } }
+        /// <summary>
+        /// The class for the sync box.
+        /// <br/>The class must be in the namespace UnityEPL.ExternalDevices. This may require a reference assembly definition. Check the "Adding a SyncBox" section of the documentation for more information.
+        /// </summary>
+        public static string syncBoxClass { get { return GetSetting<string>("syncBoxClass"); } }
         /// <summary>
         /// The duration of the sync box test in milliseconds.
         /// </summary>

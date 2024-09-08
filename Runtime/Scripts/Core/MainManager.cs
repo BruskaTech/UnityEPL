@@ -53,7 +53,9 @@ namespace UnityEPL {
         public VideoControl videoControl;
         public SoundRecorder recorder;
         //public RamulatorInterface ramulator;
-        public ISyncBox syncBox;
+
+        private GameObject syncBoxObj;
+        public SyncBox syncBox;
 
         //////////
         // Provided AudioSources
@@ -121,7 +123,16 @@ namespace UnityEPL {
                 FileManager.CreateDataFolder();
 
                 // Setup Syncbox Interface
-                if (!Config.isTest && Config.syncboxOn) {
+                if (!Config.isTest && Config.syncBoxOn) {
+                    try {
+                        syncBoxObj = new GameObject("Syncbox");
+                        var syncBoxTypePath = $"UnityEPL.ExternalDevices.{Config.syncBoxClass}, UnityEPL";
+                        syncBox = (SyncBox) syncBoxObj.AddComponentByName(syncBoxTypePath);
+                        DontDestroyOnLoad(syncBoxObj);
+                    } catch (Exception e) {
+                        throw new Exception($"Syncbox class {Config.syncBoxClass} could not be created", e);
+                    }
+
                     syncBox.Init();
                 }
 
@@ -200,6 +211,13 @@ namespace UnityEPL {
                 Debug.Log("Initialized Sound Recorder");
             }
 
+            // // Syncbox
+            // GameObject syncBoxObj = GameObject.Find("Syncbox");
+            // if (soundRecorder != null) {
+            //     syncBox = syncBoxObj.GetComponent<ISyncBox>();
+            //     Debug.Log("Initialized Syncbox");
+            // }
+
             // Ramulator Interface
             //GameObject ramulatorObject = GameObject.Find("RamulatorInterface");
             //if (ramulatorObject != null) {
@@ -262,6 +280,8 @@ namespace UnityEPL {
             await DoWaitForTS(QuitHelper);
         }
         protected async Task QuitHelper() {
+            manager.syncBox?.StopContinuousPulsing();
+
             // TODO: JPB: (feature) Make EventLoops stop gracefully by awaiting the stop with a timeout that gets logged if triggered
             foreach (var eventLoop in eventLoops) {
                 _ = eventLoop.Abort();

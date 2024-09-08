@@ -95,6 +95,8 @@ namespace UnityEPL.Experiment {
         protected async Task RunHelper() {
             DoTS(ExperimentQuit);
             DoTS(ExperimentPause);
+            manager.syncBox?.StartContinuousPulsing();
+            
             await PreTrialStates();
 
             if (practiceSession == null) {

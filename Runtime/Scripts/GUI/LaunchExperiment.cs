@@ -55,13 +55,13 @@ namespace UnityEPL.GUI {
             await DoWaitFor(DoSyncBoxTestHelper);
         }
         protected async Task DoSyncBoxTestHelper() {
-            if (!manager.syncBox?.IsRunning() ?? false) {
+            if (!manager.syncBox?.IsContinuousPulsing() ?? false) {
                 syncButton.GetComponent<Button>().interactable = false;
 
                 // TODO: JPB: (need) Fix Syncbox test
-                manager.syncBox.StartPulse();
+                manager.syncBox.StartContinuousPulsing();
                 await manager.Delay(Config.syncBoxTestDurationMs);
-                manager.syncBox.StopPulse();
+                manager.syncBox.StopContinuousPulsing();
 
                 syncButton.GetComponent<Button>().interactable = true;
             }
@@ -72,7 +72,7 @@ namespace UnityEPL.GUI {
             DoTS(LaunchExpHelper);
         }
         protected IEnumerator LaunchExpHelper() {
-            if (manager.syncBox?.IsRunning() ?? false) {
+            if (manager.syncBox?.IsContinuousPulsing() ?? false) {
                 cantGoPrompt.GetComponent<Text>().text = "Can't start while Syncbox Test is running";
                 cantGoPrompt.SetActive(true);
                 yield break;
@@ -81,7 +81,7 @@ namespace UnityEPL.GUI {
                 cantGoPrompt.SetActive(true);
                 yield break;
             } else if (!isValidParticipant(participantNameInput.text)) {
-                cantGoPrompt.GetComponent<Text>().text = "Please enter a valid participant name (ex. R1123E or LTP123)";
+                cantGoPrompt.GetComponent<Text>().text = "Please enter a valid participant name";
                 cantGoPrompt.SetActive(true);
                 yield break;
             } else if (!Config.IsExperimentConfigSetup()) {
@@ -103,6 +103,7 @@ namespace UnityEPL.GUI {
             // Setup the stable random seed with the participant name
             Utilities.Random.StableRndSeed = Config.subject.GetHashCode();
 
+            // Setup basic Unity stuff
             Cursor.visible = false;
             Application.runInBackground = true;
 
