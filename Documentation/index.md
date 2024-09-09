@@ -74,5 +74,3 @@ James Bruska, Connor Keane, Ryan Colyer
 ### UnityEPL 1.0 Authors
 
 Henry Solberg, Jesse Pazdera
-
-<meta name="google-site-verification" content="1iudkeN9uRgGULiVaYozF1wjgY9JuGC73YjebPeQgsc" />
