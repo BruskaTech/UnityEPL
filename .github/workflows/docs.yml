@@ -34,17 +34,17 @@ jobs:
     # Currently, docfx breaks with versions greater than 2.61.0
     # https://github.com/NormandErwan/DocFxForUnity/issues/9#issuecomment-1813897244
     - run: dotnet tool install -g docfx --version 2.61.0
-    - run: docfx Documentation/docfx.json
 
     # Add google verification metadata
     - run: cd Documentation; docfx template export default; cd ..
-    - run: cat "Documentation/_exported_templates/default/partials/head.tmpl.partial"
     - run: sed -i '$d' "Documentation/_exported_templates/default/partials/head.tmpl.partial"
     - run: sed -i '$d' "Documentation/_exported_templates/default/partials/head.tmpl.partial"
-    #- run: echo '    <meta name="google-site-verification" content="1iudkeN9uRgGULiVaYozF1wjgY9JuGC73YjebPeQgsc" />' >> "Documentation/_exported_templates/default/partials/head.tmpl.partial"
+    - run: echo '    <meta name="google-site-verification" content="1iudkeN9uRgGULiVaYozF1wjgY9JuGC73YjebPeQgsc" />' >> "Documentation/_exported_templates/default/partials/head.tmpl.partial"
     - run: echo '  {{/redirect_url}}' >> "Documentation/_exported_templates/default/partials/head.tmpl.partial"
     - run: echo '</head>' >> "Documentation/_exported_templates/default/partials/head.tmpl.partial"
-    - run: cat "Documentation/_exported_templates/default/partials/head.tmpl.partial"
+
+    # Build the documentation
+    - run: docfx Documentation/docfx.json
 
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
