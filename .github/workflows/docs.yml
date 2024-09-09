@@ -38,7 +38,7 @@ jobs:
 
     # Add google verification metadata
     - run: cd Documentation; docfx template export default; cd ..
-    - run: sed -i '' '$d' "Documentation/_exported_templates/default/partials/head.tmpl.partial"
+    - run: sed -i '$d' "Documentation/_exported_templates/default/partials/head.tmpl.partial"
     - run: echo '  <meta name="google-site-verification" content="1iudkeN9uRgGULiVaYozF1wjgY9JuGC73YjebPeQgsc" />' >> "Documentation/_exported_templates/default/partials/head.tmpl.partial"
     - run: echo '</head>' >> "Documentation/_exported_templates/default/partials/head.tmpl.partial"
 
