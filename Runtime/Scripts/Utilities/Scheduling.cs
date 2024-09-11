@@ -14,6 +14,15 @@ using UnityEPL.Extensions;
 namespace UnityEPL.Utilities {
 
     public static class Scheduling {
+        public readonly struct EventTime {
+            public readonly int startTime;
+            public readonly int endTime;
+            public EventTime(int startTime, int endTime) {
+                this.startTime = startTime;
+                this.endTime = endTime;
+            }
+        }
+
         /// <summary>
         /// This function schedules events randomly within a total duration such that they don't overlap.
         /// <br/>It is the same random as randomly assigning spots, checking to see if there are any overlaps, and trying again until there are no overlaps.
@@ -23,7 +32,7 @@ namespace UnityEPL.Utilities {
         /// <param name="eventDurations"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public static List<(int, int)> ScheduleEventsRandomly(int totalDuration, List<int> eventDurations) {
+        public static List<EventTime> ScheduleEventsRandomly(int totalDuration, List<int> eventDurations) {
             if (eventDurations.Count == 0) {
                 throw new ArgumentException($"eventDurations must have at least one element");
             } else if (totalDuration < eventDurations.Sum()) {
@@ -46,7 +55,7 @@ namespace UnityEPL.Utilities {
                 realTimes.Add((startTime, startTime + randomEventDurations[realTimes.Count]));
             }
 
-            return realTimes;
+            return realTimes.Select(x => new EventTime(x.Item1, x.Item2)).ToList();
         }
 
         /// <summary>
@@ -61,7 +70,7 @@ namespace UnityEPL.Utilities {
         /// <param name="blockedTimes"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public static List<(int, int)> ScheduleEventsRandomly(int totalDuration, int eventDuration, int numEvents, List<(int, int)> blockedTimes = null) {
+        public static List<EventTime> ScheduleEventsRandomly(int totalDuration, int eventDuration, int numEvents, List<(int, int)> blockedTimes = null) {
             blockedTimes ??= new();
             var blockedTimesDurations = blockedTimes.Select(x => x.Item2 - x.Item1).ToList();
 
@@ -150,7 +159,7 @@ namespace UnityEPL.Utilities {
                 }
             }
 
-            return eventTimes.Where(x => x.Item3).Select(x => (x.Item1, x.Item2)).ToList();
+            return eventTimes.Where(x => x.Item3).Select(x => new EventTime(x.Item1, x.Item2)).ToList();
         }
 
         /// <summary>
