@@ -19,21 +19,21 @@ namespace UnityEPL.Utilities {
         /// <br/>It is the same random as randomly assigning spots, checking to see if there are any overlaps, and trying again until there are no overlaps.
         ///     However, it is deterministic, does NOT require repicking, and guarantees that all events will be placed (or throws an error if it's not possible)
         /// </summary>
-        /// <param name="totalDurationMs"></param>
-        /// <param name="eventDurationsMs"></param>
+        /// <param name="totalDuration"></param>
+        /// <param name="eventDurations"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public static List<(int, int)> ScheduleEventsRandomly(int totalDurationMs, List<int> eventDurationsMs) {
-            if (eventDurationsMs.Count == 0) {
-                throw new ArgumentException($"eventDurationsMs must have at least one element");
-            } else if (totalDurationMs < eventDurationsMs.Sum()) {
-                throw new ArgumentException($"totalDurationMs ({totalDurationMs}) cannot fit all of the events in eventDurationsMs ({eventDurationsMs.Sum()})");
+        public static List<(int, int)> ScheduleEventsRandomly(int totalDuration, List<int> eventDurations) {
+            if (eventDurations.Count == 0) {
+                throw new ArgumentException($"eventDurations must have at least one element");
+            } else if (totalDuration < eventDurations.Sum()) {
+                throw new ArgumentException($"totalDuration ({totalDuration}) cannot fit all of the events in eventDurations ({eventDurations.Sum()})");
             }
 
-            var randomEventDurationsMs = eventDurationsMs.Shuffle();
-            var numGaps = totalDurationMs - randomEventDurationsMs.Sum();
+            var randomEventDurations = eventDurations.Shuffle();
+            var numGaps = totalDuration - randomEventDurations.Sum();
             var fakeTimes = Enumerable.Repeat(0, numGaps).ToList();
-            fakeTimes.AddRange(Enumerable.Repeat(1, randomEventDurationsMs.Count));
+            fakeTimes.AddRange(Enumerable.Repeat(1, randomEventDurations.Count));
             fakeTimes.ShuffleInPlace();
 
             var realTimes = new List<(int, int)>();
@@ -43,7 +43,7 @@ namespace UnityEPL.Utilities {
                 }
 
                 int startTime = i + realTimes.Select(x => x.Item2 - x.Item1).Sum() - realTimes.Count;
-                realTimes.Add((startTime, startTime + randomEventDurationsMs[realTimes.Count]));
+                realTimes.Add((startTime, startTime + randomEventDurations[realTimes.Count]));
             }
 
             return realTimes;
@@ -55,44 +55,54 @@ namespace UnityEPL.Utilities {
         /// <br/>It is the same random as randomly assigning spots, checking to see if there are any overlaps, and trying again until there are no overlaps.
         ///     However, it is deterministic, does NOT require repicking, and guarantees that all events will be placed (or throws an error if it's not possible)
         /// </summary>
-        /// <param name="totalDurationMs"></param>
-        /// <param name="eventDurationMs"></param>
+        /// <param name="totalDuration"></param>
+        /// <param name="eventDuration"></param>
         /// <param name="numEvents"></param>
+        /// <param name="blockedTimes"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public static List<(int, int)> ScheduleEventsRandomly(int totalDurationMs, int eventDurationMs, int numEvents) {
+        public static List<(int, int)> ScheduleEventsRandomly(int totalDuration, int eventDuration, int numEvents, List<(int, int)> blockedTimes = null) {
+            blockedTimes ??= new();
+            var blockedTimesDurations = blockedTimes.Select(x => x.Item2 - x.Item1).ToList();
+
             if (numEvents == 0) {
                 throw new ArgumentException($"numEvents ({numEvents}) must be greater than 0");
-            } else if (totalDurationMs < eventDurationMs * numEvents) {
-                throw new ArgumentException($"totalDurationMs ({totalDurationMs}) cannot fit the numEvents ({numEvents}) at their eventDurationMs ({eventDurationMs})");
+            } else if (totalDuration < eventDuration * numEvents) {
+                throw new ArgumentException($"totalDuration ({totalDuration}) cannot fit the numEvents ({numEvents}) "
+                    + $"at their eventDuration ({eventDuration})");
+            } else if (totalDuration < eventDuration * numEvents + blockedTimesDurations.Sum() ) {
+                throw new ArgumentException($"totalDuration ({totalDuration}) cannot fit the numEvents ({numEvents}) "
+                    + $"at their eventDuration ({eventDuration}) "
+                    + $"with the blockedTimesDurations ({blockedTimesDurations.Sum()})");
             }
 
-            var eventTimesMs = new List<(int,int)>();
-            while (eventTimesMs.Count < numEvents) {
+            var eventTimes = blockedTimes.Select(x => (x.Item1, x.Item2, false)).ToList();
+            eventTimes.Sort();
+            while (eventTimes.Count < numEvents + blockedTimes.Count) {
                 // Loop constants
-                var numGaps = eventTimesMs.Count + 1;
-                var numRemainingEvents = numEvents - eventTimesMs.Count;
+                var numGaps = eventTimes.Count + 1;
+                var numRemainingEvents = numEvents - eventTimes.Count;
 
                 // Find the gaps big enough to fit another event
                 var gaps = new List<(int, int)>();
-                if (eventTimesMs.Count == 0) {
+                if (eventTimes.Count == 0) {
                     // If there are no events, then the entire duration is a gap
-                    gaps.Add((0, totalDurationMs));
+                    gaps.Add((0, totalDuration));
                 } else {
                     // Add the gap from the start to the first event, if it's big enough
-                    if (eventTimesMs[0].Item1 >= eventDurationMs) {
-                        gaps.Add((0, eventTimesMs[0].Item1));
+                    if (eventTimes[0].Item1 >= eventDuration) {
+                        gaps.Add((0, eventTimes[0].Item1));
                     }
                     // Add the gap from the last event to the end, if it's big enough
-                    var lastEventEndTime = eventTimesMs[eventTimesMs.Count - 1].Item2;
-                    if (totalDurationMs - lastEventEndTime >= eventDurationMs) {
-                        gaps.Add((lastEventEndTime, totalDurationMs));
+                    var lastEventEndTime = eventTimes[eventTimes.Count - 1].Item2;
+                    if (totalDuration - lastEventEndTime >= eventDuration) {
+                        gaps.Add((lastEventEndTime, totalDuration));
                     }
                     // Add the gaps between the events, if they're big enough
-                    for (int i = 1; i < eventTimesMs.Count; ++i) {
-                        var gap = (eventTimesMs[i - 1].Item2, eventTimesMs[i].Item1);
+                    for (int i = 1; i < eventTimes.Count; ++i) {
+                        var gap = (eventTimes[i - 1].Item2, eventTimes[i].Item1);
                         int gapSize = gap.Item2 - gap.Item1;
-                        if (gapSize >= eventDurationMs) {
+                        if (gapSize >= eventDuration) {
                             gaps.Add(gap);
                         }
                     }
@@ -100,18 +110,22 @@ namespace UnityEPL.Utilities {
                 gaps.Sort();
 
                 // Determine the available positions in the gaps
-                int numPossibleEventsInGaps = gaps.Select(g => (g.Item2 - g.Item1) / eventDurationMs).Sum();
+                int numPossibleEventsInGaps = gaps.Select(g => (g.Item2 - g.Item1) / eventDuration).Sum();
                 var availablePositions = new List<(int, int)>();
                 foreach (var gap in gaps) {
                     int gapSize = gap.Item2 - gap.Item1;
-                    int numPossibleEventsInGap = gapSize / eventDurationMs;
+                    int numPossibleEventsInGap = gapSize / eventDuration;
                     int numPossibleEventsInOtherGaps = numPossibleEventsInGaps - numPossibleEventsInGap;
                     int numGapsNeeded = Math.Max(1, numRemainingEvents - numPossibleEventsInOtherGaps);
-                    var availablePositionsInGap = AvailablePositions(gapSize, eventDurationMs, numGapsNeeded);
+                    var availablePositionsInGap = AvailablePositions(gapSize, eventDuration, numGapsNeeded);
                     foreach (var availablePosition in availablePositionsInGap) {
                         // Convert it back to it's real position in the total duration
                         availablePositions.Add((gap.Item1 + availablePosition.Item1, gap.Item1 + availablePosition.Item2));
                     }
+                }
+                if (availablePositions.Count == 0) {
+                    throw new ArgumentException($"There are no available positions to place the remaining events. "
+                    + "This means that blocked times are too restrictive and placement is impossible.");
                 }
 
                 // Pick the start time at random from the available position
@@ -129,14 +143,14 @@ namespace UnityEPL.Utilities {
                     if (decompressedPosition < 0) {
                         int position = decompressedPosition + compressedAvailablePositions[i];
                         int startTime = availablePositions[i].Item1 + position;
-                        eventTimesMs.Add((startTime, startTime + eventDurationMs));
-                        eventTimesMs.Sort();
+                        eventTimes.Add((startTime, startTime + eventDuration, true));
+                        eventTimes.Sort();
                         break;
                     }
                 }
             }
 
-            return eventTimesMs;
+            return eventTimes.Where(x => x.Item3).Select(x => (x.Item1, x.Item2)).ToList();
         }
 
         /// <summary>
