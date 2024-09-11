@@ -70,9 +70,9 @@ namespace UnityEPL.Utilities {
         /// <param name="blockedTimes"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public static List<EventTime> ScheduleEventsRandomly(int totalDuration, int eventDuration, int numEvents, List<(int, int)> blockedTimes = null) {
+        public static List<EventTime> ScheduleEventsRandomly(int totalDuration, int eventDuration, int numEvents, List<EventTime> blockedTimes = null) {
             blockedTimes ??= new();
-            var blockedTimesDurations = blockedTimes.Select(x => x.Item2 - x.Item1).ToList();
+            var blockedTimesDurations = blockedTimes.Select(x => x.endTime - x.startTime).ToList();
 
             if (numEvents == 0) {
                 throw new ArgumentException($"numEvents ({numEvents}) must be greater than 0");
@@ -85,7 +85,7 @@ namespace UnityEPL.Utilities {
                     + $"with the blockedTimesDurations ({blockedTimesDurations.Sum()})");
             }
 
-            var eventTimes = blockedTimes.Select(x => (x.Item1, x.Item2, false)).ToList();
+            var eventTimes = blockedTimes.Select(x => (x.startTime, x.endTime, false)).ToList();
             eventTimes.Sort();
             while (eventTimes.Count < numEvents + blockedTimes.Count) {
                 // Loop constants
