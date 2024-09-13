@@ -93,6 +93,7 @@ namespace UnityEPL.ExternalDevices {
         public abstract Task ConnectTS();
         public abstract Task ConfigureTS();
         public abstract Task QuitTS();
+        public abstract Task<TimeSpan> GetLastAvgHeartbeatDelayTS();
         public abstract Task<TimeSpan> GetLastHeartbeatDelayTS();
         public abstract Task<TimeSpan> GetMsgQueueDelayTS();
 

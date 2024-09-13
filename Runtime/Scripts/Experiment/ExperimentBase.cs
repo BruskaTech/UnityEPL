@@ -89,13 +89,26 @@ namespace UnityEPL.Experiment {
             throw new EndSessionException();
         }
 
+        // TODO: JPB: (faeture) List if LogFrameDisplayTimes had lagged the frame before
+        private IEnumerator LogFrameDisplayTimes() {
+            TimeSpan msPerFrame = TimeSpan.FromMilliseconds(1000 / Application.targetFrameRate);
+            DateTime lastFrameTime = Clock.UtcNow;
+            while (true) {
+                yield return new WaitForEndOfFrame();
+                DateTime now = Clock.UtcNow;
+                eventReporter.LogTS("frameDisplayed", now, new() { 
+                    { "frame", Time.frameCount },
+                    { "timeSinceLastFrameMs", (now - lastFrameTime).TotalMilliseconds }
+                });
+                lastFrameTime = now;
+            }
+        }
+
         protected void Run() {
             DoTS(RunHelper().ToEnumerator);
         }
         protected async Task RunHelper() {
-            DoTS(ExperimentQuit);
-            DoTS(ExperimentPause);
-            manager.syncBox?.StartContinuousPulsing();
+            ExperimentSetup();
             
             await PreTrialStates();
 
@@ -123,6 +136,15 @@ namespace UnityEPL.Experiment {
 
             await PostTrialStates();
             await manager.QuitTS();
+        }
+
+        protected void ExperimentSetup() {
+            DoTS(ExperimentQuit);
+            DoTS(ExperimentPause);
+            manager.syncBox?.StartContinuousPulsing();
+            if (Config.logFrameDisplayTimes) {
+                StartCoroutine(LogFrameDisplayTimes());
+            }
         }
 
         protected virtual void LogExperimentInfo() {

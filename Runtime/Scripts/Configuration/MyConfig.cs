@@ -226,6 +226,27 @@ namespace UnityEPL {
         /// This will allow the experiment to pause at any time by pressing the pause button ('P').
         /// </summary>
         public static bool pauseAnytime { get { return GetSetting<bool>("pauseAnytime"); } }
+        /// <summary>
+        /// This causes the experiment to log the display times of each frame.
+        /// <br/> This is much closer to the actual time things are displayed on the screen 
+        ///     as opposed to the time they changed in the code.
+        /// <br/> This is the closest thing you can get to when the frame is actually displayed on the screen in Unity.
+        /// <br/>
+        /// <br/> NOTE: This value is not exact because: 
+        /// <br/>    1) Unity is not exactly locked to the vBlank of the the monitor.
+        ///  <br/>   2) When the game lags this number will be off.
+        /// <br/>
+        /// <br/> If you need something better, then you will need to do one of the following:
+        /// <br/>    1) Make an EventLoop that waits for the vBlank of the monitor and logs it
+        /// <br/>    2) Make an EventLoop that waits for a photodiode and logs it
+        /// <br/>    3) Create a InputDevice in the new Unity InputSystem for your photodiode and log it
+        ///             (https://www.youtube.com/watch?v=YNNVGGulscc)
+        /// <br/>
+        /// <br/> More info can be found at these locations:
+        /// <br/>    https://discussions.unity.com/t/timing-of-waitforendofframe-relative-to-vertical-blank-onset/173764/3
+        /// <br/>    https://discussions.unity.com/t/time-deltatime-not-constant-vsync-camerafollow-and-jitter/639394/280
+        /// </summary>
+        public static bool logFrameDisplayTimes { get { return GetSetting<bool>("logFrameDisplayTimes"); } }
 
         // ElememInterface.cs
 

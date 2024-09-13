@@ -7,6 +7,7 @@
 //UnityEPL is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 //You should have received a copy of the GNU General Public License along with UnityEPL. If not, see <https://www.gnu.org/licenses/>. 
 
+using Codice.Client.Common;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -73,6 +74,7 @@ namespace UnityEPL.ExternalDevices {
 
         private uint heartbeatCount = 0;
         private TimeSpan LastHeartbeatDelay = TimeSpan.Zero;
+        private Queue<TimeSpan> LastTenHeartbeatDelays = new(Enumerable.Repeat(TimeSpan.Zero, 10));
         protected override CancellationTokenSource DoHeartbeatsForeverTS() {
             return DoRepeatingTS(0, Config.elememHeartbeatInterval, null, DoHeartbeatHelper);
         }
@@ -85,12 +87,20 @@ namespace UnityEPL.ExternalDevices {
             var startTime = Clock.UtcNow;
             await SendAndReceive("HEARTBEAT", data, "HEARTBEAT_OK");
             LastHeartbeatDelay = Clock.UtcNow - startTime;
+            LastTenHeartbeatDelays.Dequeue();
+            LastTenHeartbeatDelays.Enqueue(LastHeartbeatDelay);
         }
         public override async Task<TimeSpan> GetLastHeartbeatDelayTS() {
             return await DoGetTS(GetLastHeartbeatDelayHelper);
         }
         protected TimeSpan GetLastHeartbeatDelayHelper() {
             return LastHeartbeatDelay;
+        }
+        public override async Task<TimeSpan> GetLastAvgHeartbeatDelayTS() {
+            return await DoGetTS(GetLastAvgHeartbeatDelayHelper);
+        }
+        protected TimeSpan GetLastAvgHeartbeatDelayHelper() {
+            return new TimeSpan((long)LastTenHeartbeatDelays.Average(ts => ts.Ticks));
         }
 
         public override async Task<TimeSpan> GetMsgQueueDelayTS() {
