@@ -94,9 +94,9 @@ namespace UnityEPL.ExternalDevices {
 
         public override async Task Pulse() {
             image.color = onColor;
-            await Task.Delay(1000);
+            await manager.Delay(1000);
             image.color = offColor;
-            await Task.Delay(1000);
+            await manager.Delay(1000);
         }
 
         public override Task TearDown() {
