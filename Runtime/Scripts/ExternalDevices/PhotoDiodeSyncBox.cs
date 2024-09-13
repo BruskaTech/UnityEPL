@@ -20,6 +20,11 @@ namespace UnityEPL.ExternalDevices {
         private Color offColor;
         private Color onColor;
 
+        private const int TIME_BETWEEN_PULSES_MS = 1000;
+        private const int TIME_BETWEEN_PULSES_JITTER_MS = 200;
+        private const int TIME_BETWEEN_PULSES_MIN_MS = TIME_BETWEEN_PULSES_MS - TIME_BETWEEN_PULSES_JITTER_MS;
+        private const int TIME_BETWEEN_PULSES_MAX_MS = TIME_BETWEEN_PULSES_MS + TIME_BETWEEN_PULSES_JITTER_MS;
+
         public void InitImage() {
             // Set the name of the GameObject
             gameObject.name = "PhotoDiodeSyncBox";
@@ -92,11 +97,13 @@ namespace UnityEPL.ExternalDevices {
             return Task.CompletedTask;
         }
 
+
         public override async Task Pulse() {
             image.color = onColor;
             await manager.Delay(1000);
             image.color = offColor;
-            await manager.Delay(1000);
+            int delayMs = Utilities.Random.Rnd.Next(TIME_BETWEEN_PULSES_MIN_MS, TIME_BETWEEN_PULSES_MAX_MS);
+            await manager.Delay(delayMs);
         }
 
         public override Task TearDown() {

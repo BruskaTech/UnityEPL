@@ -314,12 +314,20 @@ namespace UnityEPL {
             return DoWaitFor(DelayEHelper, millisecondsDelay, action);
         }
         public async Task DelayTS(int millisecondsDelay) {
-            await DoWaitForTS(DelayEHelper, millisecondsDelay);
+            if (millisecondsDelay != 0) {
+                await DoWaitForTS(DelayEHelper, millisecondsDelay);
+            }
         }
         public async Task Delay(int millisecondsDelay) {
-            await ToCoroutineTask(DelayE(millisecondsDelay));
+            if (millisecondsDelay != 0) {
+                await ToCoroutineTask(DelayE(millisecondsDelay));
+            }
+        }
+        private IEnumerator DoNothing() {
+            yield break;
         }
         public IEnumerator DelayE(int millisecondsDelay) {
+            if (millisecondsDelay == 0) { return DoNothing(); }
             return DoWaitFor(DelayEHelper, millisecondsDelay);
         }
         public IEnumerator DelayEHelper(int millisecondsDelay) {
