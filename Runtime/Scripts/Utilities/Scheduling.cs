@@ -90,7 +90,7 @@ namespace UnityEPL.Utilities {
             while (eventTimes.Count < numEvents + blockedTimes.Count) {
                 // Loop constants
                 var numGaps = eventTimes.Count + 1;
-                var numRemainingEvents = numEvents - eventTimes.Count;
+                var numRemainingEvents = numEvents + blockedTimes.Count - eventTimes.Count;
 
                 // Find the gaps big enough to fit another event
                 var gaps = new List<(int, int)>();
