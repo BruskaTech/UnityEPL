@@ -11,15 +11,15 @@ using System;
 
 namespace UnityEPL {
 
-    public abstract class SingletonEventMonoBehaviour<T> : EventMonoBehaviour
-            where T : SingletonEventMonoBehaviour<T> {
+    public abstract class SingletonEventMonoBehaviour<Self> : EventMonoBehaviour
+            where Self : SingletonEventMonoBehaviour<Self> {
 
         protected static bool IsInstatiated { get; private set; } = false;
-        private static T _Instance;
-        public static T Instance {
+        private static Self _Instance;
+        public static Self Instance {
             get {
                 if (_Instance == null) {
-                    throw new InvalidOperationException($"{typeof(T).Name} SingletonEventMonoBehavior has not initialized. Accessed before it's awake method has been called.");
+                    throw new InvalidOperationException($"{typeof(Self).Name} SingletonEventMonoBehavior has not initialized. Accessed before it's awake method has been called.");
                 }
                 return _Instance;
             }
@@ -27,12 +27,12 @@ namespace UnityEPL {
         }
 
         protected SingletonEventMonoBehaviour() {
-            _Instance = (T)this;
+            _Instance = (Self)this;
         }
 
         protected new void Awake() {
             if (IsInstatiated) {
-                ErrorNotifier.ErrorTS(new InvalidOperationException($"Cannot create multiple {typeof(T).Name} Objects"));
+                ErrorNotifier.ErrorTS(new InvalidOperationException($"Cannot create multiple {typeof(Self).Name} Objects"));
             }
             IsInstatiated = true;
             DontDestroyOnLoad(this.gameObject);

@@ -20,6 +20,7 @@ using UnityEPL.Utilities;
 using UnityEPL.ExternalDevices;
 using UnityEPL.GUI;
 using UnityEPL.Extensions;
+using Codice.CM.Common;
 
 namespace UnityEPL.Experiment {
 
@@ -53,13 +54,14 @@ namespace UnityEPL.Experiment {
         }
     }
 
-    public abstract class ExperimentBase<T, SessionType, TrialType> : SingletonEventMonoBehaviour<T>
-        where T : ExperimentBase<T, SessionType, TrialType>
+    public abstract class ExperimentBase<Self, SessionType, TrialType, Constants> : SingletonEventMonoBehaviour<Self>
+        where Self : ExperimentBase<Self, SessionType, TrialType, Constants>
         where SessionType : ExperimentSession<TrialType>
+        where Constants: ExperimentConstants, new()
     {
-
         protected InputManager inputManager;
         protected TextDisplayer textDisplayer;
+        protected Constants constants;
 
         protected SessionType session;
         protected SessionType practiceSession;
@@ -70,6 +72,8 @@ namespace UnityEPL.Experiment {
             inputManager = InputManager.Instance;
             textDisplayer = TextDisplayer.Instance;
             LogExperimentInfo();
+            constants = new Constants();
+            LogConstants();
         }
 
         protected void OnEnable() {
@@ -159,6 +163,9 @@ namespace UnityEPL.Experiment {
                 { "rndSeed", Utilities.Random.RndSeed },
                 { "stableRndSeed", Utilities.Random.StableRndSeed },
             });
+        }
+        protected virtual void LogConstants() {
+            eventReporter.LogTS("experiment constants", constants.ToDict());
         }
 
         protected virtual async void ExperimentQuit() {
