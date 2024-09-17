@@ -20,7 +20,6 @@ using UnityEPL.Utilities;
 using UnityEPL.ExternalDevices;
 using UnityEPL.GUI;
 using UnityEPL.Extensions;
-using Codice.CM.Common;
 
 namespace UnityEPL.Experiment {
 
