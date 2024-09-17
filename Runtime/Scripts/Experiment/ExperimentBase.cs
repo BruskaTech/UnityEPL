@@ -73,6 +73,7 @@ namespace UnityEPL.Experiment {
             LogExperimentInfo();
             constants = new Constants();
             LogConstants();
+            LogConstantsAndConfigs();
         }
 
         protected void OnEnable() {
@@ -165,6 +166,17 @@ namespace UnityEPL.Experiment {
         }
         protected virtual void LogConstants() {
             eventReporter.LogTS("experiment constants", constants.ToDict());
+        }
+
+        protected virtual void LogConstantsAndConfigs() {
+            var dict = constants.ToDict();
+            foreach (var kvp in Config.ToDict()) {
+                if (dict.ContainsKey(kvp.Key)) {
+                    throw new Exception("Experiment constants and one of the Configs have the same key: " + kvp.Key);
+                }
+                dict[kvp.Key] = kvp.Value;
+            }
+            eventReporter.LogTS("constants and configs", Config.ToDict());
         }
 
         protected virtual async void ExperimentQuit() {

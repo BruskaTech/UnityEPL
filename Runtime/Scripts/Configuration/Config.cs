@@ -270,5 +270,22 @@ namespace UnityEPL {
 
         }
 
+        internal static Dictionary<string, object> ToDict() {
+            var dict = new Dictionary<string, object>();
+
+            if (systemConfig != null) {
+                foreach (var kvp in systemConfig) {
+                    dict[kvp.Key] = kvp.Value;
+                }
+            }
+
+            if (experimentConfig != null) {
+                foreach (var kvp in experimentConfig) {
+                    dict[kvp.Key] = kvp.Value;
+                }
+            }
+
+            return dict;
+        }
     }
 }
