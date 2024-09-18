@@ -60,7 +60,7 @@ namespace UnityEPL.Experiment {
     {
         protected InputManager inputManager;
         protected TextDisplayer textDisplayer;
-        protected Constants constants;
+        protected Constants constants { get; private set; }
 
         protected SessionType session;
         protected SessionType practiceSession;
