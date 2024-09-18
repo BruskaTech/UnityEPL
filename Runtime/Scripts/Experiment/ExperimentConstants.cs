@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace UnityEPL.Experiment {
@@ -45,7 +46,7 @@ namespace UnityEPL.Experiment {
             foreach (FieldInfo field in fields) {
                 // Only add fields that are constants
                 if (field.IsLiteral && !field.IsInitOnly) {
-                    dict.Add(field.Name, field.GetRawConstantValue());
+                    dict[field.Name] = field.GetValue(this);
                 }
             }
 
@@ -63,9 +64,10 @@ namespace UnityEPL.Experiment {
             FieldInfo[] fields = GetType().GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
 
             // Iterate through all instance fields and add readonly fields
-            foreach (FieldInfo field in fields) {
+            // We go in reverse order so that we can override values if they are redefined in a subclass
+            foreach (FieldInfo field in fields.Reverse()) {
                 if (field.IsInitOnly) {
-                    dict.Add(field.Name, field.GetValue(this));
+                    dict[field.Name] = field.GetValue(this);
                 }
             }
 
