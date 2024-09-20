@@ -68,9 +68,9 @@ namespace UnityEPL {
         //////////
         // Event Loop Handling
         //////////
-        public ConcurrentBag<EventLoop> eventLoops = new();
-        public ConcurrentQueue<IEnumerator> events = new();
-        public ConcurrentQueue<IEnumerator> unpausableEvents = new();
+        internal ConcurrentBag<EventLoop> eventLoops = new();
+        internal ConcurrentQueue<IEnumerator> events = new();
+        internal ConcurrentQueue<IEnumerator> unpausableEvents = new();
 
         //////////
         // StartTime

@@ -27,7 +27,7 @@ namespace UnityEPL.Experiment {
     /// I also wish I could have at least used a readonly struct here, 
     ///     but I can't because you can't inherit from a struct.
     /// </summary>
-    public class ExperimentConstants {
+    public abstract class ExperimentConstants {
         public ExperimentConstants() {
             ValidateClass();
         }

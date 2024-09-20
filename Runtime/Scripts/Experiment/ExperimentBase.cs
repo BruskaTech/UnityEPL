@@ -58,9 +58,10 @@ namespace UnityEPL.Experiment {
         where SessionType : ExperimentSession<TrialType>
         where Constants: ExperimentConstants, new()
     {
+        protected readonly Constants CONSTANTS = new();
+
         protected InputManager inputManager;
         protected TextDisplayer textDisplayer;
-        protected Constants constants { get; private set; }
 
         protected SessionType session;
         protected SessionType practiceSession;
@@ -71,7 +72,6 @@ namespace UnityEPL.Experiment {
             inputManager = InputManager.Instance;
             textDisplayer = TextDisplayer.Instance;
             LogExperimentInfo();
-            constants = new Constants();
             LogConstants();
             LogConstantsAndConfigs();
         }
@@ -165,11 +165,11 @@ namespace UnityEPL.Experiment {
             });
         }
         protected virtual void LogConstants() {
-            eventReporter.LogTS("experiment constants", constants.ToDict());
+            eventReporter.LogTS("experiment constants", CONSTANTS.ToDict());
         }
 
         protected virtual void LogConstantsAndConfigs() {
-            var dict = constants.ToDict();
+            var dict = CONSTANTS.ToDict();
             foreach (var kvp in Config.ToDict()) {
                 if (dict.ContainsKey(kvp.Key)) {
                     throw new Exception("Experiment constants and one of the Configs have the same key: " + kvp.Key);
