@@ -156,7 +156,7 @@ namespace UnityEPL.Experiment {
             eventReporter.LogTS("session start", new() {
                 { "application version", Application.version },
                 { "build date", BuildInfo.Date() },
-                { "experiment version", Config.experimentName },
+                { "experiment name", Config.experimentName },
                 { "logfile version", "1.0.0" },
                 { "participant", Config.subject },
                 { "session", Config.sessionNum },
