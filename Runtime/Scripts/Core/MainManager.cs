@@ -34,7 +34,6 @@ namespace UnityEPL {
                 }
                 return instance;
             }
-            private set { }
         }
 
         const string SYSTEM_CONFIG = "config.json";

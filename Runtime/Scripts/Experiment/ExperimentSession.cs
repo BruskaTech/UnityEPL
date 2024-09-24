@@ -16,9 +16,16 @@ namespace UnityEPL.Experiment {
         public uint TrialNum = 0;
         public bool isPractice = false;
 
-        protected MainManager manager = MainManager.Instance;
-        protected TextDisplayer textDisplayer = TextDisplayer.Instance;
-        protected EventReporter eventReporter = EventReporter.Instance;
-        protected InputManager inputManager = InputManager.Instance;
+        protected MainManager manager;
+        protected TextDisplayer textDisplayer;
+        protected EventReporter eventReporter;
+        protected InputManager inputManager;
+
+        public ExperimentSession() {
+            manager = MainManager.Instance;
+            textDisplayer = TextDisplayer.Instance;
+            eventReporter = EventReporter.Instance;
+            inputManager = InputManager.Instance;
+        }
     }
 }

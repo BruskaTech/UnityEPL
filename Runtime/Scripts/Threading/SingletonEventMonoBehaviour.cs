@@ -23,7 +23,6 @@ namespace UnityEPL {
                 }
                 return _Instance;
             }
-            private set { }
         }
 
         protected SingletonEventMonoBehaviour() {
