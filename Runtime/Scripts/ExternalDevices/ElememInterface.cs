@@ -46,7 +46,7 @@ namespace UnityEPL.ExternalDevices {
 
             Dictionary<string, object> configDict = new() {
                 { "stim_mode", stimMode },
-                { "experiment", Config.experimentName + Config.stimMode },
+                { "experiment", Config.experimentName },
                 { "subject", Config.subject },
                 { "session", Config.sessionNum },
             };
