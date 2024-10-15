@@ -50,23 +50,7 @@ namespace UnityEPL.ExternalDevices {
             : base("TASK_STATUS", new() { {"status", name}, {"data", dict} }) {}
 
         public static HostPcStatusMsg PAUSE(bool pauseStart) { return new HostPcStatusMsg("PAUSE", new() { {"pause start", pauseStart} }); }
-        public static HostPcStatusMsg REST() { return new HostPcStatusMsg("REST"); }
-        public static HostPcStatusMsg ORIENT() { return new HostPcStatusMsg("ORIENT"); }
-        public static HostPcStatusMsg COUNTDOWN() { return new HostPcStatusMsg("COUNTDOWN"); }
-        public static HostPcStatusMsg DISTRACT() { return new HostPcStatusMsg("DISTRACT"); }
-        public static HostPcStatusMsg INSTRUCT() { return new HostPcStatusMsg("INSTRUCT"); }
         public static HostPcStatusMsg WAITING() { return new HostPcStatusMsg("WAITING"); }
-        public static HostPcStatusMsg SYNC() { return new HostPcStatusMsg("SYNC"); }
-        public static HostPcStatusMsg VOCALIZATION() { return new HostPcStatusMsg("VOCALIZATION"); }
-        public static HostPcStatusMsg FIXATION() { return new HostPcStatusMsg("FIXATION"); }
-        public static HostPcStatusMsg ENCODING() { return new HostPcStatusMsg("ENCODING"); }
-        public static HostPcStatusMsg RETRIEVAL() { return new HostPcStatusMsg("RETRIEVAL"); }
-        public static HostPcStatusMsg MATH() { return new HostPcStatusMsg("MATH"); }
-        public static HostPcStatusMsg ISI(float duration) { return new HostPcStatusMsg("ISI", new() {{"duration", duration}}); }
-        public static HostPcStatusMsg FREE_RECALL(float duration) { return new HostPcStatusMsg("FREE_RECALL", new() {{"duration", duration}}); }
-        public static HostPcStatusMsg CUED_RECALL(float duration) { return new HostPcStatusMsg("CUED_RECALL", new() {{"duration", duration}}); }
-        public static HostPcStatusMsg FINAL_RECALL(float duration) { return new HostPcStatusMsg("FINAL_RECALL", new() {{"duration", duration}}); }
-        public static HostPcStatusMsg RECOGNITION(float duration) { return new HostPcStatusMsg("RECOGNITION", new() {{"duration", duration}}); }
     }
 
     // Host PC Closed Loop Message
