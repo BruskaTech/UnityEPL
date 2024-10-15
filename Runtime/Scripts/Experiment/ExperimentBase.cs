@@ -139,6 +139,7 @@ namespace UnityEPL.Experiment {
             eventReporter.LogTS("session start", new() {
                 { "application version", Application.version },
                 { "build date", BuildInfo.Date() },
+                { "UnityEPL version", PackageVersion.Version() },
                 { "experiment name", Config.experimentName },
                 { "logfile version", "1.0.0" },
                 { "participant", Config.subject },
@@ -371,7 +372,7 @@ namespace UnityEPL.Experiment {
             return await PressAnyKey(description, LangStrings.Blank(), displayText);
         }
         protected async Task<KeyCode> PressAnyKey(string description, LangString displayTitle, LangString displayText) {
-            await manager.hostPC?.SendStateMsgTS(HostPcStatusMsg.WAITING());
+            await SetExperimentStatus(HostPcStatusMsg.WAITING());
             // TODO: JPB: (needed) Add Ramulator to match this
             textDisplayer.Display($"{description} (press any key prompt)", displayTitle, displayText);
             var keyCode = await InputManager.Instance.WaitForKey();
