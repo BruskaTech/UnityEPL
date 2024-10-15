@@ -137,13 +137,16 @@ namespace UnityEPL.Experiment {
         protected virtual void LogExperimentInfo() {
             // Log versions and experiment info
             eventReporter.LogTS("session start", new() {
-                { "application version", Application.version },
-                { "build date", BuildInfo.Date() },
-                { "UnityEPL version", PackageVersion.Version() },
+                { "application version", BuildInfo.ApplicationVersion() },
                 { "experiment name", Config.experimentName },
-                { "logfile version", "1.0.0" },
                 { "participant", Config.subject },
                 { "session", Config.sessionNum },
+                { "unityEPL version", BuildInfo.PackageVersion() },
+                { "unity version", BuildInfo.UnityVersion() },
+                { "logfile version", "1.0.0" },
+                { "build date", BuildInfo.BuildDateTime() },
+                { "unityEPL commit hash", BuildInfo.PackageCommitHash() },
+                { "application commit hash", BuildInfo.ApplicationCommitHash() },
                 { "rndSeed", Utilities.Random.RndSeed },
                 { "stableRndSeed", Utilities.Random.StableRndSeed },
             });
