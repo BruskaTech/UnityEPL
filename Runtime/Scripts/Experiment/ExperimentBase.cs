@@ -74,6 +74,7 @@ namespace UnityEPL.Experiment {
             LogExperimentInfo();
             LogConstants();
             LogConstantsAndConfigs();
+            ReportSessionNum();
         }
 
         protected void OnEnable() {
@@ -93,21 +94,6 @@ namespace UnityEPL.Experiment {
             throw new EndSessionException();
         }
 
-        // TODO: JPB: (faeture) List if LogFrameDisplayTimes had lagged the frame before
-        private IEnumerator LogFrameDisplayTimes() {
-            TimeSpan msPerFrame = TimeSpan.FromMilliseconds(1000 / Application.targetFrameRate);
-            DateTime lastFrameTime = Clock.UtcNow;
-            while (true) {
-                yield return new WaitForEndOfFrame();
-                DateTime now = Clock.UtcNow;
-                eventReporter.LogTS("frameDisplayed", now, new() { 
-                    { "frame", Time.frameCount },
-                    { "timeSinceLastFrameMs", (now - lastFrameTime).TotalMilliseconds }
-                });
-                lastFrameTime = now;
-            }
-        }
-
         protected void Run() {
             DoTS(RunHelper().ToEnumerator);
         }
@@ -125,16 +111,16 @@ namespace UnityEPL.Experiment {
             session = practiceSession;
             try {
                 while (true) {
-                    session.TrialNum++;
                     await PracticeTrialStates();
+                    session.TrialNum++;
                 }
             } catch (EndSessionException) {} // do nothing
 
             session = normalSession;
             try {
                 while (true) {
-                    session.TrialNum++;
                     await TrialStates();
+                    session.TrialNum++;
                 }
             } catch (EndSessionException) {} // do nothing
 
@@ -146,9 +132,6 @@ namespace UnityEPL.Experiment {
             DoTS(ExperimentQuit);
             DoTS(ExperimentPause);
             manager.syncBox?.StartContinuousPulsing();
-            if (Config.logFrameDisplayTimes) {
-                StartCoroutine(LogFrameDisplayTimes());
-            }
         }
 
         protected virtual void LogExperimentInfo() {
@@ -181,12 +164,20 @@ namespace UnityEPL.Experiment {
 
         protected virtual async void ExperimentQuit() {
             if (Config.quitAnytime) {
+                bool firstLoop = true;
                 await RepeatUntilYes(async (CancellationToken ct) => {
                     // Resume since they don't want to quit (or haven't tried yet)
+                    if (!firstLoop) {
+                        await SetExperimentStatus(HostPcStatusMsg.PAUSE(false));
+                        firstLoop = false;
+                    }
                     manager.Pause(false);
+
                     // Wait for the quit key
                     await inputManager.WaitForKey(new List<KeyCode>() { KeyCode.Q }, unpausable: true, ct: ct);
+
                     // Pause everything and ask if they want to quit
+                    await SetExperimentStatus(HostPcStatusMsg.PAUSE(true));
                     manager.Pause(true);
                 }, "experiment quit", LangStrings.ExperimentQuit(), new(), unpausable: true);
                 
@@ -198,13 +189,21 @@ namespace UnityEPL.Experiment {
         protected virtual async void ExperimentPause() {
             if (Config.pauseAnytime) {
                 var pauseKeyCodes = new List<KeyCode>() { KeyCode.P };
+                bool firstLoop = true;
                 await RepeatForever(async (CancellationToken ct) => {
                     // Resume since they don't want to quit (or haven't tried yet)
                     manager.Pause(false);
+                    if (!firstLoop) {
+                        await SetExperimentStatus(HostPcStatusMsg.PAUSE(false));
+                        firstLoop = false;
+                    }
+
                     // Wait for the pause key
                     await inputManager.WaitForKey(pauseKeyCodes, ct: ct);
+
                     // Pause everything and ask if they want to quit
                     manager.Pause(true);
+                    await SetExperimentStatus(HostPcStatusMsg.PAUSE(true));
                 }, "experiment pause", LangStrings.ExperimentPaused(), pauseKeyCodes, new(), unpausable: true);
             }
         }
@@ -215,7 +214,7 @@ namespace UnityEPL.Experiment {
             bool isKeypadNum = keyCode >= KeyCode.Keypad0 && keyCode <= KeyCode.Keypad9;
             return isAlphaNum || isKeypadNum;
         }
-        protected virtual void SendRamulatorStateMsg(HostPcStateMsg state, bool stateToggle, Dictionary<string, object> extraData = null) {
+        protected virtual void SendRamulatorStateMsg(HostPcStatusMsg state, bool stateToggle, Dictionary<string, object> extraData = null) {
             // Do nothing by default
         }
         protected async Task RepeatUntilYes(Func<CancellationToken, Task> preFunc, string description, LangString displayText, CancellationToken ct, Func<bool, CancellationToken, Task> postFunc = null, bool unpausable = false) {
@@ -224,12 +223,12 @@ namespace UnityEPL.Experiment {
                 await preFunc(ct);
                 ct.ThrowIfCancellationRequested();
 
-                SendRamulatorStateMsg(HostPcStateMsg.WAITING(), true);
+                SendRamulatorStateMsg(HostPcStatusMsg.WAITING(), true);
                 await textDisplayer.DisplayForTask(description, LangStrings.Blank(), displayText, ct, async (CancellationToken ct) => {
                     var keyCode = await inputManager.WaitForKey(new List<KeyCode>() { KeyCode.Y, KeyCode.N }, unpausable: unpausable, ct: ct);
                     repeat = keyCode != KeyCode.Y;
                 });
-                SendRamulatorStateMsg(HostPcStateMsg.WAITING(), false);
+                SendRamulatorStateMsg(HostPcStatusMsg.WAITING(), false);
                 ct.ThrowIfCancellationRequested();
 
                 if (postFunc != null) { await postFunc(repeat, ct); }
@@ -241,12 +240,12 @@ namespace UnityEPL.Experiment {
                 await preFunc(ct);
                 ct.ThrowIfCancellationRequested();
 
-                SendRamulatorStateMsg(HostPcStateMsg.WAITING(), true);
+                SendRamulatorStateMsg(HostPcStatusMsg.WAITING(), true);
                 await textDisplayer.DisplayForTask(description, LangStrings.Blank(), displayText, ct, async (CancellationToken ct) => {
                     var keyCode = await inputManager.WaitForKey(new List<KeyCode>() { KeyCode.Y, KeyCode.N }, unpausable: unpausable, ct: ct);
                     repeat = keyCode != KeyCode.N;
                 });
-                SendRamulatorStateMsg(HostPcStateMsg.WAITING(), false);
+                SendRamulatorStateMsg(HostPcStatusMsg.WAITING(), false);
                 ct.ThrowIfCancellationRequested();
 
                 if (postFunc != null) { await postFunc(repeat, ct); }
@@ -257,11 +256,11 @@ namespace UnityEPL.Experiment {
                 await preFunc(ct);
                 ct.ThrowIfCancellationRequested();
 
-                SendRamulatorStateMsg(HostPcStateMsg.WAITING(), true);
+                SendRamulatorStateMsg(HostPcStatusMsg.WAITING(), true);
                 await textDisplayer.DisplayForTask(description, LangStrings.Blank(), displayText, ct, async (CancellationToken ct) => {
                     var keyCode = await inputManager.WaitForKey(keyCodes, unpausable: unpausable, ct: ct);
                 });
-                SendRamulatorStateMsg(HostPcStateMsg.WAITING(), false);
+                SendRamulatorStateMsg(HostPcStatusMsg.WAITING(), false);
                 ct.ThrowIfCancellationRequested();
 
                 if (postFunc != null) { await postFunc(ct); }
@@ -271,7 +270,7 @@ namespace UnityEPL.Experiment {
         // Pre-Trial States
         protected virtual async Task Introduction() {
             await RepeatUntilYes(async (CancellationToken ct) => {
-                await textDisplayer.PressAnyKey("show instruction video", LangStrings.ShowInstructionVideo());
+                await PressAnyKey("show instruction video", LangStrings.ShowInstructionVideo());
 
                 manager.videoControl.SetVideo(Config.introductionVideo, true);
                 await manager.videoControl.PlayVideo();
@@ -279,7 +278,7 @@ namespace UnityEPL.Experiment {
         }
         protected virtual async Task MicrophoneTest() {
             await RepeatUntilYes(async (CancellationToken ct) => {
-                await textDisplayer.PressAnyKey("microphone test prompt", LangStrings.MicrophoneTestTitle(), LangStrings.MicrophoneTest());
+                await PressAnyKey("microphone test prompt", LangStrings.MicrophoneTestTitle(), LangStrings.MicrophoneTest());
 
                 string wavPath = System.IO.Path.Combine(FileManager.SessionPath(), "microphone_test_"
                         + Clock.UtcNow.ToString("yyyy-MM-dd_HH_mm_ss") + ".wav");
@@ -301,21 +300,21 @@ namespace UnityEPL.Experiment {
             }, "repeat mic test", LangStrings.RepeatMicTest(), new());
         }
         protected virtual async Task QuitPrompt() {
-            SendRamulatorStateMsg(HostPcStateMsg.WAITING(), true);
-            manager.hostPC?.SendStateMsgTS(HostPcStateMsg.WAITING());
+            SendRamulatorStateMsg(HostPcStatusMsg.WAITING(), true);
+            await SetExperimentStatus(HostPcStatusMsg.WAITING());
 
             textDisplayer.Display("subject/session confirmation", LangStrings.Blank(),
                 LangStrings.SubjectSessionConfirmation(Config.subject, Config.sessionNum.Value, Config.experimentName));
             var keyCode = await inputManager.WaitForKey(new List<KeyCode>() { KeyCode.Y, KeyCode.N });
 
-            SendRamulatorStateMsg(HostPcStateMsg.WAITING(), false);
+            SendRamulatorStateMsg(HostPcStatusMsg.WAITING(), false);
 
             if (keyCode == KeyCode.N) {
                 await manager.QuitTS();
             }
         }
         protected virtual async Task ConfirmStart() {
-            await textDisplayer.PressAnyKey("confirm start", LangStrings.ConfirmStart());
+            await PressAnyKey("confirm start", LangStrings.ConfirmStart());
         }
         protected async Task DisplayTextSlides(List<TextSlide> textSlides) {
             // Resize based on all text item sizes
@@ -333,6 +332,51 @@ namespace UnityEPL.Experiment {
                     if (keycode == KeyCode.LeftArrow && i > 0) { i -= 2; }
                 });
             }
+        }
+        protected async Task SetExperimentStatus(HostPcStatusMsg state, Dictionary<string, object> extraData = null) {
+            if (manager.hostPC == null) {
+                var dict = (extraData ?? new()).Concat(state.dict).ToDictionary(x=>x.Key,x=>x.Value);
+                eventReporter.LogTS(state.name, dict);
+            } else {
+                await manager.hostPC.SendStateMsgTS(state, extraData);
+            }
+        }
+        protected void ReportSessionNum(Dictionary<string, object> extraData = null) {
+            var exp = HostPcExpMsg.SESSION(Config.sessionNum.Value);
+            if (manager.hostPC == null) {
+                var dict = (extraData ?? new()).Concat(exp.dict).ToDictionary(x=>x.Key,x=>x.Value);
+                eventReporter.LogTS(exp.name, dict);
+            } else {
+                manager.hostPC.SendExpMsgTS(exp);
+            }
+        }
+        protected void ReportTrialNum(bool stim, Dictionary<string, object> extraData = null) {
+            var exp = HostPcExpMsg.TRIAL((int)session.TrialNum, stim, session.isPractice);
+            if (manager.hostPC == null) {
+                var dict = (extraData ?? new()).Concat(exp.dict).ToDictionary(x=>x.Key,x=>x.Value);
+                eventReporter.LogTS(exp.name, dict);
+            } else {
+                manager.hostPC.SendExpMsgTS(exp);
+            }
+        }
+    
+        /// <summary>
+        /// Display a message and wait for keypress
+        /// </summary>
+        /// <param name="description"></param>
+        /// <param name="displayText"></param>
+        /// <param name="displayText"></param>
+        /// <returns></returns>
+        protected async Task<KeyCode> PressAnyKey(string description, LangString displayText) {
+            return await PressAnyKey(description, LangStrings.Blank(), displayText);
+        }
+        protected async Task<KeyCode> PressAnyKey(string description, LangString displayTitle, LangString displayText) {
+            await manager.hostPC?.SendStateMsgTS(HostPcStatusMsg.WAITING());
+            // TODO: JPB: (needed) Add Ramulator to match this
+            textDisplayer.Display($"{description} (press any key prompt)", displayTitle, displayText);
+            var keyCode = await InputManager.Instance.WaitForKey();
+            textDisplayer.Clear();
+            return keyCode;
         }
     }
 }

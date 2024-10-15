@@ -23,6 +23,7 @@ using UnityEPL.Utilities;
 using UnityEPL.Extensions;
 
 using static UnityEPL.Threading.Blittability;
+using UnityEPL.DataManagement;
 
 // TODO: JPB: (refactor) Clean up EventMonoBehaviour with UniTask
 //            https://github.com/Cysharp/UniTask
@@ -74,7 +75,7 @@ namespace UnityEPL {
         /// Retuns whether the calling function is on the main unity thread
         /// </summary>
         /// <returns>if calling function is on unity thread</returns>
-        protected bool OnUnityThread() {
+        public bool OnUnityThread() {
             return threadID == Thread.CurrentThread.ManagedThreadId;
         }
 

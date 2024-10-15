@@ -311,36 +311,6 @@ namespace UnityEPL.GUI {
             return textElement.text.ToNativeText();
         }
 
-        /// <summary>
-        /// Display a message and wait for keypress
-        /// </summary>
-        /// <param name="description"></param>
-        /// <param name="displayText"></param>
-        /// <param name="displayText"></param>
-        /// <returns></returns>
-        public async Task<KeyCode> PressAnyKey(string description, LangString displayText) {
-            return await PressAnyKey(description, LangStrings.Blank(), displayText);
-        }
-        public async Task<KeyCode> PressAnyKeyTS(string description, LangString displayText) {
-            return await PressAnyKeyTS(description, LangStrings.Blank(), displayText);
-        }
-        public async Task<KeyCode> PressAnyKey(string description, LangString displayTitle, LangString displayText) {
-            return await DoGet(PressAnyKeyHelper, description.ToNativeText(), displayTitle.ToNativeText(), displayText.ToNativeText());
-        }
-        public async Task<KeyCode> PressAnyKeyTS(string description, LangString displayTitle, LangString displayText) {
-            return await DoGetTS(PressAnyKeyHelper, description.ToNativeText(), displayTitle.ToNativeText(), displayText.ToNativeText());
-        }
-        protected async Task<KeyCode> PressAnyKeyHelper(NativeText description, NativeText displayTitle, NativeText displayText) {
-            _ = manager.hostPC?.SendStateMsgTS(HostPcStateMsg.WAITING());
-            // TODO: JPB: (needed) Add Ramulator to match this
-            var displayTitleStr = LangStrings.GenForCurrLang(displayTitle.ToStringAndDispose());
-            var displayTextStr = LangStrings.GenForCurrLang(displayText.ToStringAndDispose());
-            Display($"{description.ToStringAndDispose()} (press any key prompt)", displayTitleStr, displayTextStr);
-            var keyCode = await InputManager.Instance.WaitForKey();
-            Clear();
-            return keyCode;
-        }
-
         public float FindMaxFittingFontSize(List<LangString> strings) {
             List<string> strs = strings.Select(str => str.ToString()).ToList();
             return DoGet(FindMaxFittingFontSizeHelper, strs.ToNativeArray());

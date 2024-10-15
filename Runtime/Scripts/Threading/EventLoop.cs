@@ -37,6 +37,7 @@ namespace UnityEPL.Threading {
         protected CancellationTokenSource cts = new CancellationTokenSource();
         protected MainManager manager;
         protected DateTime startTime;
+        protected int threadID;
 
         public EventLoop() {
             scheduler = new SingleThreadTaskScheduler(cts.Token);
@@ -46,6 +47,7 @@ namespace UnityEPL.Threading {
             // Init threadlocal variables
             DoTS(async () => {
                 startTime = Clock.UtcNow;
+                threadID = Thread.CurrentThread.ManagedThreadId;
                 await Task.Delay(1);
             });
         }
@@ -62,6 +64,17 @@ namespace UnityEPL.Threading {
             cts.Cancel();
             await Task.Delay(5000);
             scheduler.Abort();
+        }
+
+        /// <summary>
+        /// Guarentees that a function is being called from this EventLoop's thread
+        /// </summary>
+        protected void ThreadSafetyCheck() {
+            if (threadID != Thread.CurrentThread.ManagedThreadId) {
+                ErrorNotifier.ErrorTS(new InvalidOperationException(
+                    "Cannot call this function from outside this EventLoop's thread.\n" +
+                    "Try using the thread safe version of this method"));
+            }
         }
 
         // Do

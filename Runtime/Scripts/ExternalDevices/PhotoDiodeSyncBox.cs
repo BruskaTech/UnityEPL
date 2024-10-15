@@ -10,6 +10,7 @@ using System;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEPL.DataManagement;
 
 namespace UnityEPL.ExternalDevices {
 
@@ -98,7 +99,7 @@ namespace UnityEPL.ExternalDevices {
         }
 
 
-        public override async Task Pulse() {
+        protected override async Task PulseInternals() {
             image.color = onColor;
             await manager.Delay(1000);
             image.color = offColor;

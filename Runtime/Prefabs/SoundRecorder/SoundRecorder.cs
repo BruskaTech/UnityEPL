@@ -68,6 +68,7 @@ namespace UnityEPL.Utilities {
                 throw new UnityException("Already recording.  Please StopRecording first.");
             }
 
+            eventReporter.LogTS("recording start");
             nextOutputPath = outputFilePath.ToString();
             startSample = Microphone.GetPosition("");
             startTime = Time.unscaledTime;
@@ -86,6 +87,7 @@ namespace UnityEPL.Utilities {
                 throw new UnityException("Not recording.  Please StartRecording first.");
             }
             isRecording = false;
+            eventReporter.LogTS("recording stop");
 
             float recordingLength = Time.unscaledTime - startTime;
 

@@ -12,15 +12,19 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-using UnityEPL.Utilities;
-using UnityEPL.ExternalDevices;
-using UnityEPL.Threading;
+
+using UnityEPL.DataManagement;
 using UnityEPL.Extensions;
+using UnityEPL.ExternalDevices;
 using UnityEPL.GUI;
+using UnityEPL.Threading;
+using UnityEPL.Utilities;
+
 
 namespace UnityEPL {
 
@@ -261,7 +265,7 @@ namespace UnityEPL {
                     Time.timeScale = oldTimeScale;
                 }
             }
-            if (videoControl != null) { videoControl.PauseVideo(oldTimeScale != 0); }
+            if (videoControl != null) { videoControl.PauseVideo(oldTimeScale == 0); }
         }
         public bool IsPausedTS() {
             return IsPausedHelper();
@@ -291,7 +295,6 @@ namespace UnityEPL {
             await Delay(500);
             this.Quit();
         }
-
 
         // Helpful functions
         public void LockCursor(CursorLockMode isLocked) {

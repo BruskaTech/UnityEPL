@@ -14,6 +14,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using UnityEngine;
+using UnityEPL.DataManagement;
 using UnityEPL.Extensions;
 using UnityEPL.Utilities;
 
@@ -35,7 +37,7 @@ namespace UnityEPL.ExternalDevices {
         }
         protected async Task ConfigureHelper() {
             // Configure Elemem
-            await SendAndReceiveTS("CONNECTED", "CONNECTED_OK");
+            await SendAndReceiveJsonTS("CONNECTED", "CONNECTED_OK");
 
             string stimMode = Config.stimMode switch {
                 "ReadOnly" => "none",
@@ -50,7 +52,7 @@ namespace UnityEPL.ExternalDevices {
                 { "subject", Config.subject },
                 { "session", Config.sessionNum },
             };
-            await SendAndReceive("CONFIGURE", configDict, "CONFIGURE_OK");
+            await SendAndReceiveJsonTS("CONFIGURE", configDict, "CONFIGURE_OK");
 
             // Latency Check
             await DoLatencyCheckTS();
@@ -84,7 +86,7 @@ namespace UnityEPL.ExternalDevices {
             heartbeatCount++;
 
             var startTime = Clock.UtcNow;
-            await SendAndReceive("HEARTBEAT", data, "HEARTBEAT_OK");
+            await SendAndReceiveJsonTS("HEARTBEAT", data, "HEARTBEAT_OK");
             LastHeartbeatDelay = Clock.UtcNow - startTime;
             LastTenHeartbeatDelays.Dequeue();
             LastTenHeartbeatDelays.Enqueue(LastHeartbeatDelay);
@@ -129,7 +131,7 @@ namespace UnityEPL.ExternalDevices {
                 delay[i] = (Clock.UtcNow - startTime).TotalMilliseconds;
 
                 if (delay[i] >= maxSingleTimeMs) {
-                    throw new TimeoutException($"Single heartbeat time greater than {maxSingleTimeMs}ms");
+                    throw new TimeoutException($"Single heartbeat time ({delay[i]}ms) greater than {maxSingleTimeMs}ms");
                 }
 
                 await Task.Delay(50 - (int)delay[i]);
@@ -139,7 +141,7 @@ namespace UnityEPL.ExternalDevices {
             double max = delay.Max();
             double mean = delay.Average();
             if (mean >= meanSingleTimeMs) {
-                throw new TimeoutException($"Mean heartbeat time greater than {meanSingleTimeMs}ms");
+                throw new TimeoutException($"Mean heartbeat time ({mean}ms) greater than {meanSingleTimeMs}ms");
             }
 
             // the maximum resolution of the timer in nanoseconds
@@ -154,15 +156,11 @@ namespace UnityEPL.ExternalDevices {
             UnityEngine.Debug.Log(string.Join(Environment.NewLine, dict));
         }
 
-        protected override async Task SendTS(string type, Dictionary<string, object> data = null) {
-            await base.SendTS(type, data);
+        protected async Task SendTS(string type, Dictionary<string, object> data = null) {
+            await SendJsonTS(type, data);
         }
 
-        protected override async Task<JObject> ReceiveTS(string type) {
-            // Task norm = ReceiveJsonTS(type);
-            // Task error = ReceiveJsonTS("ERROR");
-            // var json = await await Task.WhenAny(task, timeoutTask);
-
+        protected async Task<JObject> ReceiveTS(string type) {
             var json = await ReceiveJsonTS(type);
             var msgType = json.GetValue("type").Value<string>();
 
@@ -175,15 +173,15 @@ namespace UnityEPL.ExternalDevices {
             return json;
         }
 
-        public override async Task SendMathMsgTS(string problem, string response, int responseTimeMs, bool correct) {
-            Dictionary<string, object> data = new() {
-                { "problem", problem },
-                { "response", response },
-                { "response_time_ms", responseTimeMs },
-                { "correct", correct },
-            };
-            await SendTS("MATH", data);
-        }
+        // public override async Task SendMathMsgTS(string problem, string response, int responseTimeMs, bool correct) {
+        //     Dictionary<string, object> data = new() {
+        //         { "problem", problem },
+        //         { "response", response },
+        //         { "response_time_ms", responseTimeMs },
+        //         { "correct", correct },
+        //     };
+        //     await SendTS("MATH", data);
+        // }
 
         public override async Task SendStimSelectMsgTS(string tag) {
             Dictionary<string, object> data = new() {
@@ -205,51 +203,60 @@ namespace UnityEPL.ExternalDevices {
             await SendTS(type.name, type.dict);
         }
 
-        public override async Task SendSessionMsgTS(int session) {
-            Dictionary<string, object> data = new() {
-                { "session", session },
-            };
-            await SendTS("SESSION", data);
+        // public override async Task SendSessionMsgTS(int session) {
+        //     Dictionary<string, object> data = new() {
+        //         { "session", session },
+        //     };
+        //     await SendTS("SESSION", data);
+        // }
+        public override Task SendExpMsgTS(HostPcExpMsg exp, Dictionary<string, object> extraData = null) {
+            var dict = (extraData ?? new()).Concat(exp.dict).ToDictionary(x=>x.Key,x=>x.Value);
+            EventReporter.Instance.LogTS(exp.name, extraData);
+            return Task.CompletedTask;
         }
 
-        public override async Task SendStateMsgTS(HostPcStateMsg state, Dictionary<string, object> extraData = null) {
-            var dict = (extraData != null) ? new Dictionary<string, object>(extraData) : new();
-            foreach (var item in state.dict) {
-                dict.Add(item.Key, item.Value);
-            }
-            await SendTS(state.name, dict);
+        public override Task SendStateMsgTS(HostPcStatusMsg state, Dictionary<string, object> extraData = null) {
+            var dict = (extraData ?? new()).Concat(state.dict).ToDictionary(x=>x.Key,x=>x.Value);
+            EventReporter.Instance.LogTS(state.name, extraData);
+            return Task.CompletedTask;
         }
 
-        public override async Task SendTrialMsgTS(int trial, bool stim) {
-            Dictionary<string, object> data = new() {
-                { "trial", trial },
-                { "stim", stim },
-            };
-            await SendTS("TRIAL", data);
-        }
+        // public override async Task SendTrialMsgTS(int trial, bool stim) {
+        //     Dictionary<string, object> data = new() {
+        //         { "trial", trial },
+        //         { "stim", stim },
+        //     };
+        //     await SendTS("TRIAL", data);
+        // }
 
-        public override async Task SendWordMsgTS(string word, int serialPos, bool stim, Dictionary<string, object> extraData = null) {
-            var data = (extraData != null) ? new Dictionary<string, object>(extraData) : new();
-            data["word"] = word;
-            data["serialPos"] = serialPos;
-            data["stim"] = stim;  
-            await SendTS("WORD", data);
-        }
+        // public override async Task SendWordMsgTS(string word, int serialPos, bool stim, Dictionary<string, object> extraData = null) {
+        //     var data = (extraData != null) ? new Dictionary<string, object>(extraData) : new();
+        //     data["word"] = word;
+        //     data["serialPos"] = serialPos;
+        //     data["stim"] = stim;  
+        //     await SendTS("WORD", data);
+        // }
 
         public override async Task SendExitMsgTS() {
             await SendTS("EXIT");
         }
 
         public override async Task SendLogMsgTS(string type, DateTime time, Dictionary<string, object> data = null) {
-            data.Add("unity time", time.ConvertToMillisecondsSinceEpoch());
             await SendTS(type, data);
         }
 
-        public override async Task SendUncheckedLogMsgTS(string type, DateTime time, Dictionary<string, object> data = null) {
-            if (IsConnectedUnchecked()) {
-                data.Add("unity time", time.ConvertToMillisecondsSinceEpoch());
+        /// <summary>
+        /// This is just like SendLogMsgTS except that it does not throw an exception if the connection is not established.
+        /// Only use this if you truly don't care if the message is sent or not.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="time"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public override async Task SendLogMsgIfConnectedTS(string type, DateTime time, Dictionary<string, object> data = null) {
+            try {
                 await SendTS(type, data);
-            }
+            } catch (UnConnectedException) { } // Ignore unconnected exceptions
         }
     }
 

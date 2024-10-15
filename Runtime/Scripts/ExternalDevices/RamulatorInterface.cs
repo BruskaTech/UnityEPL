@@ -33,12 +33,12 @@ namespace UnityEPL.ExternalDevices {
             ramulatorInterface.BeginNewTrial(trialNumber);
         }
 
-        public void SendStateMsg(HostPcStateMsg state, bool stateToggle, Dictionary<string, object> data = null) {
+        public void SendStateMsg(HostPcStatusMsg state, bool stateToggle, Dictionary<string, object> data = null) {
             var dict = (data != null) ? new Dictionary<string, object>(data) : new();
-            foreach (var item in state.dict) {
+            foreach (var item in state.dict["data"] as Dictionary<string, object>) {
                 dict.Add(item.Key, item.Value);
             }
-            ramulatorInterface.SetState(state.name, stateToggle, dict);
+            ramulatorInterface.SetState((string)state.dict["status"], stateToggle, dict);
         }
 
         public void SendMathMsg(string problem, string response, int responseTimeMs, bool correct) {
@@ -50,8 +50,8 @@ namespace UnityEPL.ExternalDevices {
         }
 
         // Don't use this unless you have to
-        public void SendMsg(DataPoint dataPoint) {
-            ramulatorInterface.SendMessageToRamulator(dataPoint);
+        public void SendMsg(string type, Dictionary<string, object> data = null) {
+            ramulatorInterface.SendMessageToRamulator(new(type, -1, data));
         }
     }
 
@@ -63,6 +63,7 @@ namespace UnityEPL.ExternalDevices {
         const int unreceivedHeartbeatsToQuit = 8;
 
         private int unreceivedHeartbeats = 0;
+        private int packetId = 0;
 
         private NetMQ.Sockets.PairSocket zmqSocket;
         private const string address = "tcp://*:8889";
@@ -96,16 +97,14 @@ namespace UnityEPL.ExternalDevices {
                 { "subject", Config.subject },
                 { "session_number", Config.sessionNum.ToString() },
             };
-            DataPoint sessionDataPoint = new DataPoint("SESSION", sessionData);
-            SendMessageToRamulator(sessionDataPoint);
+            SendMessageToRamulator(new("SESSION", -1, sessionData));
             yield return null;
 
             //Begin Heartbeats///////////////////////////////////////////////////////////////////////
             InvokeRepeating("SendHeartbeat", 0, 1);
 
             //SendReadyEvent////////////////////////////////////////////////////////////////////
-            DataPoint ready = new DataPoint("READY");
-            SendMessageToRamulator(ready);
+            SendMessageToRamulator(new("READY", -1));
             yield return null;
 
             yield return WaitForMessage("START", "Start signal not received");
@@ -139,8 +138,7 @@ namespace UnityEPL.ExternalDevices {
             Dictionary<string, object> sessionData = new() {
                 { "trial", trialNumber.ToString() },
             };
-            DataPoint sessionDataPoint = new DataPoint("TRIAL", sessionData);
-            SendMessageToRamulator(sessionDataPoint);
+            SendMessageToRamulator(new("TRIAL", -1, sessionData));
         }
 
         //ramulator expects this when you display words to the subject.
@@ -148,8 +146,7 @@ namespace UnityEPL.ExternalDevices {
         public void SetState(string stateName, bool stateToggle, Dictionary<string, object> sessionData) {
             sessionData.Add("name", stateName);
             sessionData.Add("value", stateToggle.ToString());
-            DataPoint sessionDataPoint = new DataPoint("STATE", sessionData);
-            SendMessageToRamulator(sessionDataPoint);
+            SendMessageToRamulator(new("STATE", -1, sessionData));
         }
 
         public void SendMathMessage(string problem, string response, int responseTimeMs, bool correct) {
@@ -159,14 +156,12 @@ namespace UnityEPL.ExternalDevices {
                 { "response_time_ms", responseTimeMs.ToString() },
                 { "correct", correct.ToString() },
             };
-            DataPoint mathDataPoint = new DataPoint("MATH", mathData);
-            SendMessageToRamulator(mathDataPoint);
+            SendMessageToRamulator(new("MATH", -1, mathData));
         }
 
 
         private void SendHeartbeat() {
-            DataPoint sessionDataPoint = new DataPoint("HEARTBEAT", null);
-            SendMessageToRamulator(sessionDataPoint);
+            SendMessageToRamulator(new("HEARTBEAT", -1));
         }
 
         private void ReceiveHeartbeat() {
@@ -190,15 +185,17 @@ namespace UnityEPL.ExternalDevices {
             }
         }
 
-        public void SendMessageToRamulator(DataPoint dataPoint) {
+        public void SendMessageToRamulator(NativeDataPoint dataPoint) {
+            dataPoint.id = packetId++;
             var message = dataPoint.ToJSON();
             bool wouldNotHaveBlocked = zmqSocket.TrySendFrame(message, more: false);
             Debug.Log("Tried to send a message: " + message + " \nWouldNotHaveBlocked: " + wouldNotHaveBlocked.ToString());
             ReportMessage(message, true);
+            dataPoint.Dispose();
         }
 
         public void SendExitMessage() {
-            var msg = new DataPoint("EXIT");
+            var msg = new NativeDataPoint("EXIT", -1);
             SendMessageToRamulator(msg);
         }
 

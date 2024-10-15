@@ -20,6 +20,8 @@ using UnityEngine;
 using Newtonsoft.Json;
 using TMPro;
 
+using UnityEPL.DataManagement;
+
 namespace UnityEPL.Extensions {
     public static class IEnumerableExtensions {
         // https://stackoverflow.com/a/30758270

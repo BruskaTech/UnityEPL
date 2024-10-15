@@ -115,6 +115,7 @@ namespace UnityEPL.GUI {
             textDisplay.SetActive(skippable);
 
             videoPlayer.Play();
+            eventReporter.LogTS("play video", new() { { "video", videoPath } });
             await videoFinished.Task;
             gameObject.SetActive(false);
         }
@@ -129,8 +130,10 @@ namespace UnityEPL.GUI {
             if (videoPlayer.isActiveAndEnabled) {
                 if (pause) {
                     videoPlayer.Pause();
+                    eventReporter.LogTS("pause video", new() { {"paused", true}, { "video", videoPath } });
                 } else {
                     videoPlayer.Play();
+                    eventReporter.LogTS("pause video", new() { {"paused", false}, { "video", videoPath } });
                 }
             }
         }
@@ -165,6 +168,7 @@ namespace UnityEPL.GUI {
         protected void OnLoopPointReached(VideoPlayer vp) {
             gameObject.SetActive(false);
             videoFinished.SetResult(true);
+            eventReporter.LogTS("video finished", new() { { "video", videoPath } });
         }
         protected void OnErrorReceived(VideoPlayer vp, string message) {
             gameObject.SetActive(false);

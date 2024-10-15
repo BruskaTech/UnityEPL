@@ -9,6 +9,7 @@
 
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEPL.DataManagement;
 
 namespace UnityEPL.ExternalDevices {
     public abstract class SyncBox : EventMonoBehaviour {
@@ -16,13 +17,20 @@ namespace UnityEPL.ExternalDevices {
         private int lastFrameCount = -1;
 
         public abstract Task Init();
-        public abstract Task Pulse();
+        protected abstract Task PulseInternals();
         public abstract Task TearDown();
 
         protected override void AwakeOverride() { }
         protected void OnDestroy() {
             StopContinuousPulsing();
             TearDown();
+        }
+
+        public async Task Pulse() {
+            EventReporter.Instance.LogTS("syncbox", new() {
+                { "pulse", "on" }
+            });
+            await PulseInternals();
         }
 
         public void StartContinuousPulsing() {

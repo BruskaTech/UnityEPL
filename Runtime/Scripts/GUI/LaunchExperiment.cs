@@ -124,6 +124,7 @@ namespace UnityEPL.GUI {
 
             // Save Configs
             Config.SaveConfigs(FileManager.SessionPath());
+            eventReporter.experimentConfigured = true;
 
             SceneManager.sceneLoaded += onExperimentSceneLoaded;
             SceneManager.LoadScene(Config.experimentScene);

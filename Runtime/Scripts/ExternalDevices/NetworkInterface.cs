@@ -24,8 +24,15 @@ using Newtonsoft.Json.Linq;
 using UnityEPL.DataManagement;
 using UnityEPL.Threading;
 using UnityEPL.Extensions;
+using System.Diagnostics;
 
 namespace UnityEPL.Utilities {
+    public class UnConnectedException : IOException {
+        public UnConnectedException() { }
+        public UnConnectedException(string message) : base(message) { }
+        public UnConnectedException(string message, Exception inner) : base(message, inner) { }
+    }
+
     public abstract class NetworkInterface : EventLoop {
         private TcpClient tcpClient;
         private NetworkStream stream;
@@ -37,18 +44,17 @@ namespace UnityEPL.Utilities {
         private readonly static int sendTimeoutMs = 5000;
         private readonly static int receiveTimeoutMs = 5000;
 
+        private int packetId = 0;
+
         ~NetworkInterface() {
             DisconnectHelper();
         }
 
         public async Task<bool> IsConnectedTS() {
-            return await DoGetTS<Bool>(IsConnectedHelper);
+            return await DoGetTS(IsConnectedHelper);
         }
         private Bool IsConnectedHelper() {
             return tcpClient?.Connected ?? false;
-        }
-        protected bool IsConnectedUnchecked() {
-            return IsConnectedHelper();
         }
 
         public async Task ConnectTS(string ip, int port) {
@@ -100,9 +106,8 @@ namespace UnityEPL.Utilities {
 
                 // Extract a full message from the byte buffer, and leave remaining characters in string buffer.
                 // Also, if there is more than one message in the buffer, report both.
-                var newLineIndex = 0;
-                while (newLineIndex != messageBuffer.Length) {
-                    newLineIndex = messageBuffer.IndexOf("\n", newLineIndex) + 1;
+                var newLineIndex = messageBuffer.IndexOf("\n") + 1;
+                while (newLineIndex != 0) {
                     string message = messageBuffer.Substring(0, newLineIndex);
 
                     JObject json;
@@ -111,14 +116,24 @@ namespace UnityEPL.Utilities {
                         json = JObject.Parse(message);
                         // Remove it from the message buffer if it is valid
                         messageBuffer = messageBuffer.Substring(newLineIndex);
-                        newLineIndex = 0;
+                        // Set the index of the next newline
+                        newLineIndex = messageBuffer.IndexOf("\n") + 1;
                     } catch {
+                        EventReporter.Instance.LogTS("invalid network json", new() {
+                            { "interface", this.GetType().Name },
+                            { "ip", ((IPEndPoint)tcpClient.Client.RemoteEndPoint).Address.ToString() },
+                            { "message", message },
+                        });
                         continue;
                     }
                     
                     // Report the message and send it to the waiting tasks
-                    var msgType = json.GetValue("type").Value<string>();
-                    ReportNetworkMessageTS(msgType, message, Clock.UtcNow, false);
+                    string msgType = json.GetValue("type").Value<string>();
+                    bool idPresent = json.TryGetValue("id", out JToken idJToken);
+                    int msgId = idPresent ? idJToken.Value<int>() : -1;
+                    var dataPoint = new NativeDataPoint(msgType, msgId, Clock.UtcNow, json);
+                    ReportNetworkMessage(dataPoint, false);
+                    dataPoint.Dispose();
                     for (int i = receiveRequests.Count - 1; i >= 0; i--) {
                         var (type, tcs) = receiveRequests[i];
                         if (type == msgType) {
@@ -140,9 +155,6 @@ namespace UnityEPL.Utilities {
             }
         }
 
-        protected virtual Task<JObject> ReceiveTS(string type) {
-            return ReceiveJsonTS(type);
-        }
         protected async Task<JObject> ReceiveJsonTS(string type) {
             return await DoGetRelaxedTS(ReceiveJsonHelper, type.ToNativeText());
         }
@@ -157,19 +169,16 @@ namespace UnityEPL.Utilities {
             return await tcs.Task.Timeout(receiveTimeoutMs, new(), timeoutMessage);
         }
 
-        // TODO: JPB: (needed) Make NetworkInterface::Send use Mutex
-        protected virtual async Task SendTS(string type, Dictionary<string, object> data = null) {
-            await SendJsonTS(type, data);
+        protected async Task SendJsonTS(string type, Dictionary<string, object> data) {
+            var dataPoint = new NativeDataPoint(type, -1, Clock.UtcNow, data);
+            await DoWaitForTS(SendJsonHelper, dataPoint);
         }
-        protected async Task SendJsonTS(string type, Dictionary<string, object> data = null) {
-            await DoWaitForTS(async () => { await SendJsonHelper(type, data); });
-        }
-        private async Task SendJsonHelper(string type, Dictionary<string, object> data = null) {
-            if (tcpClient == null || stream == null) { 
-                ErrorNotifier.ErrorTS(new Exception($"Tried to send {this.GetType().Name} network message \"{type}\" before connecting."));
+        private async Task SendJsonHelper(NativeDataPoint dataPoint) {
+            if (tcpClient == null || stream == null) {
+                throw new UnConnectedException($"Tried to send {this.GetType().Name} network message \"{dataPoint.type}\" before connecting.");
             }
-            DataPoint point = new DataPoint(type, data);
-            string message = point.ToJSON();
+            dataPoint.id = packetId++;
+            string message = dataPoint.ToJSON();
 
             Byte[] buffer = Encoding.UTF8.GetBytes(message + "\n");
             var timeoutMessage = $"{this.GetType().Name} didn't receive message after waiting {1000}ms";
@@ -177,28 +186,29 @@ namespace UnityEPL.Utilities {
             Task sendTask;
             try {
                 sendTask = stream.WriteAsync(buffer, 0, buffer.Length, cts.Token);
-            } catch (SocketException) {
+            } catch (SocketException exception) {
                 var name = this.GetType().Name;
-                throw new IOException($"The network interface {name} closed before the {type} message could be sent");
+                throw new IOException($"The network interface {name} closed before the {dataPoint.type} message could be sent", exception);
             }
 
-            ReportNetworkMessageTS(type, message, point.time, true);
+            ReportNetworkMessage(dataPoint, true);
             await sendTask.Timeout(1000, cts, timeoutMessage);
+            dataPoint.Dispose();
         }
 
-        protected async Task<JObject> SendAndReceiveTS(string sendType, string receiveType) {
-            return await SendAndReceive(sendType, null, receiveType);
+        protected async Task<JObject> SendAndReceiveJsonTS(string sendType, string receiveType) {
+            return await SendAndReceiveJsonTS(sendType, null, receiveType);
         }
-        protected async Task<JObject> SendAndReceive(string sendType, Dictionary<string, object> sendData, string receiveType) {
-            var recvTask = ReceiveTS(receiveType);
-            await SendTS(sendType, sendData);
+        protected async Task<JObject> SendAndReceiveJsonTS(string sendType, Dictionary<string, object> sendData, string receiveType) {
+            var recvTask = ReceiveJsonTS(receiveType);
+            await SendJsonTS(sendType, sendData);
             return await recvTask;
         }
 
-        protected void ReportNetworkMessageTS(string type, string message, DateTime time, bool sent) {
+        protected void ReportNetworkMessage(NativeDataPoint dataPoint, bool sent) {
             Dictionary<string, object> dict = new() {
                 { "interface", this.GetType().Name },
-                { "message", message },
+                { "message", dataPoint.ToJSON() },
                 { "ip", ((IPEndPoint)tcpClient.Client.RemoteEndPoint).Address.ToString() },
                 { "sent", sent },
             };
@@ -209,7 +219,7 @@ namespace UnityEPL.Utilities {
 #endif // NETWORKINTERFACE_DEBUG_MESSAGES
 
             if (Config.logNetworkMessages) {
-                EventReporter.Instance.LogLocalTS("network", time, dict);
+                EventReporter.Instance.LogLocalTS("network", Clock.UtcNow, dict);
             }
         }
     }
