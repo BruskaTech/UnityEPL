@@ -14,6 +14,9 @@ namespace UnityEPL.Utilities {
         public static LangString Error() { return new( new() {
             { Language.English, "Error" },
         }); }
+        public static LangString ErrorMsg(string msg) { return new( new() {
+            { Language.English, msg + "\n\nPress Q to quit" },
+        }); }
         public static LangString Warning() { return new( new() {
             { Language.English, "Warning" },
         }); }

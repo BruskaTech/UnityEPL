@@ -9,6 +9,7 @@
 //You should have received a copy of the GNU General Public License along with UnityEPL. If not, see <https://www.gnu.org/licenses/>. 
 
 using System;
+using System.Collections;
 using System.Threading.Tasks;
 using Unity.Collections;
 using UnityEngine;
@@ -22,9 +23,33 @@ using UnityEPL.Utilities;
 namespace UnityEPL {
 
     public class ErrorNotifier : SingletonEventMonoBehaviour<ErrorNotifier> {
-        protected override void AwakeOverride() {}
-
         bool errorSet = false;
+
+        protected override void AwakeOverride() {
+            Application.logMessageReceivedThreaded += (string logString, string stackTrace, LogType type) => {
+                if (type == LogType.Exception) {
+                    if (logString.StartsWith("Exception: ")) {
+                        logString = logString.Substring(11);
+                    }
+                    // Only show first error on screen, but report all errors
+                    if (!errorSet) {
+                        errorSet = true;
+                        TextDisplayer.Instance.Display("Error", LangStrings.Error().Color("red"), LangStrings.ErrorMsg(logString));
+                        Debug.LogError($"Error: {logString}\n{stackTrace}");
+                    }
+                    eventReporter.LogTS("Error", new() {
+                        { "message", logString },
+                        { "stackTrace", stackTrace } });
+                    manager.Pause(true);
+                    StartCoroutine(WaitForQuitKey(), true);
+                }
+            };
+        }
+
+        protected IEnumerator WaitForQuitKey() {
+            yield return InputManager.Instance.WaitForKey(KeyCode.Q, true).ToEnumerator();
+            manager.Quit();
+        }
 
         public static void ErrorTS(Exception exception) {
             if (!IsInstatiated) {
@@ -41,11 +66,10 @@ namespace UnityEPL {
                 if (!errorSet) {
                     errorSet = true;
                     var msg = e.Message == "" ? e.GetType().Name : e.Message;
-                    msg += "\n\nPress Q to quit";
-                    TextDisplayer.Instance.Display("Error", LangStrings.Error().Color("red"), LangStrings.GenForCurrLang(msg));
-                    Debug.Log($"Error: {msg}\n{e.StackTrace}");
+                    TextDisplayer.Instance.Display("Error", LangStrings.Error().Color("red"), LangStrings.ErrorMsg(msg));
+                    Debug.LogError($"Error: {msg}\n{e.StackTrace}");
                 }
-                EventReporter.Instance.LogTS("Error", new() {
+                eventReporter.LogTS("Error", new() {
                     { "message", e.Message },
                     { "stackTrace", e.StackTrace } });
                 await Awaitable.NextFrameAsync();
@@ -78,7 +102,7 @@ namespace UnityEPL {
             manager.Pause(true);
             TextDisplayer.Instance.Display("Warning", LangStrings.Warning().Color("yellow"), LangStrings.GenForCurrLang(message.ToString()));
             Debug.Log($"Warning: {message}\n{stackTrace}");
-            EventReporter.Instance.LogTS("Warning", new() {
+            eventReporter.LogTS("Warning", new() {
                 { "message", message.ToString() },
                 { "stackTrace", stackTrace.ToString() } });
             message.Dispose();
