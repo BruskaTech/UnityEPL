@@ -70,9 +70,7 @@ namespace UnityEPL.Threading {
         protected override bool TryExecuteTaskInline(Task task, bool taskWasPreviouslyQueued) {
             // We'd need to remove the task from queue if it was already queued. 
             // That would be too hard.
-            if (taskWasPreviouslyQueued)
-                return false;
-
+            if (taskWasPreviouslyQueued) { return false; }
             return _isExecuting && TryExecuteTask(task);
         }
     }
