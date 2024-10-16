@@ -71,9 +71,9 @@ namespace UnityEPL.Threading {
         /// </summary>
         protected void ThreadSafetyCheck() {
             if (threadID != Thread.CurrentThread.ManagedThreadId) {
-                ErrorNotifier.ErrorTS(new InvalidOperationException(
+                throw new InvalidOperationException(
                     "Cannot call this function from outside this EventLoop's thread.\n" +
-                    "Try using the thread safe version of this method"));
+                    "Try using the thread safe version of this method");
             }
         }
 
@@ -616,7 +616,7 @@ namespace UnityEPL.Threading {
                 } catch (Exception e) {
                     var e2 = new Exception(e.Message, e);
                     if (stackTrace != null) { e2.SetStackTrace(stackTrace); }
-                    ErrorNotifier.ErrorTS(e2);
+                    throw e2;
                 }
             };
         }
@@ -627,7 +627,7 @@ namespace UnityEPL.Threading {
                 } catch (Exception e) {
                     var e2 = new Exception(e.Message, e);
                     if (stackTrace != null) { e2.SetStackTrace(stackTrace); }
-                    ErrorNotifier.ErrorTS(e2);
+                    throw e2;
                 }
             };
         }
@@ -639,8 +639,7 @@ namespace UnityEPL.Threading {
                 } catch (Exception e) {
                     var e2 = new Exception(e.Message, e);
                     if (stackTrace != null) { e2.SetStackTrace(stackTrace); }
-                    ErrorNotifier.ErrorTS(e2);
-                    throw e; // never called
+                    throw e2;
                 }
             };
         }
@@ -652,8 +651,7 @@ namespace UnityEPL.Threading {
                 } catch (Exception e) {
                     var e2 = new Exception(e.Message, e);
                     if (stackTrace != null) { e2.SetStackTrace(stackTrace); }
-                    ErrorNotifier.ErrorTS(e2);
-                    throw e; // never called
+                    throw e2;
                 }
             };
         }

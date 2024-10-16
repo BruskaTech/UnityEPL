@@ -31,7 +31,7 @@ namespace UnityEPL {
 
         protected new void Awake() {
             if (IsInstatiated) {
-                ErrorNotifier.ErrorTS(new InvalidOperationException($"Cannot create multiple {typeof(Self).Name} Objects"));
+                throw new InvalidOperationException($"Cannot create multiple {typeof(Self).Name} Objects");
             }
             IsInstatiated = true;
             DontDestroyOnLoad(this.gameObject);

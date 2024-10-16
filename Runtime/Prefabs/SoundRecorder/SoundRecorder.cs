@@ -33,11 +33,7 @@ namespace UnityEPL.Utilities {
 
         protected void OnEnable() {
             //TODO: enable cycling through devices
-            try {
-                recording = Microphone.Start("", true, SECONDS_IN_MEMORY, SAMPLE_RATE);
-            } catch (Exception e) { // TODO
-                ErrorNotifier.ErrorTS(e);
-            }
+            recording = Microphone.Start("", true, SECONDS_IN_MEMORY, SAMPLE_RATE);
         }
 
         protected void OnDisable() {

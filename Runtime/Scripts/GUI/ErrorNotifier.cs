@@ -9,7 +9,6 @@
 //You should have received a copy of the GNU General Public License along with UnityEPL. If not, see <https://www.gnu.org/licenses/>. 
 
 using System;
-using System.Collections;
 using System.Threading.Tasks;
 using Unity.Collections;
 using UnityEngine;
@@ -28,56 +27,32 @@ namespace UnityEPL {
         protected override void AwakeOverride() {
             Application.logMessageReceivedThreaded += (string logString, string stackTrace, LogType type) => {
                 if (type == LogType.Exception) {
-                    if (logString.StartsWith("Exception: ")) {
-                        logString = logString.Substring(11);
+                    int exceptionIdx = logString.IndexOf("Exception: ");
+                    if (exceptionIdx != -1) {
+                        logString = logString.Substring(exceptionIdx + 11);
                     }
-                    // Only show first error on screen, but report all errors
-                    if (!errorSet) {
-                        errorSet = true;
-                        TextDisplayer.Instance.Display("Error", LangStrings.Error().Color("red"), LangStrings.ErrorMsg(logString));
-                        Debug.LogError($"Error: {logString}\n{stackTrace}");
-                    }
-                    eventReporter.LogTS("Error", new() {
-                        { "message", logString },
-                        { "stackTrace", stackTrace } });
-                    manager.Pause(true);
-                    StartCoroutine(WaitForQuitKey(), true);
+                    DoTS(ErrorHelper, logString.ToNativeText(), stackTrace.ToNativeText());
                 }
             };
         }
 
-        protected IEnumerator WaitForQuitKey() {
-            yield return InputManager.Instance.WaitForKey(KeyCode.Q, true).ToEnumerator();
-            manager.Quit();
-        }
-
-        public static void ErrorTS(Exception exception) {
-            if (!IsInstatiated) {
-                throw new Exception("THIS SHOULD NOT HAPPEN! ErrorNotifier was accessed before it's awake method has been called.", exception);
-            }
-
-            Instance.DoTS(async () => { await Instance.ErrorHelper(new Mutex<Exception>(exception)); });
-            throw new Exception("ErrorNotifier", exception);
-        }
-        protected async Task ErrorHelper(Mutex<Exception> exception) {
+        protected async void ErrorHelper(NativeText message, NativeText stackTrace) {
             try {
-                Exception e = exception.Get();
                 // Only show first error on screen, but report all errors
                 if (!errorSet) {
                     errorSet = true;
-                    var msg = e.Message == "" ? e.GetType().Name : e.Message;
-                    TextDisplayer.Instance.Display("Error", LangStrings.Error().Color("red"), LangStrings.ErrorMsg(msg));
-                    Debug.LogError($"Error: {msg}\n{e.StackTrace}");
+                    TextDisplayer.Instance.Display("Error", LangStrings.Error().Color("red"), LangStrings.ErrorMsg(message.ToString()));
+                    Debug.LogError($"Error: {message}\n{stackTrace}");
                 }
                 eventReporter.LogTS("Error", new() {
-                    { "message", e.Message },
-                    { "stackTrace", e.StackTrace } });
-                await Awaitable.NextFrameAsync();
+                    { "message", message.ToStringAndDispose() },
+                    { "stackTrace", stackTrace.ToStringAndDispose() } });
+                await Awaitable.NextFrameAsync(); // Without this lines, you can hit an infinite loop
                 manager.Pause(true);
                 await InputManager.Instance.WaitForKey(KeyCode.Q, true);
                 manager.Quit();
             } catch (Exception e) {
-                Debug.Log("UNSAVEABLE ERROR IN ErrorHelper... Quitting...\n" + e);
+                Debug.LogError("UNSAVEABLE ERROR IN ErrorHelper... Quitting...\n" + e);
                 Debug.Assert(gameObject != null);
                 Debug.Assert(manager != null);
                 Debug.Assert(EventReporter.Instance != null);
@@ -85,7 +60,27 @@ namespace UnityEPL {
             }
         }
 
+        /// <summary>
+        /// Throws an error and logs it to the event reporter.
+        /// <br/>
+        /// I'm not sure when you would want to use this over just throwing an exception, 
+        /// but I provide it in case it is useful to someone.
+        /// </summary>
+        /// <param name="exception"></param>
+        /// <exception cref="Exception"></exception>
+        public static void ErrorTS(Exception exception) {
+            if (!IsInstatiated) {
+                throw new Exception("THIS SHOULD NOT HAPPEN! ErrorNotifier was accessed before it's awake method has been called.", exception);
+            }
+
+            var msg = exception.Message == "" ? exception.GetType().Name : exception.Message;
+            var stackTrace = exception.StackTrace ?? "";
+            Instance.DoTS(Instance.ErrorHelper, msg.ToNativeText(), stackTrace.ToNativeText());
+            throw new Exception("ErrorNotifier", exception);
+        }
+
         public static void WarningTS(Exception exception) {
+            throw new NotImplementedException();
             if (exception.StackTrace == null) {
                 try { // This is used to get the stack trace
                     throw exception;

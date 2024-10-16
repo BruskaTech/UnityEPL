@@ -144,7 +144,7 @@ namespace UnityEPL.Utilities {
 
                     // Handle network error messages
                     if (msgType.Contains("ERROR")) {
-                        ErrorNotifier.ErrorTS(new Exception($"Error received from {this.GetType().Name} is {msgType}: {json.GetValue("data").Value<string>("error")}"));
+                        throw new Exception($"Error received from {this.GetType().Name} is {msgType}: {json.GetValue("data").Value<string>("error")}");
                     }
 
                     // Handle network exit messge

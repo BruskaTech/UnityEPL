@@ -171,7 +171,7 @@ namespace UnityEPL.ExternalDevices {
             if (unreceivedHeartbeats > unreceivedHeartbeatsToQuit) {
                 CancelInvoke("ReceiveHeartbeat");
                 CancelInvoke("SendHeartbeat");
-                ErrorNotifier.ErrorTS(new Exception("Too many missed heartbeats."));
+                throw new Exception("Too many missed heartbeats.");
             }
 
             string receivedMessage = "";

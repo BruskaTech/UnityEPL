@@ -65,9 +65,9 @@ namespace UnityEPL {
         protected void MonoBehaviourSafetyCheck() {
             //Debug.Log($"{threadID} {Thread.CurrentThread.ManagedThreadId}");
             if (threadID != Thread.CurrentThread.ManagedThreadId) {
-                ErrorNotifier.ErrorTS(new InvalidOperationException(
+                throw new InvalidOperationException(
                     "Cannot call this function from a non-unity thread.\n" +
-                    "Try using the thread safe version of this method"));
+                    "Try using the thread safe version of this method");
             }
         }
 
@@ -81,7 +81,6 @@ namespace UnityEPL {
 
         /// <summary>
         /// Run an iterator function that might throw an exception.
-        /// Handle the exception by using the ErrorNotifier
         /// Handle pausing as well
         /// https://www.jacksondunstan.com/articles/3718
         /// If for some reason this project needs a to define a custom Enumerator instead of using this function,
@@ -103,9 +102,7 @@ namespace UnityEPL {
                 } catch (Exception e) {
                     var e2 = new Exception(e.Message, e);
                     if (stackTrace != null) { e2.SetStackTrace(stackTrace); }
-                    UnityEngine.Debug.Log(e2);
-                    ErrorNotifier.ErrorTS(e2);
-                    yield break;
+                    throw e2;
                 }
                 yield return current;
             }
@@ -171,43 +168,23 @@ namespace UnityEPL {
         // TODO: JPB: (feature) Add support for cancellation tokens in EventMonoBehavior Do functions
         protected void Do(Action func) {
             MonoBehaviourSafetyCheck();
-            try {
-                func();
-            } catch (Exception e) {
-                ErrorNotifier.ErrorTS(e);
-            }
+            func();
         }
         protected void Do<T>(Action<T> func, T t) {
             MonoBehaviourSafetyCheck();
-            try {
-                func(t);
-            } catch (Exception e) {
-                ErrorNotifier.ErrorTS(e);
-            }
+            func(t);
         }
         protected void Do<T, U>(Action<T, U> func, T t, U u) {
             MonoBehaviourSafetyCheck();
-            try {
-                func(t, u);
-            } catch (Exception e) {
-                ErrorNotifier.ErrorTS(e);
-            }
+            func(t, u);
         }
         protected void Do<T, U, V>(Action<T, U, V> func, T t, U u, V v) {
             MonoBehaviourSafetyCheck();
-            try {
-                func(t, u, v);
-            } catch (Exception e) {
-                ErrorNotifier.ErrorTS(e);
-            }
+            func(t, u, v);
         }
         protected void Do<T, U, V, W>(Action<T, U, V, W> func, T t, U u, V v, W w) {
             MonoBehaviourSafetyCheck();
-            try {
-                func(t, u, v, w);
-            } catch (Exception e) {
-                ErrorNotifier.ErrorTS(e);
-            }
+            func(t, u, v, w);
         }
 
 
@@ -309,53 +286,28 @@ namespace UnityEPL {
 #if EVENTMONOBEHAVIOR_TASK_OPERATORS
         protected async Task DoIn(int millisecondsDelay, Func<Task> func) {
             MonoBehaviourSafetyCheck();
-            try {
-                await manager.Delay(millisecondsDelay);
-                await func();
-            } catch (Exception e) {
-                ErrorNotifier.ErrorTS(e);
-                throw e; // This is a duplication, but C# can't tell Error always throws an exception
-            }
+            await manager.Delay(millisecondsDelay);
+            await func();
         }
         protected async Task DoIn<T>(int millisecondsDelay, Func<T, Task> func, T t) {
             MonoBehaviourSafetyCheck();
-            try {
-                await manager.Delay(millisecondsDelay);
-                await func(t);
-            } catch (Exception e) {
-                ErrorNotifier.ErrorTS(e);
-                throw e; // This is a duplication, but C# can't tell Error always throws an exception
-            }
+            await manager.Delay(millisecondsDelay);
+            await func(t);
         }
         protected async Task DoIn<T, U>(int millisecondsDelay, Func<T, U, Task> func, T t, U u) {
             MonoBehaviourSafetyCheck();
-            try {
-                await manager.Delay(millisecondsDelay);
-                await func(t, u);
-            } catch (Exception e) {
-                ErrorNotifier.ErrorTS(e);
-                throw e; // This is a duplication, but C# can't tell Error always throws an exception
-            }
+            await manager.Delay(millisecondsDelay);
+            await func(t, u);
         }
         protected async Task DoIn<T, U, V>(int millisecondsDelay, Func<T, U, V, Task> func, T t, U u, V v) {
             MonoBehaviourSafetyCheck();
-            try {
-                await manager.Delay(millisecondsDelay);
-                await func(t, u, v);
-            } catch (Exception e) {
-                ErrorNotifier.ErrorTS(e);
-                throw e; // This is a duplication, but C# can't tell Error always throws an exception
-            }
+            await manager.Delay(millisecondsDelay);
+            await func(t, u, v);
         }
         protected async Task DoIn<T, U, V, W>(int millisecondsDelay, Func<T, U, V, W, Task> func, T t, U u, V v, W w) {
             MonoBehaviourSafetyCheck();
-            try {
-                await manager.Delay(millisecondsDelay);
-                await func(t, u, v, w);
-            } catch (Exception e) {
-                ErrorNotifier.ErrorTS(e);
-                throw e; // This is a duplication, but C# can't tell Error always throws an exception
-            }
+            await manager.Delay(millisecondsDelay);
+            await func(t, u, v, w);
         }
 #endif // EVENTMONOBEHAVIOR_TASK_OPERATORS
 
@@ -770,48 +722,23 @@ namespace UnityEPL {
 #if EVENTMONOBEHAVIOR_TASK_OPERATORS
         protected async Task DoWaitFor(Func<Task> func) {
             MonoBehaviourSafetyCheck();
-            try {
-                await func();
-            } catch (Exception e) {
-                ErrorNotifier.ErrorTS(e);
-                throw e; // This is a duplication, but C# can't tell Error always throws an exception
-            }
+            await func();
         }
         protected async Task DoWaitFor<T>(Func<T, Task> func, T t) {
             MonoBehaviourSafetyCheck();
-            try {
-                await func(t);
-            } catch (Exception e) {
-                ErrorNotifier.ErrorTS(e);
-                throw e; // This is a duplication, but C# can't tell Error always throws an exception
-            }
+            await func(t);
         }
         protected async Task DoWaitFor<T, U>(Func<T, U, Task> func, T t, U u) {
             MonoBehaviourSafetyCheck();
-            try {
-                await func(t, u);
-            } catch (Exception e) {
-                ErrorNotifier.ErrorTS(e);
-                throw e; // This is a duplication, but C# can't tell Error always throws an exception
-            }
+            await func(t, u);
         }
         protected async Task DoWaitFor<T, U, V>(Func<T, U, V, Task> func, T t, U u, V v) {
             MonoBehaviourSafetyCheck();
-            try {
-                await func(t, u, v);
-            } catch (Exception e) {
-                ErrorNotifier.ErrorTS(e);
-                throw e; // This is a duplication, but C# can't tell Error always throws an exception
-            }
+            await func(t, u, v);
         }
         protected async Task DoWaitFor<T, U, V, W>(Func<T, U, V, W, Task> func, T t, U u, V v, W w) {
             MonoBehaviourSafetyCheck();
-            try {
-                await func(t, u, v, w);
-            } catch (Exception e) {
-                ErrorNotifier.ErrorTS(e);
-                throw e; // This is a duplication, but C# can't tell Error always throws an exception
-            }
+            await func(t, u, v, w);
         }
 #endif // EVENTMONOBEHAVIOR_TASK_OPERATORS
 
@@ -945,95 +872,45 @@ namespace UnityEPL {
 
         protected Z DoGet<Z>(Func<Z> func) {
             MonoBehaviourSafetyCheck();
-            try {
-                return func();
-            } catch (Exception e) {
-                ErrorNotifier.ErrorTS(e);
-                throw e; // This is a duplication, but C# can't tell Error always throws an exception
-            }
+            return func();
         }
         protected Z DoGet<T, Z>(Func<T, Z> func, T t) {
             MonoBehaviourSafetyCheck();
-            try {
-                return func(t);
-            } catch (Exception e) {
-                ErrorNotifier.ErrorTS(e);
-                throw e; // This is a duplication, but C# can't tell Error always throws an exception
-            }
+            return func(t);
         }
         protected Z DoGet<T, U, Z>(Func<T, U, Z> func, T t, U u) {
             MonoBehaviourSafetyCheck();
-            try {
-                return func(t, u);
-            } catch (Exception e) {
-                ErrorNotifier.ErrorTS(e);
-                throw e; // This is a duplication, but C# can't tell Error always throws an exception
-            }
+            return func(t, u);
         }
         protected Z DoGet<T, U, V, Z>(Func<T, U, V, Z> func, T t, U u, V v) {
             MonoBehaviourSafetyCheck();
-            try {
-                return func(t, u, v);
-            } catch (Exception e) {
-                ErrorNotifier.ErrorTS(e);
-                throw e; // This is a duplication, but C# can't tell Error always throws an exception
-            }
+            return func(t, u, v);
         }
         protected Z DoGet<T, U, V, W, Z>(Func<T, U, V, W, Z> func, T t, U u, V v, W w) {
             MonoBehaviourSafetyCheck();
-            try {
-                return func(t, u, v, w);
-            } catch (Exception e) {
-                ErrorNotifier.ErrorTS(e);
-                throw e; // This is a duplication, but C# can't tell Error always throws an exception
-            }
+            return func(t, u, v, w);
         }
 
 #if EVENTMONOBEHAVIOR_TASK_OPERATORS
         protected async Task<Z> DoGet<Z>(Func<Task<Z>> func) {
             MonoBehaviourSafetyCheck();
-            try {
-                return await func();
-            } catch (Exception e) {
-                ErrorNotifier.ErrorTS(e);
-                throw e; // This is a duplication, but C# can't tell Error always throws an exception
-            }
+            return await func();
         }
         protected async Task<Z> DoGet<T, Z>(Func<T, Task<Z>> func, T t) {
             MonoBehaviourSafetyCheck();
-            try {
-                return await func(t);
-            } catch (Exception e) {
-                ErrorNotifier.ErrorTS(e);
-                throw e; // This is a duplication, but C# can't tell Error always throws an exception
-            }
+            return await func(t);
         }
         protected async Task<Z> DoGet<T, U, Z>(Func<T, U, Task<Z>> func, T t, U u) {
             MonoBehaviourSafetyCheck();
-            try {
-                return await func(t, u);
-            } catch (Exception e) {
-                ErrorNotifier.ErrorTS(e);
-                throw e; // This is a duplication, but C# can't tell Error always throws an exception
-            }
+            return await func(t, u);
         }
         protected async Task<Z> DoGet<T, U, V, Z>(Func<T, U, V, Task<Z>> func, T t, U u, V v) {
             MonoBehaviourSafetyCheck();
-            try {
-                return await func(t, u, v);
-            } catch (Exception e) {
-                ErrorNotifier.ErrorTS(e);
-                throw e; // This is a duplication, but C# can't tell Error always throws an exception
-            }
+            return await func(t, u, v);
         }
         protected async Task<Z> DoGet<T, U, V, W, Z>(Func<T, U, V, W, Task<Z>> func, T t, U u, V v, W w) {
             MonoBehaviourSafetyCheck();
-            try {
-                return await func(t, u, v, w);
-            } catch (Exception e) {
-                ErrorNotifier.ErrorTS(e);
-                throw e; // This is a duplication, but C# can't tell Error always throws an exception
-            }
+            return await func(t, u, v, w);
         }
 #endif // EVENTMONOBEHAVIOR_TASK_OPERATORS
 

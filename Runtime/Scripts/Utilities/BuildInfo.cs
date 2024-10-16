@@ -53,7 +53,6 @@ namespace UnityEPL.Utilities {
             return Instance().applicationCommitHash;
         }
         public static string BuildDateTime() {
-            UnityEngine.Debug.Log(Instance().buildDateTime);
             return Instance().buildDateTime;
         }
 

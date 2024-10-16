@@ -116,34 +116,30 @@ namespace UnityEPL {
             // Unity internal event handling
             SceneManager.sceneLoaded += onSceneLoaded;
 
-            try {
-                // Create objects not tied to unity
-                // Nothing for now
+            // Create objects not tied to unity
+            // Nothing for now
 
-                // Setup Configs
-                var configs = SetupConfigs();
-                GetExperiments(configs);
-                FileManager.CreateDataFolder();
+            // Setup Configs
+            var configs = SetupConfigs();
+            GetExperiments(configs);
+            FileManager.CreateDataFolder();
 
-                // Setup Syncbox Interface
-                if (!Config.isTest && Config.syncBoxOn) {
-                    try {
-                        syncBoxObj = new GameObject("Syncbox");
-                        var syncBoxTypePath = $"UnityEPL.ExternalDevices.{Config.syncBoxClass}, UnityEPL";
-                        syncBox = (SyncBox) syncBoxObj.AddComponentByName(syncBoxTypePath);
-                        DontDestroyOnLoad(syncBoxObj);
-                    } catch (Exception e) {
-                        throw new Exception($"Syncbox class {Config.syncBoxClass} could not be created", e);
-                    }
-
-                    await syncBox.Init();
+            // Setup Syncbox Interface
+            if (!Config.isTest && Config.syncBoxOn) {
+                try {
+                    syncBoxObj = new GameObject("Syncbox");
+                    var syncBoxTypePath = $"UnityEPL.ExternalDevices.{Config.syncBoxClass}, UnityEPL";
+                    syncBox = (SyncBox) syncBoxObj.AddComponentByName(syncBoxTypePath);
+                    DontDestroyOnLoad(syncBoxObj);
+                } catch (Exception e) {
+                    throw new Exception($"Syncbox class {Config.syncBoxClass} could not be created", e);
                 }
 
-                // Launch Startup Scene
-                LaunchLauncher();
-            } catch(Exception e) {
-                ErrorNotifier.ErrorTS(e);
+                await syncBox.Init();
             }
+
+            // Launch Startup Scene
+            LaunchLauncher();
         }
 
         protected string[] SetupConfigs() {
@@ -157,7 +153,7 @@ namespace UnityEPL {
             string configPath = FileManager.ConfigPath();
             string[] configs = Directory.GetFiles(configPath, "*.json");
             if (configs.Length < 2) {
-                ErrorNotifier.ErrorTS(new Exception("Configuration File Error. Missing system or experiment configuration file in configs folder"));
+                throw new Exception("Configuration File Error. Missing system or experiment configuration file in configs folder");
             }
             return configs;
         }

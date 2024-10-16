@@ -66,9 +66,9 @@ namespace UnityEPL.ExternalDevices {
 
             // Set the image size
             if (Config.photoDiodeSyncBoxImageHeightInch <= 0) {
-                ErrorNotifier.ErrorTS(new Exception($"Config variable photoDiodeImageHeightInch ({Config.photoDiodeSyncBoxImageHeightInch}) must be greater than 0"));
+                throw new Exception($"Config variable photoDiodeImageHeightInch ({Config.photoDiodeSyncBoxImageHeightInch}) must be greater than 0");
             } else if (Config.photoDiodeSyncBoxImageWidthInch <= 0) {
-                ErrorNotifier.ErrorTS(new Exception($"Config variable photoDiodeImageWidthInch ({Config.photoDiodeSyncBoxImageWidthInch}) must be greater than 0"));
+                throw new Exception($"Config variable photoDiodeImageWidthInch ({Config.photoDiodeSyncBoxImageWidthInch}) must be greater than 0");
             }
             float dpi = Screen.dpi;
             if (dpi == 0) { dpi = 96; }
@@ -78,9 +78,9 @@ namespace UnityEPL.ExternalDevices {
             // Set the image position
             var imagePosition = Config.photoDiodeSyncBoxImagePosition;
             if (imagePosition.Length != 2) {
-                ErrorNotifier.ErrorTS(new Exception("Config variable photoDiodeImagePosition must have exactly 2 elements"));
+                throw new Exception("Config variable photoDiodeImagePosition must have exactly 2 elements");
             } else if (imagePosition[0] > 1 || imagePosition[1] > 1) {
-                ErrorNotifier.ErrorTS(new Exception("Config variable photoDiodeImagePosition elements must be 0 or 1"));
+                throw new Exception("Config variable photoDiodeImagePosition elements must be 0 or 1");
             }
             var imagePositionVec2 = new Vector2(imagePosition[0], imagePosition[1]);
             imageRect.anchorMin = imagePositionVec2;
@@ -90,9 +90,9 @@ namespace UnityEPL.ExternalDevices {
 
             // Set the image colors
             if (!ColorUtility.TryParseHtmlString(Config.photoDiodeSyncBoxImageOffColor, out offColor)) {
-                ErrorNotifier.ErrorTS(new Exception($"Config variable photoDiodeImageOffColor ({Config.photoDiodeSyncBoxImageOffColor}) is not a valid color"));
+                throw new Exception($"Config variable photoDiodeImageOffColor ({Config.photoDiodeSyncBoxImageOffColor}) is not a valid color");
             } else if (!ColorUtility.TryParseHtmlString(Config.photoDiodeSyncBoxImageOnColor, out onColor)) {
-                ErrorNotifier.ErrorTS(new Exception($"Config variable photoDiodeImageOnColor ({Config.photoDiodeSyncBoxImageOnColor}) is not a valid color"));
+                throw new Exception($"Config variable photoDiodeImageOnColor ({Config.photoDiodeSyncBoxImageOnColor}) is not a valid color");
             }
 
             return Task.CompletedTask;

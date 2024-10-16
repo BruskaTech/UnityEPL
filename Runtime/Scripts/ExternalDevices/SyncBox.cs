@@ -40,7 +40,7 @@ namespace UnityEPL.ExternalDevices {
             continuousPulsing = true;
             while (continuousPulsing) {
                 if (lastFrameCount == Time.frameCount) {
-                    ErrorNotifier.ErrorTS(new System.Exception($"SyncBox ({this.GetType().Name}) is pulsing too fast (or has no delays in it). You can only pulse once per frame."));
+                    throw new System.Exception($"SyncBox ({this.GetType().Name}) is pulsing too fast (or has no delays in it). You can only pulse once per frame.");
                 }
                 lastFrameCount = Time.frameCount;
                 await Pulse();

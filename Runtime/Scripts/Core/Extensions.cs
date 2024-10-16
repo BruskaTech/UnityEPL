@@ -236,8 +236,8 @@ namespace UnityEPL.Extensions {
         /// <param name="task"></param>
         public static IEnumerator ToEnumerator(this Task task) {
             while(!task.IsCompleted) { yield return null; }
-            if (task.IsFaulted) { ErrorNotifier.ErrorTS(task.Exception.InnerException); }
-            else if (task.IsCanceled) { ErrorNotifier.ErrorTS(new OperationCanceledException("ToEnumerator")); }
+            if (task.IsFaulted) { throw new Exception("Task Exception", task.Exception.InnerException); }
+            else if (task.IsCanceled) { throw new OperationCanceledException("ToEnumerator"); }
         }
 
         /// <summary>
@@ -248,8 +248,8 @@ namespace UnityEPL.Extensions {
         /// <param name="task"></param>
         public static IEnumerator ToEnumerator<T>(this Task<T> task) {
             while (!task.IsCompleted) { yield return null; }
-            if (task.IsFaulted) { ErrorNotifier.ErrorTS(task.Exception.InnerException); }
-            else if (task.IsCanceled) { ErrorNotifier.ErrorTS(new OperationCanceledException("ToEnumerator")); }
+            if (task.IsFaulted) { throw new Exception("Task Exception", task.Exception.InnerException); }
+            else if (task.IsCanceled) { throw new OperationCanceledException("ToEnumerator"); }
         }
 
         /// <summary>

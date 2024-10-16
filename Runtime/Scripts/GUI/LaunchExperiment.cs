@@ -185,9 +185,9 @@ namespace UnityEPL.GUI {
                     expManager.SetActive(true);
                 }
             } catch (InvalidOperationException exception) {
-                ErrorNotifier.ErrorTS(new Exception(
+                throw new Exception(
                     $"Missing experiment GameObject that is the same name as the experiment class ({Config.experimentClass})",
-                    exception));
+                    exception);
             }
 
             SceneManager.sceneLoaded -= onExperimentSceneLoaded;

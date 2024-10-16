@@ -40,9 +40,8 @@ namespace UnityEPL {
 
             try {
                 experiment = Config.experimentName;
-            } catch (MissingFieldException) {
-                ErrorNotifier.ErrorTS(new Exception("No experiment selected"));
-                return null;
+            } catch (MissingFieldException e) {
+                throw new MissingFieldException("No experiment selected", e);
             }
 
             return Path.Combine(DataPath(), experiment);
@@ -58,7 +57,7 @@ namespace UnityEPL {
             string dir = ExperimentPath();
 
             if (Config.subject == null) {
-                ErrorNotifier.ErrorTS(new Exception("No participant selected"));
+                throw new MissingFieldException("No participant selected");
             }
 
             dir = Path.Combine(dir, Config.subject);
