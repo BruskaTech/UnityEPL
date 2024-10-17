@@ -1,13 +1,15 @@
 {
-  "name": "com.pennmem.psyforge",
+  "name": "com.bruskatech.psyforge",
   "displayName": "PsyForge",
-  "version": "3.0.0-pre.7",
+  "version": "0.1.0",
   "unity": "2022.3",
-  "description": "The package provides a framework and tools for building 2D and 3D psychology experiments.",
+  "description": "The package provides a framework and tools for building 2D and 3D psychology/neuroscience experiments.",
   "keywords": [
     "psyforge",
-    "epl",
+    "psych",
     "psychology",
+    "neuro",
+    "neuroscience",
     "experiment",
     "library",
     "framework"
