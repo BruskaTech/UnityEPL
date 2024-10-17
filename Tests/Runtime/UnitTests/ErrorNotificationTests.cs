@@ -55,7 +55,7 @@ namespace PsyForgeTests {
             UnityEngine.Debug.Log("Meep 1 " +  System.Environment.CurrentManagedThreadId);
             Task.Run(async () => {
                 Awaitable a = WaitForSecondsAsync(1);
-                // await a;
+                await a;
                 UnityEngine.Debug.Log("Meep 2 " + System.Environment.CurrentManagedThreadId);
             }).Wait();
         }

@@ -80,7 +80,6 @@ namespace PsyForge {
         }
 
         public static void WarningTS(Exception exception) {
-            throw new NotImplementedException();
             if (exception.StackTrace == null) {
                 try { // This is used to get the stack trace
                     throw exception;
@@ -91,6 +90,7 @@ namespace PsyForge {
 
             // TODO: JPB: (bug) What will happen to the error in WarningTS if it errors
             _ = Instance.DoWaitFor(Instance.WarningHelper, exception.Message.ToNativeText(), exception.StackTrace.ToNativeText());
+            throw new NotImplementedException("WarningTS");
         }
         // TODO: JPB: (feature) Implement WarningHelper
         protected Task WarningHelper(NativeText message, NativeText stackTrace) {
