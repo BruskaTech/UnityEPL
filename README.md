@@ -46,14 +46,14 @@ See the [FAQ](https://bruskatech.github.io/PsyForge/articles/FAQ.html).
 
 ## Authors
 
-### Current (PsyForge) Authors
+### PsyForge Authors
 
-James Bruska (Bruska Tech)
+James Bruska
 
-### PsyForge 2.0 Authors
+### UnityEPL 2.0 Authors
 
 James Bruska, Connor Keane, Ryan Colyer
 
-### PsyForge 1.0 Authors
+### UnityEPL 1.0 Authors
 
 Henry Solberg, Jesse Pazdera
