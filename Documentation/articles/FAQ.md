@@ -1,6 +1,6 @@
 # FAQ
 
-This is the Frequently Asked Questions document for the UnityEPL
+This is the Frequently Asked Questions document for the PsyForge
 
 ## General
 
@@ -8,14 +8,14 @@ These are general questions often asked.
 
 1. ### What does the name stand for?
 
-    - UnityEPL stands for Unity Experiment Programming Library.
+    - PsyForge stands for Unity Experiment Programming Library.
 
 ## Why Async/Await over IEnumerators
 
 So after looking at even the basic example, you will notice that the 'async', 'await', and 'Task' keywords sprinkled everywhere.
 This is opposite from what you usually see with Unity ('IEnumerator' and 'yield return' sprinkled everywhere).
 Both IEnumerators (in Unity) and async/await act similarly in Unity. Each has its pros and cons.
-Below I will explain what each is and why the foundation of UnityEPL uses async/await.
+Below I will explain what each is and why the foundation of PsyForge uses async/await.
 
 ### What are IEnumerators
 
@@ -37,10 +37,10 @@ So now this new thing comes along, async/await. You mark an function ```async```
         await Awaitable.NextFrameAsync(); // Wait for 1 frame
         await Task.Delay(1000); // Wait for 1 second
 
-        // Note, when using the UnityEPLm it should be the following:
+        // Note, when using the PsyForgem it should be the following:
         // await MaineManager.Instance.Delay(1000); // Wait for 1 second
 
-        // Or if in an UnityEPL Experiment method:
+        // Or if in an PsyForge Experiment method:
         // await manager.Delay(1000); // Wait for 1 second
     }
 ```
@@ -235,7 +235,7 @@ You can see that they are pretty similar. So what's the difference?
     }
     ```
 
-    Third, use [UniTask](https://github.com/Cysharp/UniTask). I have to give a shoutout to this amazing framework. Someday, this may be integrated directly into UnityEPL.
+    Third, use [UniTask](https://github.com/Cysharp/UniTask). I have to give a shoutout to this amazing framework. Someday, this may be integrated directly into PsyForge.
 
     ```csharp
     async Task<int> FrameLogger() {
@@ -337,13 +337,13 @@ If you look at the pros of IEnumerator, it isn't very strong. Sticking to someth
 
 Unity is also increasing compatibility with async/await more and more with every release. They realize how important this language feature is and the benefits that it brings.
 
-Now, just because the main experiments are written with async/await as the lead, doesn't mean you can't use IEnumerators. IEnumerators are used all over UnityEPL internally. In addition, many tools are provided for IEnumerators (ex: EnumeratorExtensions::TryCatch) and for the switching between IEnumerators and Tasks (TaskExtensions::ToEnumerator and EventMonoBehaviour::ToCoroutineTask)
+Now, just because the main experiments are written with async/await as the lead, doesn't mean you can't use IEnumerators. IEnumerators are used all over PsyForge internally. In addition, many tools are provided for IEnumerators (ex: EnumeratorExtensions::TryCatch) and for the switching between IEnumerators and Tasks (TaskExtensions::ToEnumerator and EventMonoBehaviour::ToCoroutineTask)
 
 ## Common Unity Errors
 
 These are general questions often asked.
 
-1. ### You just imported UnityEPL and there are a bunch of errors
+1. ### You just imported PsyForge and there are a bunch of errors
 
     - Make sure you close the unity editor and re-open it. I'm not sure why this is needed, but it is.
 
@@ -351,7 +351,7 @@ These are general questions often asked.
 
     1. Click *Edit > Project Settings*.
     1. Go to *Script Execution Order*.
-    1. Click the *+* to add a script and select UnityEPL.MainManager.
+    1. Click the *+* to add a script and select PsyForge.MainManager.
     1. Set the value of this new item to *-10* (or anything less than 0).
 
 1. ### You start the experiment, but all you see is the empty background (looks like the sky)
@@ -364,7 +364,7 @@ These are general questions often asked.
         }
         ```
 
-    - Or you need to make sure that there is a configs folder defined on your Desktop (when running from the Unity Editor). Just copy the [configs folder](https://github.com/BruskaTech/UnityEPL/tree/main/configs) from the UnityEPL repo to your Desktop and anywhere that the executable is located.
+    - Or you need to make sure that there is a configs folder defined on your Desktop (when running from the Unity Editor). Just copy the [configs folder](https://github.com/BruskaTech/PsyForge/tree/main/configs) from the PsyForge repo to your Desktop and anywhere that the executable is located.
 
 1. ### Microphone class is used but Microphone Usage Description is empty in Player Settings
 

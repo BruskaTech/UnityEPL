@@ -10,9 +10,9 @@ using System;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEPL.DataManagement;
+using PsyForge.DataManagement;
 
-namespace UnityEPL.ExternalDevices {
+namespace PsyForge.ExternalDevices {
 
     public class PhotoDiodeSyncBox : SyncBox {
         [SerializeField] private RectTransform imageRect;

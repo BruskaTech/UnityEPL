@@ -1,16 +1,16 @@
 # Architecture
 
-This is the architecture document for the UnityEPL.
+This is the architecture document for the PsyForge.
 
-It also provides the best coding practices when using UnityEPL.
+It also provides the best coding practices when using PsyForge.
 
-There are certain coding practices that should always be applied when coding in the UnityEPL.
+There are certain coding practices that should always be applied when coding in the PsyForge.
 Some are recommendations and some are requirements (code will break if you do not follow them).
 We try to make as many errors occur at compile time, but there are always limitations of the language.
 
 ## Overview
 
-There are two main components to UnityEPL: the Unity side and the Threading side.
+There are two main components to PsyForge: the Unity side and the Threading side.
 
 The Unity side is what you will use for almost everything you want to build. It builds convenient packages on top of Unity for developing experiments. Some examples of this are a text displayer, error handler, config system, randomization that is consistent within participant, rating systems, questioneers, and more. You can also add any Unity asset from the store that you want to use and build new features. You probably don't need much of this architecture document if you are just using the Unity side.
 

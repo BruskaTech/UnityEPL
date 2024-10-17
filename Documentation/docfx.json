@@ -57,7 +57,7 @@
       }
     ],
     "sitemap": {
-      "baseUrl": "https://bruskatech.github.io/UnityEPL",
+      "baseUrl": "https://bruskatech.github.io/PsyForge",
       "changefreq": "weekly",
       "fileOptions": {
         "api/*": {

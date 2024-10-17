@@ -2,10 +2,10 @@
 //Copyright (c) 2024 Bruska Technologies LLC (James Bruska)
 //Copyright (c) 2023 University of Pennsylvania (James Bruska)
 
-//This file is part of UnityEPL.
-//UnityEPL is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-//UnityEPL is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-//You should have received a copy of the GNU General Public License along with UnityEPL. If not, see <https://www.gnu.org/licenses/>. 
+//This file is part of PsyForge.
+//PsyForge is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+//PsyForge is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+//You should have received a copy of the GNU General Public License along with PsyForge. If not, see <https://www.gnu.org/licenses/>. 
 
 #define EVENTMONOBEHAVIOR_TASK_OPERATORS
 #define EVENTMONOBEHAVIOR_MANUAL_RESULT_SET
@@ -18,12 +18,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
-using UnityEPL.Threading;
-using UnityEPL.Utilities;
-using UnityEPL.Extensions;
+using PsyForge.Threading;
+using PsyForge.Utilities;
+using PsyForge.Extensions;
 
-using static UnityEPL.Threading.Blittability;
-using UnityEPL.DataManagement;
+using static PsyForge.Threading.Blittability;
+using PsyForge.DataManagement;
 
 // TODO: JPB: (refactor) Clean up EventMonoBehaviour with UniTask
 //            https://github.com/Cysharp/UniTask
@@ -31,7 +31,7 @@ using UnityEPL.DataManagement;
 //            https://cysharp.github.io/UniTask/api/Cysharp.Threading.Tasks.UniTaskExtensions.html#Cysharp_Threading_Tasks_UniTaskExtensions_AsTask_Cysharp_Threading_Tasks_UniTask_
 //            https://cysharp.github.io/UniTask/api/Cysharp.Threading.Tasks.UniTaskExtensions.html
 
-namespace UnityEPL {
+namespace PsyForge {
 
     public abstract class EventMonoBehaviour : MonoBehaviour {
         protected MainManager manager;

@@ -2,28 +2,28 @@
 
 These are the different features for use and how add them to your project
 
-## Adding the UnityEPL Assembly Definition Reference (UnityEPLExtensions folder)
+## Adding the PsyForge Assembly Definition Reference (PsyForgeExtensions folder)
 
-In order to implement things as "part of" the UnityEPL and extend it's functionality, you will need to create an assembly definition reference (asmref). This is used for things like mkaing your own experiment config variables, language strings, or a new sync box.
+In order to implement things as "part of" the PsyForge and extend it's functionality, you will need to create an assembly definition reference (asmref). This is used for things like mkaing your own experiment config variables, language strings, or a new sync box.
 
-1. Make a folder called *UnityEPLExtensions* in the Script folder.
+1. Make a folder called *PsyForgeExtensions* in the Script folder.
 1. Navigate to that folder in the Unity Project Window.
-1. Add the asmref (assembly definition reference) for UnityEPL in the folder
+1. Add the asmref (assembly definition reference) for PsyForge in the folder
     1. Right click in that folder
-    1. Create an asmref named *UnityEPL* (Right Click: Create > Scripting > Assembly Definition Reference)
+    1. Create an asmref named *PsyForge* (Right Click: Create > Scripting > Assembly Definition Reference)
     1. Click on the assembly definition reference
     1. Select the little dot next to "Assembly Definition" in the Inspector
-    1. Select the item named UnityEPL
+    1. Select the item named PsyForge
     1. Click the "Apply" button
 
 ## Adding Config Variables
 
-1. Make sure you have already created the UnityEPLExtensions folder, [as explained here](#adding-the-unityepl-assembly-definition-reference-unityeplextensions-folder).
+1. Make sure you have already created the PsyForgeExtensions folder, [as explained here](#adding-the-psyforge-assembly-definition-reference-psyforgeextensions-folder).
 1. Create a file named *MyConfig.cs*
-Add a static partial class named ```Config``` inside the UnityEPL namespace.
+Add a static partial class named ```Config``` inside the PsyForge namespace.
 
     ```csharp
-    namespace UnityEPL {
+    namespace PsyForge {
         public static partial class Config {
             // config items go here
         }
@@ -38,12 +38,12 @@ Add a static partial class named ```Config``` inside the UnityEPL namespace.
 
 ## Adding Multi-Language Strings (LangStrings)
 
-1. Make sure you have already created the UnityEPLExtensions folder, [as explained here](#adding-the-unityepl-assembly-definition-reference-unityeplextensions-folder).
-1. Create a file named *MyLangStrings.cs* in the UnityEPLExtensions folder
-1. Add a static partial class named ```LangStrings``` inside the UnityEPL.Utilities namespace.
+1. Make sure you have already created the PsyForgeExtensions folder, [as explained here](#adding-the-psyforge-assembly-definition-reference-psyforgeextensions-folder).
+1. Create a file named *MyLangStrings.cs* in the PsyForgeExtensions folder
+1. Add a static partial class named ```LangStrings``` inside the PsyForge.Utilities namespace.
 
     ```csharp
-    namespace UnityEPL.Utilities {
+    namespace PsyForge.Utilities {
         public static partial class LangStrings {
             // multi-language strings go here
         }
@@ -66,14 +66,14 @@ Add a static partial class named ```Config``` inside the UnityEPL namespace.
 
 We will create a fake sync box named TestSyncBox to demonstrate how to do it.
 
-1. Make sure you have already created the UnityEPLExtensions folder, [as explained here](#adding-the-unityepl-assembly-definition-reference-unityeplextensions-folder).
-1. Create a file named *TestSyncBox.cs* in the UnityEPLExtensions folder.
-1. Create the class in the ```UnityEPL.ExternalDevices``` namespace that inherits from ```SyncBox```
+1. Make sure you have already created the PsyForgeExtensions folder, [as explained here](#adding-the-psyforge-assembly-definition-reference-psyforgeextensions-folder).
+1. Create a file named *TestSyncBox.cs* in the PsyForgeExtensions folder.
+1. Create the class in the ```PsyForge.ExternalDevices``` namespace that inherits from ```SyncBox```
 
     ```csharp
     using System.Threading.Tasks;
 
-    namespace UnityEPL.ExternalDevices {
+    namespace PsyForge.ExternalDevices {
         public class TestSyncBox : SyncBox {
 
         }
@@ -113,7 +113,7 @@ We will create a fake sync box named TestSyncBox to demonstrate how to do it.
 ```csharp
 using System.Threading.Tasks;
 
-namespace UnityEPL.ExternalDevices {
+namespace PsyForge.ExternalDevices {
     public class TestSyncBox : SyncBox {
         public override Task Init() {
             UnityEngine.Debug.Log("Init SyncBox");

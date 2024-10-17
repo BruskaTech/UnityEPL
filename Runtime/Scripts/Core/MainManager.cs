@@ -2,10 +2,10 @@
 //Copyright (c) 2024 Bruska Technologies LLC (James Bruska)
 //Copyright (c) 2023 University of Pennsylvania (James Bruska)
 
-//This file is part of UnityEPL.
-//UnityEPL is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-//UnityEPL is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-//You should have received a copy of the GNU General Public License along with UnityEPL. If not, see <https://www.gnu.org/licenses/>. 
+//This file is part of PsyForge.
+//PsyForge is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+//PsyForge is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+//You should have received a copy of the GNU General Public License along with PsyForge. If not, see <https://www.gnu.org/licenses/>. 
 
 using System;
 using System.Collections;
@@ -18,15 +18,15 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 
-using UnityEPL.DataManagement;
-using UnityEPL.Extensions;
-using UnityEPL.ExternalDevices;
-using UnityEPL.GUI;
-using UnityEPL.Threading;
-using UnityEPL.Utilities;
+using PsyForge.DataManagement;
+using PsyForge.Extensions;
+using PsyForge.ExternalDevices;
+using PsyForge.GUI;
+using PsyForge.Threading;
+using PsyForge.Utilities;
 
 
-namespace UnityEPL {
+namespace PsyForge {
 
     [DefaultExecutionOrder(-999)]
     public class MainManager : SingletonEventMonoBehaviour<MainManager> {
@@ -128,7 +128,7 @@ namespace UnityEPL {
             if (!Config.isTest && Config.syncBoxOn) {
                 try {
                     syncBoxObj = new GameObject("Syncbox");
-                    var syncBoxTypePath = $"UnityEPL.ExternalDevices.{Config.syncBoxClass}, UnityEPL";
+                    var syncBoxTypePath = $"PsyForge.ExternalDevices.{Config.syncBoxClass}, PsyForge";
                     syncBox = (SyncBox) syncBoxObj.AddComponentByName(syncBoxTypePath);
                     DontDestroyOnLoad(syncBoxObj);
                 } catch (Exception e) {

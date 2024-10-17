@@ -1,27 +1,27 @@
 # API Documentation
 
-Here is the API documentation for UnityEPL.
+Here is the API documentation for PsyForge.
 
 ---
 
-[UnityEPL](UnityEPL.yml): General things needed for almost every project that uses UnityEPL.
+[PsyForge](PsyForge.yml): General things needed for almost every project that uses PsyForge.
 
 ---
 
-[Experiment](UnityEPL.Experiment.yml): Experiment creation classes and other prebuilt experiment types within it.
+[Experiment](PsyForge.Experiment.yml): Experiment creation classes and other prebuilt experiment types within it.
 
-[GUI](UnityEPL.GUI.yml): Graphical tools for experiments.
-
----
-
-[Utilities](UnityEPL.Utilities.yml): General utilities
-
-[Extensions](UnityEPL.Extensions.yml): All type extensions used in UnityEPL.
+[GUI](PsyForge.GUI.yml): Graphical tools for experiments.
 
 ---
 
-[Data Management](UnityEPL.DataManagement.yml): Other data reporting tools
+[Utilities](PsyForge.Utilities.yml): General utilities
 
-[ExternalDevices](UnityEPL.ExternalDevices.yml): External Devices (ex: Elemem and networked syncbox)
+[Extensions](PsyForge.Extensions.yml): All type extensions used in PsyForge.
 
-[Threading](UnityEPL.Threading.yml): Tools to make threading simple
+---
+
+[Data Management](PsyForge.DataManagement.yml): Other data reporting tools
+
+[ExternalDevices](PsyForge.ExternalDevices.yml): External Devices (ex: Elemem and networked syncbox)
+
+[Threading](PsyForge.Threading.yml): Tools to make threading simple

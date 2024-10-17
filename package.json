@@ -1,11 +1,11 @@
 {
-  "name": "com.pennmem.unityepl",
-  "displayName": "UnityEPL",
+  "name": "com.pennmem.psyforge",
+  "displayName": "PsyForge",
   "version": "3.0.0-pre.7",
   "unity": "2022.3",
   "description": "The package provides a framework and tools for building 2D and 3D psychology experiments.",
   "keywords": [
-    "unityepl",
+    "psyforge",
     "epl",
     "psychology",
     "experiment",

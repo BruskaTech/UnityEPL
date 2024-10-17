@@ -2,14 +2,14 @@
 //Copyright (c) 2024 Jefferson University (James Bruska)
 //Copyright (c) 2024 Bruska Technologies LLC (James Bruska)
 
-//This file is part of UnityEPL.
-//UnityEPL is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-//UnityEPL is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-//You should have received a copy of the GNU General Public License along with UnityEPL. If not, see <https://www.gnu.org/licenses/>. 
+//This file is part of PsyForge.
+//PsyForge is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+//PsyForge is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+//You should have received a copy of the GNU General Public License along with PsyForge. If not, see <https://www.gnu.org/licenses/>. 
 
 using System;
 
-namespace UnityEPL {
+namespace PsyForge {
     public static partial class Config {
         // System Settings
 
@@ -57,7 +57,7 @@ namespace UnityEPL {
         public static bool syncBoxContinuousPulsing { get { return GetSetting<bool>("syncBoxContinuousPulsing"); } }
         /// <summary>
         /// The class for the sync box.
-        /// <br/>The class must be in the namespace UnityEPL.ExternalDevices. This may require a reference assembly definition. Check the "Adding a SyncBox" section of the documentation for more information.
+        /// <br/>The class must be in the namespace PsyForge.ExternalDevices. This may require a reference assembly definition. Check the "Adding a SyncBox" section of the documentation for more information.
         /// </summary>
         public static string syncBoxClass { get { return GetSetting<string>("syncBoxClass"); } }
         /// <summary>

@@ -312,7 +312,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 3667653023120699702}
-        m_TargetAssemblyTypeName: UnityEPL.ParticipantSelection, UnityEPL
+        m_TargetAssemblyTypeName: PsyForge.ParticipantSelection, PsyForge
         m_MethodName: IncreaseSessionNumber
         m_Mode: 1
         m_Arguments:
@@ -780,7 +780,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 3667653023120699702}
-        m_TargetAssemblyTypeName: UnityEPL.ParticipantSelection, UnityEPL
+        m_TargetAssemblyTypeName: PsyForge.ParticipantSelection, PsyForge
         m_MethodName: ParticipantSelected
         m_Mode: 1
         m_Arguments:
@@ -2519,7 +2519,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 3667653024019025116}
-        m_TargetAssemblyTypeName: UnityEPL.ExperimentSelection, UnityEPL
+        m_TargetAssemblyTypeName: PsyForge.ExperimentSelection, PsyForge
         m_MethodName: SetExperiment
         m_Mode: 1
         m_Arguments:
@@ -2531,7 +2531,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 3667653023120699702}
-        m_TargetAssemblyTypeName: UnityEPL.ParticipantSelection, UnityEPL
+        m_TargetAssemblyTypeName: PsyForge.ParticipantSelection, PsyForge
         m_MethodName: ExperimentUpdated
         m_Mode: 1
         m_Arguments:
@@ -3462,7 +3462,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 3667653023120699702}
-        m_TargetAssemblyTypeName: UnityEPL.ParticipantSelection, UnityEPL
+        m_TargetAssemblyTypeName: PsyForge.ParticipantSelection, PsyForge
         m_MethodName: DecreaseSessionNumber
         m_Mode: 1
         m_Arguments:
@@ -3862,7 +3862,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 3667653023539533682}
-        m_TargetAssemblyTypeName: UnityEPL.LaunchExperiment, UnityEPL
+        m_TargetAssemblyTypeName: PsyForge.LaunchExperiment, PsyForge
         m_MethodName: LaunchExp
         m_Mode: 1
         m_Arguments:
@@ -4074,7 +4074,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 3667653023539533682}
-        m_TargetAssemblyTypeName: UnityEPL.LaunchExperiment, UnityEPL
+        m_TargetAssemblyTypeName: PsyForge.LaunchExperiment, PsyForge
         m_MethodName: DoSyncBoxTest
         m_Mode: 1
         m_Arguments:
