@@ -1,4 +1,4 @@
-# PsyForge 3.0
+# PsyForge
 
 A library for easy creation of 2D and 3D psychology experiments.
 
@@ -6,7 +6,7 @@ A library for easy creation of 2D and 3D psychology experiments.
 
 ## Overview
 
-The experimental designs required to explore and understand neural mechanisms are becoming increasingly complex. There exists a multitude of experimental programming libraries for both 2D and 3D games; however, none provide a simple and effective way to handle high-frequency inputs in real-time (i.e., a closed-loop system). This is because the fastest these games can consistently react is once a frame (usually 30Hz or 60Hz). We introduce PsyForge 3.0, a framework for creating 2D and 3D experiments that handle high-frequency real-time data. It uses a safe threading paradigm to handle high precision inputs and outputs while still providing all of the power, community assets, and vast documentation of the Unity game engine. PsyForge 3.0 supports most platforms such as Windows, Mac, Linux, iOS, Android, VR, and Web (with convenient psiTurk integration). Similar to other experimental programming libraries, it also includes common experimental components such as logging, configuration, text display, audio recording, language switching, and an EEG alignment system. PsyForge 3.0 allows experimenters to quickly and easily create high quality, high throughput, cross-platform games that can handle high-frequency closed-loop systems.
+The experimental designs required to explore and understand neural mechanisms are becoming increasingly complex. There exists a multitude of experimental programming libraries for both 2D and 3D games; however, none provide a simple and effective way to handle high-frequency inputs in real-time (i.e., a closed-loop system). This is because the fastest these games can consistently react is once a frame (usually 30Hz or 60Hz). We introduce PsyForge, a framework for creating 2D and 3D experiments that handle high-frequency real-time data. It uses a safe threading paradigm to handle high precision inputs and outputs while still providing all of the power, community assets, and vast documentation of the Unity game engine. PsyForge supports most platforms such as Windows, Mac, Linux, iOS, Android, VR, and Web (with convenient psiTurk integration). Similar to other experimental programming libraries, it also includes common experimental components such as logging, configuration, text display, audio recording, language switching, and an EEG alignment system. PsyForge allows experimenters to quickly and easily create high quality, high throughput, cross-platform games that can handle high-frequency closed-loop systems.
 
 For more information than what is in this document, please see the [Documentation Site](https://bruskatech.github.io/PsyForge).
 
@@ -46,7 +46,7 @@ See the [FAQ](https://bruskatech.github.io/PsyForge/articles/FAQ.html).
 
 ## Authors
 
-### Current (PsyForge 3.0) Authors
+### Current (PsyForge) Authors
 
 James Bruska (Bruska Tech)
 
